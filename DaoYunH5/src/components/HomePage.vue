@@ -172,27 +172,7 @@
     </header>
     <!-- End Navigation Bar-->
 
-    <div class="wrapper">
-        <div class="container-fluid">
-
-            <!-- Page-Title -->
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="page-title-box">
-                        <div class="btn-group pull-right">
-                            <ol class="breadcrumb hide-phone p-0 m-0">
-                                <li class="breadcrumb-item"><a href="#">28</a></li>
-                                <li class="breadcrumb-item active">首页</li>
-                            </ol>
-                        </div>
-                        <h4 class="page-title">这是首页</h4>
-                    </div>
-                </div>
-            </div>
-            <!-- end page title end breadcrumb -->
-
-        </div> <!-- end container -->
-    </div>
+    <router-view></router-view>
     <!-- end wrapper -->
 
     <!-- Footer -->
@@ -221,6 +201,7 @@ export default {
   created () {
     // 定时函数，看载入效果，等之后后台完善了要删掉。进入页面两秒后自动消失
     setTimeout(this.showPreloader, 2000)
+    this.$router.push('List')
   },
   methods: {
     // 关闭载入动画的函数
