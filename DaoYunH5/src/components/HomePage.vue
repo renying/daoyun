@@ -1,5 +1,7 @@
 <template>
   <div>
+    <!-- Loader -->
+    <div v-show="preloader" id="preloader"><div id="status"><div class="spinner"></div></div></div>
     <!-- Navigation Bar-->
     <header id="topnav">
       <div class="topbar-main">
@@ -208,14 +210,22 @@
 </template>
 
 <script>
-import '@/assets/css/icons.css'
-import '@/assets/css/style.css'
-import '@/assets/css/bootstrap.min.css'
+
 export default {
-  name: 'HelloWorld',
+  name: 'HomePage',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      preloader: true
+    }
+  },
+  created () {
+    // 定时函数，看载入效果，等之后后台完善了要删掉。进入页面两秒后自动消失
+    setTimeout(this.showPreloader, 2000)
+  },
+  methods: {
+    // 关闭载入动画的函数
+    showPreloader () {
+      this.preloader = false
     }
   }
 }
