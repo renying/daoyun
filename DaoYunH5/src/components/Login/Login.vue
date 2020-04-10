@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div id="preloader">
+    <div id="preloader" v-show="preloader">
       <div id="status"><div class="spinner"></div></div>
     </div>
 
@@ -67,9 +67,10 @@
 
               <div class="form-group m-t-10 mb-0 row">
                 <div class="col-12 m-t-20">
-                  <a href="pages-recoverpw.html" class="text-muted"
+                  <router-link to = "Recoverpw" replace><i class="mdi mdi-lock    "></i>忘记密码？</router-link>
+                  <!-- <a href="pages-recoverpw.html" class="text-muted"
                     ><i class="mdi mdi-lock    "></i>忘记密码？</a
-                  >
+                  > -->
                 </div>
               </div>
             </form>
