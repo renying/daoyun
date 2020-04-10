@@ -37,7 +37,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
  * @author XUE
  * @since 2019/3/22 11:21
  */
-public class BaseActivity extends XPageActivity {
+public abstract class BaseActivity extends XPageActivity {
 
     Unbinder mUnbinder;
 
@@ -125,4 +125,10 @@ public class BaseActivity extends XPageActivity {
         super.onRelease();
     }
 
+    /**
+     * 初始化状态栏的样式
+     */
+    protected void initStatusBarStyle() {
+
+    }
 }

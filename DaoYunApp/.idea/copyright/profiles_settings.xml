@@ -1,7 +1,3 @@
 <component name="CopyrightManager">
-  <settings default="xuexiang">
-    <module2copyright>
-      <element module="Project Files" copyright="xuexiang" />
-    </module2copyright>
-  </settings>
+  <settings default="team28" />
 </component>
