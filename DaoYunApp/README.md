@@ -38,7 +38,8 @@
 
 * [Flutter空壳模板工程](https://github.com/xuexiangjys/flutter_template)
 
-<div style = 'display:none'>
+
+<!--
 
 ## 使用方式
 
@@ -78,4 +79,4 @@ git clone https://github.com/xuexiangjys/TemplateAppProject.git
 
 4.使用`./gradlew clean assembleReleaseChannels`进行多渠道打包。
 
-</div>
+-->
