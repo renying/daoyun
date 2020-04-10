@@ -152,16 +152,17 @@
                     <li class="has-submenu">
                         <a href="#"><i class="mdi mdi-view-dashboard"></i>班课管理</a>
                   <ul class="submenu">
-                    <li><a href="pages-home.html">班课信息</a></li>
-                    <li><a href="pages-home.html">我的班课</a></li>
-                    <li><a href="pages-home.html">签到管理</a></li>
-                    <li><a href="pages-home.html">通知管理</a></li>
+                    <li><router-link to = "List">班课信息</router-link></li>
+                    <li><router-link to = "List">我的班课</router-link></li>
+                    <li><router-link to = "List">签到管理</router-link></li>
+                    <li><router-link to = "List">通知管理</router-link></li>
                   </ul>
                 </li>
                 <li class="has-submenu">
                     <a href="#"><i class="mdi mdi-view-dashboard"></i>关于我们</a>
                     <ul class="submenu">
-                        <li><a href="pages-home.html">关于我们</a></li>
+                        <!-- <li><a href="pages-home.html">关于我们</a></li> -->
+                        <li><router-link to = "HomePage">关于我们</router-link></li>
                     </ul>
                 </li>
             </ul>
@@ -201,7 +202,7 @@ export default {
   created () {
     // 定时函数，看载入效果，等之后后台完善了要删掉。进入页面两秒后自动消失
     setTimeout(this.showPreloader, 2000)
-    this.$router.push('List')
+    // this.$router.push('Login')
   },
   methods: {
     // 关闭载入动画的函数
