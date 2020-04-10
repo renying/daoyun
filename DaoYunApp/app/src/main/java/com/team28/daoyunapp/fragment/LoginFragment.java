@@ -20,7 +20,6 @@ import com.team28.daoyunapp.core.BaseFragment;
 import com.team28.daoyunapp.utils.XToastUtils;
 import com.xuexiang.xutil.app.ActivityUtils;
 import com.xuexiang.xutil.common.RandomUtils;
-import com.team28.daoyunapp.utils.XToastUtils;
 
 import butterknife.BindView;
 import butterknife.OnClick;

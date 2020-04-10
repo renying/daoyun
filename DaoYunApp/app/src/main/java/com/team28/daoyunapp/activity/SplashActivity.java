@@ -1,26 +1,10 @@
-/*
- * Copyright (C) 2020 xuexiangjys(xuexiangjys@163.com)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- */
-
 package com.team28.daoyunapp.activity;
 
 import android.view.KeyEvent;
 
 import com.team28.daoyunapp.R;
 import com.team28.daoyunapp.utils.MMKVUtils;
+import com.team28.daoyunapp.utils.TokenUtils;
 import com.team28.daoyunapp.utils.Utils;
 import com.xuexiang.xui.utils.KeyboardUtils;
 import com.xuexiang.xui.widget.activity.BaseSplashActivity;
@@ -37,7 +21,7 @@ import me.jessyan.autosize.internal.CancelAdapt;
 public class SplashActivity extends BaseSplashActivity implements CancelAdapt {
 
     @Override
-    protected long getSplashDurationMillis() {
+    protected long getSplashDurationMillis () {
         return 500;
     }
 
@@ -45,27 +29,34 @@ public class SplashActivity extends BaseSplashActivity implements CancelAdapt {
      * activity启动后的初始化
      */
     @Override
-    protected void onCreateActivity() {
-        initSplashView(R.drawable.xui_config_bg_splash);
-        startSplash(false);
+    protected void onCreateActivity () {
+        initSplashView (R.drawable.xui_config_bg_splash);
+        startSplash (false);
     }
-
 
     /**
      * 启动页结束后的动作
      */
     @Override
-    protected void onSplashFinished() {
-        boolean isAgree = MMKVUtils.getBoolean("key_agree_privacy", false);
+    protected void onSplashFinished () {
+        boolean isAgree = MMKVUtils.getBoolean ("key_agree_privacy", false);
         if (isAgree) {
-            ActivityUtils.startActivity(MainActivity.class);
-            finish();
+            if (TokenUtils.hasToken ()) {
+                ActivityUtils.startActivity (MainActivity.class);
+            } else {
+                ActivityUtils.startActivity (LoginActivity.class);
+            }
+            finish ();
         } else {
-            Utils.showPrivacyDialog(this, (dialog, which) -> {
-                dialog.dismiss();
-                MMKVUtils.put("key_agree_privacy", true);
-                ActivityUtils.startActivity(MainActivity.class);
-                finish();
+            Utils.showPrivacyDialog (this, ( dialog, which ) -> {
+                dialog.dismiss ();
+                MMKVUtils.put ("key_agree_privacy", true);
+                if (TokenUtils.hasToken ()) {
+                    ActivityUtils.startActivity (MainActivity.class);
+                } else {
+                    ActivityUtils.startActivity (LoginActivity.class);
+                }
+                finish ();
             });
         }
     }
@@ -74,7 +65,7 @@ public class SplashActivity extends BaseSplashActivity implements CancelAdapt {
      * 菜单、返回键响应
      */
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        return KeyboardUtils.onDisableBackKeyDown(keyCode) && super.onKeyDown(keyCode, event);
+    public boolean onKeyDown ( int keyCode, KeyEvent event ) {
+        return KeyboardUtils.onDisableBackKeyDown (keyCode) && super.onKeyDown (keyCode, event);
     }
 }

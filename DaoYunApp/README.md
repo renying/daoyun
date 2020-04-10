@@ -1,6 +1,6 @@
 # DaoYunApp
 
-采用*[XUI Android空壳模板工程](https://github.com/xuexiangjys/TemplateAppProject)，快速搭建（集成了XUI、XUtil、XAOP、XPage、XUpdate、XHttp2、友盟统计和walle多渠道打包)
+采用[XUI Android空壳模板工程](https://github.com/xuexiangjys/TemplateAppProject)，快速搭建（集成了XUI、XUtil、XAOP、XPage、XUpdate、XHttp2、友盟统计和walle多渠道打包)
 
 ## 效果
 
