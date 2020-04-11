@@ -50,7 +50,7 @@ $config = [
             'rules' => [
                 [
                     'pattern' => 'api',
-                    'route' => 'api/user-login',
+                    'route' => 'api/api',
                 ],
             ],
         ],

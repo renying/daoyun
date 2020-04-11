@@ -2,103 +2,76 @@
 
 namespace app\models;
 
-class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
+use Yii;
+
+/**
+ * This is the model class for table "{{%User}}".
+ *
+ * @property int $UserId
+ * @property string|null $UserName
+ * @property string|null $NickName
+ * @property string|null $BornDate
+ * @property int|null $CountryId
+ * @property string|null $Address
+ * @property int|null $SchoolId
+ * @property int|null $Phone
+ * @property int|null $UserCode
+ * @property string|null $RealName
+ * @property int|null $UserType
+ *
+ * @property CheckIn[] $checkIns
+ */
+class User extends \yii\db\ActiveRecord
 {
-    public $id;
-    public $username;
-    public $password;
-    public $authKey;
-    public $accessToken;
-
-    private static $users = [
-        '100' => [
-            'id' => '100',
-            'username' => 'admin',
-            'password' => 'admin',
-            'authKey' => 'test100key',
-            'accessToken' => '100-token',
-        ],
-        '101' => [
-            'id' => '101',
-            'username' => 'demo',
-            'password' => 'demo',
-            'authKey' => 'test101key',
-            'accessToken' => '101-token',
-        ],
-    ];
-
-
     /**
      * {@inheritdoc}
      */
-    public static function findIdentity($id)
+    public static function tableName()
     {
-        return isset(self::$users[$id]) ? new static(self::$users[$id]) : null;
+        return '{{%User}}';
     }
 
     /**
      * {@inheritdoc}
      */
-    public static function findIdentityByAccessToken($token, $type = null)
+    public function rules()
     {
-        foreach (self::$users as $user) {
-            if ($user['accessToken'] === $token) {
-                return new static($user);
-            }
-        }
-
-        return null;
+        return [
+            [['UserId'], 'required'],
+            [['UserId', 'CountryId', 'SchoolId', 'Phone', 'UserCode', 'UserType'], 'integer'],
+            [['BornDate'], 'safe'],
+            [['UserName', 'NickName', 'Address', 'RealName'], 'string', 'max' => 255],
+            [['UserId'], 'unique'],
+        ];
     }
 
     /**
-     * Finds user by username
+     * {@inheritdoc}
+     */
+    public function attributeLabels()
+    {
+        return [
+            'UserId' => '用户编号',
+            'UserName' => '用户名',
+            'NickName' => '昵称',
+            'BornDate' => '出生日期',
+            'CountryId' => '国家编号',
+            'Address' => '地址',
+            'SchoolId' => '学校编号',
+            'Phone' => '电话',
+            'UserCode' => '用户唯一码',
+            'RealName' => '真实姓名',
+            'UserType' => '用户类型',
+        ];
+    }
+
+    /**
+     * Gets query for [[CheckIns]].
      *
-     * @param string $username
-     * @return static|null
+     * @return \yii\db\ActiveQuery
      */
-    public static function findByUsername($username)
+    public function getCheckIns()
     {
-        foreach (self::$users as $user) {
-            if (strcasecmp($user['username'], $username) === 0) {
-                return new static($user);
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getAuthKey()
-    {
-        return $this->authKey;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function validateAuthKey($authKey)
-    {
-        return $this->authKey === $authKey;
-    }
-
-    /**
-     * Validates password
-     *
-     * @param string $password password to validate
-     * @return bool if password provided is valid for current user
-     */
-    public function validatePassword($password)
-    {
-        return $this->password === $password;
+        return $this->hasMany(CheckIn::className(), ['UserId' => 'UserId']);
     }
 }
