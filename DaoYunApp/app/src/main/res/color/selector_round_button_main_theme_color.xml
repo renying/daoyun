@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright (C) 2020 xuexiangjys(xuexiangjys@163.com)
+  ~ Copyright (C) 2019 xuexiangjys(xuexiangjys@163.com)
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -16,19 +16,9 @@
   ~
   -->
 
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android"
-    android:opacity="opaque">
-    <item android:drawable="?attr/xui_config_color_splash_bg"/>
-
-    <item android:bottom="?attr/xui_config_app_logo_bottom">
-        <bitmap
-            android:gravity="center"
-            android:src="?attr/xui_config_splash_app_logo"/>
-    </item>
-
-    <item android:bottom="?attr/xui_config_company_logo_bottom">
-        <bitmap
-            android:gravity="bottom"
-            android:src="?attr/xui_config_splash_company_logo"/>
-    </item>
-</layer-list>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true" android:color="?attr/colorAccent" />
+    <item android:state_selected="true" android:color="?attr/colorAccent" />
+    <item android:state_enabled="false" android:color="@color/xui_btn_disable_color" />
+    <item android:color="?attr/colorAccent" />
+</selector>

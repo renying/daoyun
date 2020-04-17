@@ -20,13 +20,13 @@ package com.team28.daoyunapp;
 import android.app.Application;
 import android.content.Context;
 
-import androidx.multidex.BuildConfig;
 import androidx.multidex.MultiDex;
 
 import com.team28.daoyunapp.utils.sdkinit.ANRWatchDogInit;
 import com.team28.daoyunapp.utils.sdkinit.UMengInit;
 import com.team28.daoyunapp.utils.sdkinit.XBasicLibInit;
 import com.team28.daoyunapp.utils.sdkinit.XUpdateInit;
+import com.team28.daoyunapp.BuildConfig;
 
 /**
  * @author xuexiang

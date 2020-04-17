@@ -17,31 +17,41 @@
 
 package com.team28.daoyunapp.activity;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
+import com.team28.daoyunapp.core.BaseActivity;
+import com.team28.daoyunapp.core.BaseFragment;
+import com.team28.daoyunapp.fragment.AboutFragment;
 import com.team28.daoyunapp.fragment.news.NewsFragment;
 import com.team28.daoyunapp.fragment.profile.ProfileFragment;
 import com.team28.daoyunapp.fragment.trending.TrendingFragment;
-import com.team28.daoyunapp.R;
-import com.team28.daoyunapp.core.BaseActivity;
-import com.team28.daoyunapp.core.BaseFragment;
 import com.team28.daoyunapp.utils.Utils;
 import com.team28.daoyunapp.utils.XToastUtils;
+import com.team28.daoyunapp.R;
+import com.team28.daoyunapp.fragment.SettingsFragment;
 import com.xuexiang.xaop.annotation.SingleClick;
 import com.xuexiang.xui.adapter.FragmentAdapter;
 import com.xuexiang.xui.utils.ResUtils;
+import com.xuexiang.xui.utils.ThemeUtils;
+import com.xuexiang.xui.widget.imageview.RadiusImageView;
 import com.xuexiang.xutil.XUtil;
 import com.xuexiang.xutil.common.ClickUtils;
 import com.xuexiang.xutil.common.CollectionUtils;
+import com.xuexiang.xutil.display.Colors;
 
 import butterknife.BindView;
 
@@ -62,7 +72,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
      */
     @BindView(R.id.bottom_navigation)
     BottomNavigationView bottomNavigation;
-
+    /**
+     * 侧边栏
+     */
+    @BindView(R.id.nav_view)
+    NavigationView navView;
     @BindView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
 
@@ -93,6 +107,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         toolbar.inflateMenu(R.menu.menu_main);
         toolbar.setOnMenuItemClickListener(this);
 
+        initHeader();
 
         //主页内容填充
         BaseFragment[] fragments = new BaseFragment[]{
@@ -104,16 +119,86 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         viewPager.setOffscreenPageLimit(mTitles.length - 1);
         viewPager.setAdapter(adapter);
     }
+
+    private void initHeader() {
+        navView.setItemIconTintList(null);
+        View headerView = navView.getHeaderView(0);
+        LinearLayout navHeader = headerView.findViewById(R.id.nav_header);
+        RadiusImageView ivAvatar = headerView.findViewById(R.id.iv_avatar);
+        TextView tvAvatar = headerView.findViewById(R.id.tv_avatar);
+        TextView tvSign = headerView.findViewById(R.id.tv_sign);
+
+        if (Utils.isColorDark(ThemeUtils.resolveColor(this, R.attr.colorAccent))) {
+            tvAvatar.setTextColor(Colors.WHITE);
+            tvSign.setTextColor(Colors.WHITE);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                ivAvatar.setImageTintList(ResUtils.getColors(R.color.xui_config_color_white));
+            }
+        } else {
+            tvAvatar.setTextColor(ThemeUtils.resolveColor(this, R.attr.xui_config_color_title_text));
+            tvSign.setTextColor(ThemeUtils.resolveColor(this, R.attr.xui_config_color_explain_text));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                ivAvatar.setImageTintList(ResUtils.getColors(R.color.xui_config_color_gray_3));
+            }
+        }
+
+        // TODO: 2019-10-09 初始化数据
+        ivAvatar.setImageResource(R.drawable.ic_default_head);
+        tvAvatar.setText(R.string.app_name);
+        tvSign.setText("这个家伙很懒，什么也没有留下～～");
+        navHeader.setOnClickListener(this);
+    }
+
     protected void initListeners() {
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
+        //侧边栏点击事件
+        navView.setNavigationItemSelectedListener(menuItem -> {
+            if (menuItem.isCheckable()) {
+                drawerLayout.closeDrawers();
+                return handleNavigationItemSelected(menuItem);
+            } else {
+                switch (menuItem.getItemId()) {
+                    case R.id.nav_settings:
+                        openNewPage(SettingsFragment.class);
+                        break;
+                    case R.id.nav_about:
+                        openNewPage(AboutFragment.class);
+                        break;
+                    default:
+                        XToastUtils.toast("点击了:" + menuItem.getTitle());
+                        break;
+                }
+            }
+            return true;
+        });
 
         //主页事件监听
         viewPager.addOnPageChangeListener(this);
         bottomNavigation.setOnNavigationItemSelectedListener(this);
     }
 
+    /**
+     * 处理侧边栏点击事件
+     *
+     * @param menuItem
+     * @return
+     */
+    private boolean handleNavigationItemSelected(@NonNull MenuItem menuItem) {
+        int index = CollectionUtils.arrayIndexOf(mTitles, menuItem.getTitle());
+        if (index != -1) {
+            toolbar.setTitle(menuItem.getTitle());
+            viewPager.setCurrentItem(index, false);
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public boolean onMenuItemClick(MenuItem item) {
-        switch(item.getItemId()) {
+        switch (item.getItemId()) {
             case R.id.action_privacy:
                 Utils.showPrivacyDialog(this, null);
                 break;
@@ -148,6 +233,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         toolbar.setTitle(item.getTitle());
         item.setChecked(true);
 
+        updateSideNavStatus(item);
     }
 
     @Override
@@ -170,9 +256,22 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             toolbar.setTitle(menuItem.getTitle());
             viewPager.setCurrentItem(index, false);
 
+            updateSideNavStatus(menuItem);
             return true;
         }
         return false;
+    }
+
+    /**
+     * 更新侧边栏菜单选中状态
+     *
+     * @param menuItem
+     */
+    private void updateSideNavStatus(MenuItem menuItem) {
+        MenuItem side = navView.getMenu().findItem(menuItem.getItemId());
+        if (side != null) {
+            side.setChecked(true);
+        }
     }
 
     /**

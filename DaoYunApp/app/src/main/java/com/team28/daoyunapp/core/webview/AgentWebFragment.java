@@ -65,8 +65,8 @@ import com.just.agentweb.download.DownloadListenerAdapter;
 import com.just.agentweb.download.DownloadingService;
 import com.just.agentweb.utils.LogUtils;
 import com.just.agentweb.widget.IWebLayout;
-import com.team28.daoyunapp.utils.XToastUtils;
 import com.team28.daoyunapp.MyApp;
+import com.team28.daoyunapp.utils.XToastUtils;
 import com.team28.daoyunapp.R;
 import com.xuexiang.xutil.net.JsonUtil;
 

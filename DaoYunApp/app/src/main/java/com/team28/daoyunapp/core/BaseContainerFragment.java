@@ -33,6 +33,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.team28.daoyunapp.core.SimpleListAdapter.KEY_SUB_TITLE;
+import static com.team28.daoyunapp.core.SimpleListAdapter.KEY_TITLE;
+
 /**
  * 修改列表样式为主副标题显示
  *
@@ -66,11 +69,11 @@ public abstract class BaseContainerFragment extends XPageContainerListFragment {
             Map<String, String> item = new HashMap<>();
             int index = content.indexOf("\n");
             if (index > 0) {
-                item.put(SimpleListAdapter.KEY_TITLE, String.valueOf(content.subSequence(0, index)));
-                item.put(SimpleListAdapter.KEY_SUB_TITLE, String.valueOf(content.subSequence(index + 1, content.length())));
+                item.put(KEY_TITLE, String.valueOf(content.subSequence(0, index)));
+                item.put(KEY_SUB_TITLE, String.valueOf(content.subSequence(index + 1, content.length())));
             } else {
-                item.put(SimpleListAdapter.KEY_TITLE, content);
-                item.put(SimpleListAdapter.KEY_SUB_TITLE, "");
+                item.put(KEY_TITLE, content);
+                item.put(KEY_SUB_TITLE, "");
             }
             data.add(item);
         }

@@ -40,9 +40,7 @@
     <string name="content_think_about_it_again">要不要再想想</string>
     <string name="content_privacy_explain_again">我们非常重视对你个人信息的保护，承诺严格按照《%s隐私权政策》保护及处理你的信息。如果你不同意该政策，很遗憾我们将无法为你提供服务</string>
     <string name="lab_privacy_name">《%s隐私权政策》</string>
-    <string name="logo">Logo</string>
 
-<!--    登录界面-->
     <string name="title_login_register">登录/注册</string>
     <string name="action_get_verify_code">获取验证码</string>
 

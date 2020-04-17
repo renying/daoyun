@@ -9,7 +9,14 @@ import com.team28.daoyunapp.core.BaseActivity;
 import com.team28.daoyunapp.fragment.LoginFragment;
 import com.xuexiang.xutil.display.Colors;
 
+/**
+ * 登录页面
+ *
+ * @author xuexiang
+ * @since 2019-11-17 22:21
+ */
 public class LoginActivity extends BaseActivity {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

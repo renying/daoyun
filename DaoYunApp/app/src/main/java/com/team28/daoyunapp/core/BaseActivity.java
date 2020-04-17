@@ -37,7 +37,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
  * @author XUE
  * @since 2019/3/22 11:21
  */
-public abstract class BaseActivity extends XPageActivity {
+public class BaseActivity extends XPageActivity {
 
     Unbinder mUnbinder;
 
@@ -100,6 +100,13 @@ public abstract class BaseActivity extends XPageActivity {
     }
 
     /**
+     * 初始化状态栏的样式
+     */
+    protected void initStatusBarStyle() {
+
+    }
+
+    /**
      * 切换fragment
      *
      * @param clazz 页面类
@@ -125,10 +132,4 @@ public abstract class BaseActivity extends XPageActivity {
         super.onRelease();
     }
 
-    /**
-     * 初始化状态栏的样式
-     */
-    protected void initStatusBarStyle() {
-
-    }
 }

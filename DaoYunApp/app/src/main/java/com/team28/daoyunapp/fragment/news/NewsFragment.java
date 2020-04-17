@@ -25,10 +25,10 @@ import com.alibaba.android.vlayout.VirtualLayoutManager;
 import com.alibaba.android.vlayout.layout.GridLayoutHelper;
 import com.alibaba.android.vlayout.layout.LinearLayoutHelper;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.team28.daoyunapp.adapter.entity.NewInfo;
 import com.team28.daoyunapp.R;
 import com.team28.daoyunapp.adapter.base.delegate.SimpleDelegateAdapter;
 import com.team28.daoyunapp.adapter.base.delegate.SingleDelegateAdapter;
-import com.team28.daoyunapp.adapter.entity.NewInfo;
 import com.team28.daoyunapp.core.BaseFragment;
 import com.team28.daoyunapp.utils.DemoDataProvider;
 import com.team28.daoyunapp.utils.Utils;
@@ -89,36 +89,6 @@ public class NewsFragment extends BaseFragment {
         recyclerView.setRecycledViewPool(viewPool);
         viewPool.setMaxRecycledViews(0, 10);
 
-        //轮播条
-        SingleDelegateAdapter bannerAdapter = new SingleDelegateAdapter(R.layout.include_head_view_banner) {
-            @Override
-            public void onBindViewHolder(@NonNull RecyclerViewHolder holder, int position) {
-                SimpleImageBanner banner = holder.findViewById(R.id.sib_simple_usage);
-                banner.setSource(DemoDataProvider.getBannerList())
-                        .setOnItemClickListener((view, item, position1) -> XToastUtils.toast("headBanner position--->" + position1)).startScroll();
-            }
-        };
-
-        //九宫格菜单
-        GridLayoutHelper gridLayoutHelper = new GridLayoutHelper(4);
-        gridLayoutHelper.setPadding(0, 16, 0, 0);
-        gridLayoutHelper.setVGap(10);
-        gridLayoutHelper.setHGap(0);
-        SimpleDelegateAdapter<AdapterItem> commonAdapter = new SimpleDelegateAdapter<AdapterItem>(R.layout.adapter_common_grid_item, gridLayoutHelper, DemoDataProvider.getGridItems(getContext())) {
-            @Override
-            protected void bindData(@NonNull RecyclerViewHolder holder, int position, AdapterItem item) {
-                if (item != null) {
-                    RadiusImageView imageView = holder.findViewById(R.id.riv_item);
-                    imageView.setCircle(true);
-                    ImageLoader.get().loadImage(imageView, item.getIcon());
-                    holder.text(R.id.tv_title, item.getTitle().toString().substring(0, 1));
-                    holder.text(R.id.tv_sub_title, item.getTitle());
-
-                    holder.click(R.id.ll_container, v -> XToastUtils.toast("点击了：" + item.getTitle()));
-                }
-            }
-        };
-
         //资讯的标题
         SingleDelegateAdapter titleAdapter = new SingleDelegateAdapter(R.layout.adapter_title_item) {
             @Override
@@ -134,8 +104,6 @@ public class NewsFragment extends BaseFragment {
             @Override
             protected void bindData(@NonNull RecyclerViewHolder holder, int position, NewInfo model) {
                 if (model != null) {
-                    holder.text(R.id.tv_user_name, model.getUserName());
-                    holder.text(R.id.tv_tag, model.getTag());
                     holder.text(R.id.tv_title, model.getTitle());
                     holder.text(R.id.tv_summary, model.getSummary());
                     holder.text(R.id.tv_praise, model.getPraise() == 0 ? "点赞" : String.valueOf(model.getPraise()));
@@ -149,8 +117,6 @@ public class NewsFragment extends BaseFragment {
         };
 
         DelegateAdapter delegateAdapter = new DelegateAdapter(virtualLayoutManager);
-        delegateAdapter.addAdapter(bannerAdapter);
-        delegateAdapter.addAdapter(commonAdapter);
         delegateAdapter.addAdapter(titleAdapter);
         delegateAdapter.addAdapter(mNewsAdapter);
 

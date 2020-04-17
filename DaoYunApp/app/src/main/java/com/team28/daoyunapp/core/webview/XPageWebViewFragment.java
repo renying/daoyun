@@ -62,10 +62,10 @@ import com.just.agentweb.download.DefaultDownloadImpl;
 import com.just.agentweb.download.DownloadListenerAdapter;
 import com.just.agentweb.download.DownloadingService;
 import com.just.agentweb.widget.IWebLayout;
-import com.team28.daoyunapp.utils.XToastUtils;
 import com.team28.daoyunapp.MyApp;
 import com.team28.daoyunapp.R;
 import com.team28.daoyunapp.core.BaseFragment;
+import com.team28.daoyunapp.utils.XToastUtils;
 import com.xuexiang.xaop.annotation.SingleClick;
 import com.xuexiang.xpage.annotation.Page;
 import com.xuexiang.xpage.base.XPageActivity;
@@ -80,13 +80,15 @@ import java.util.HashMap;
 import butterknife.BindView;
 import butterknife.OnClick;
 
+import static com.team28.daoyunapp.core.webview.AgentWebFragment.KEY_URL;
+
 /**
  * 使用XPageFragment
  *
  * @author xuexiang
  * @since 2019-05-26 18:15
  */
-@Page(params = {AgentWebFragment.KEY_URL})
+@Page(params = {KEY_URL})
 public class XPageWebViewFragment extends BaseFragment {
 
     @BindView(R.id.iv_back)
@@ -110,7 +112,7 @@ public class XPageWebViewFragment extends BaseFragment {
      */
     public static Fragment openUrl(XPageActivity xPageActivity, String url) {
         return PageOption.to(XPageWebViewFragment.class)
-                .putString(AgentWebFragment.KEY_URL, url)
+                .putString(KEY_URL, url)
                 .open(xPageActivity);
     }
 
@@ -124,7 +126,7 @@ public class XPageWebViewFragment extends BaseFragment {
     public static Fragment openUrl(XPageFragment fragment, String url) {
         return PageOption.to(XPageWebViewFragment.class)
                 .setNewActivity(true)
-                .putString(AgentWebFragment.KEY_URL, url)
+                .putString(KEY_URL, url)
                 .open(fragment);
     }
 
@@ -388,7 +390,7 @@ public class XPageWebViewFragment extends BaseFragment {
         String target = "";
         Bundle bundle = getArguments();
         if (bundle != null) {
-            target = bundle.getString(AgentWebFragment.KEY_URL);
+            target = bundle.getString(KEY_URL);
         }
 
         if (TextUtils.isEmpty(target)) {

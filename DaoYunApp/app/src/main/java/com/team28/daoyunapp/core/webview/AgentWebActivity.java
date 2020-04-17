@@ -34,6 +34,8 @@ import com.xuexiang.xrouter.facade.callback.NavCallback;
 import com.xuexiang.xrouter.launcher.XRouter;
 import com.xuexiang.xui.widget.slideback.SlideBack;
 
+import static com.team28.daoyunapp.core.webview.AgentWebFragment.KEY_URL;
+
 /**
  * 壳浏览器
  *
@@ -49,7 +51,7 @@ public class AgentWebActivity extends AppCompatActivity {
      */
     public static void goWeb(Context context, final String url) {
         Intent intent = new Intent(context, AgentWebActivity.class);
-        intent.putExtra(AgentWebFragment.KEY_URL, url);
+        intent.putExtra(KEY_URL, url);
         context.startActivity(intent);
     }
 
@@ -72,7 +74,7 @@ public class AgentWebActivity extends AppCompatActivity {
                 }
             });
         } else {
-            String url = getIntent().getStringExtra(AgentWebFragment.KEY_URL);
+            String url = getIntent().getStringExtra(KEY_URL);
             if (url != null) {
                 openFragment(url);
             } else {

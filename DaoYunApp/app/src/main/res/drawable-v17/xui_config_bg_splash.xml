@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?><!--
-  ~ Copyright (C) 2019 xuexiangjys(xuexiangjys@163.com)
+  ~ Copyright (C) 2020 xuexiangjys(xuexiangjys@163.com)
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -29,6 +29,6 @@
     <item android:bottom="@dimen/xui_config_company_logo_bottom">
         <bitmap
             android:gravity="bottom"
-            android:src="@drawable/ic_splash_company_logo" />
+            android:src="@drawable/ic_splash_team28" />
     </item>
 </layer-list>

@@ -93,5 +93,4 @@
         <item name="sSelectorPressedColor">?attr/colorAccent</item>
         <item name="android:textColor">@color/xui_config_color_white</item>
     </style>
-
 </resources>

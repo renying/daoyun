@@ -20,10 +20,10 @@ package com.team28.daoyunapp.utils.sdkinit;
 import android.app.Application;
 import android.content.Context;
 
-import com.team28.daoyunapp.MyApp;
 import com.team28.daoyunapp.utils.update.CustomUpdateDownloader;
 import com.team28.daoyunapp.utils.update.CustomUpdateFailureListener;
 import com.team28.daoyunapp.utils.update.XHttpUpdateHttpServiceImpl;
+import com.team28.daoyunapp.MyApp;
 import com.xuexiang.xupdate.XUpdate;
 import com.xuexiang.xupdate.utils.UpdateUtils;
 
@@ -57,8 +57,8 @@ public final class XUpdateInit {
                 .param("versionCode", UpdateUtils.getVersionCode(application))
                 .param("appKey", application.getPackageName())
                 //这个必须设置！实现网络请求功能。
-                .setIUpdateHttpService(new XHttpUpdateHttpServiceImpl())
-                .setIUpdateDownLoader(new CustomUpdateDownloader())
+                .setIUpdateHttpService(new XHttpUpdateHttpServiceImpl ())
+                .setIUpdateDownLoader(new CustomUpdateDownloader ())
                 //这个必须初始化
                 .init(application);
     }
@@ -70,6 +70,6 @@ public final class XUpdateInit {
      */
     public static void checkUpdate(Context context, boolean needErrorTip) {
         XUpdate.newBuild(context).updateUrl(KEY_UPDATE_URL).update();
-        XUpdate.get().setOnUpdateFailureListener(new CustomUpdateFailureListener(needErrorTip));
+        XUpdate.get().setOnUpdateFailureListener(new CustomUpdateFailureListener (needErrorTip));
     }
 }

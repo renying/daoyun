@@ -19,8 +19,8 @@ package com.team28.daoyunapp.core.http.callback;
 
 import androidx.annotation.NonNull;
 
-import com.team28.daoyunapp.utils.XToastUtils;
 import com.team28.daoyunapp.core.BaseFragment;
+import com.team28.daoyunapp.utils.XToastUtils;
 import com.xuexiang.xhttp2.callback.ProgressLoadingCallBack;
 import com.xuexiang.xhttp2.exception.ApiException;
 import com.xuexiang.xhttp2.model.XHttpRequest;

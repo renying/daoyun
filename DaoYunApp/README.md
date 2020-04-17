@@ -1,12 +1,16 @@
-# DaoYunApp
+# TemplateAppProject
 
-采用[XUI Android空壳模板工程](https://github.com/xuexiangjys/TemplateAppProject)，快速搭建（集成了XUI、XUtil、XAOP、XPage、XUpdate、XHttp2、友盟统计和walle多渠道打包)
+Android空壳模板工程，快速搭建（集成了XUI、XUtil、XAOP、XPage、XUpdate、XHttp2、友盟统计和walle多渠道打包)
+
+## 关于我
+
+[![github](https://img.shields.io/badge/GitHub-xuexiangjys-blue.svg)](https://github.com/xuexiangjys)   [![csdn](https://img.shields.io/badge/CSDN-xuexiangjys-green.svg)](http://blog.csdn.net/xuexiangjys)   [![简书](https://img.shields.io/badge/简书-xuexiangjys-red.svg)](https://www.jianshu.com/u/6bf605575337)   [![掘金](https://img.shields.io/badge/掘金-xuexiangjys-brightgreen.svg)](https://juejin.im/user/598feef55188257d592e56ed)   [![知乎](https://img.shields.io/badge/知乎-xuexiangjys-violet.svg)](https://www.zhihu.com/people/xuexiangjys) 
 
 ## 效果
 
-待开发
+![](https://github.com/xuexiangjys/Resource/blob/master/img/templateproject/demo.gif)
 
-## 集成介绍
+## 集成介绍（请star支持）
 
 > 本项目是项目androidx项目。精选了X系列最实用的几个库，可大大提高开发的效率。
 
@@ -37,9 +41,6 @@
 * [X-Library系列Android应用框架详解](https://github.com/xuexiangjys/AndroidAdvancedLearning/blob/master/framework/X-Library系列Android应用框架详解.md)
 
 * [Flutter空壳模板工程](https://github.com/xuexiangjys/flutter_template)
-
-
-<!--
 
 ## 使用方式
 
@@ -79,4 +80,22 @@ git clone https://github.com/xuexiangjys/TemplateAppProject.git
 
 4.使用`./gradlew clean assembleReleaseChannels`进行多渠道打包。
 
--->
+## 如果觉得项目还不错，可以考虑打赏一波
+
+> 你的打赏是我维护的动力，我将会列出所有打赏人员的清单在下方作为凭证，打赏前请留下打赏项目的备注！
+
+![](https://github.com/xuexiangjys/Resource/blob/master/img/pay/alipay.jpeg) &emsp; ![](https://github.com/xuexiangjys/Resource/blob/master/img/pay/weixinpay.jpeg)
+
+感谢下面小伙伴的打赏：
+
+姓名 | 金额 | 方式
+:-|:-|:-
+myie9 | 100￥ | 微信
+*鸥 | 10.24￥ | 微信
+
+
+## 联系方式
+
+[![](https://img.shields.io/badge/点击一键加入QQ交流群-602082750-blue.svg)](http://shang.qq.com/wpa/qunwpa?idkey=9922861ef85c19f1575aecea0e8680f60d9386080a97ed310c971ae074998887)
+
+![](https://github.com/xuexiangjys/Resource/blob/master/img/qq/qq_group.jpg)
