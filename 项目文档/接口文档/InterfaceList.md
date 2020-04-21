@@ -276,3 +276,38 @@ api/get-noticeinfolist
 | 1001 | 接口没有使用post请求 |
 | 9999 | 系统错误             |
 
+
+## 七、创建班课
+
+### 接口地址：
+
+api/add-classinfo
+
+###  输入参数：
+
+| 参数名称  | 参数类型 | 是否必填 | 参数说明                                                     |
+| --------- | -------- | -------- | ------------------------------------------------------------ |
+| ui        | string   | Y        | 当前用户id，非int，需要上传MD5值，即标准MD5(userid)          |
+| className | string   | Y        | 课程名称                                                     |
+| classDesc | string   | Y        | 课程简介                                                     |
+| TimeStamp | string   | Y        | 时间戳，格式为：yyyyMMddHHmmss例如：20200411155201           |
+| CheckCode | string   | Y        | 校验码，格式为：标准MD5(ui +className +  TimeStamp + 平台密钥) （加号代表连接符，非数值运算） |
+
+### 返回结果：
+
+```c#
+{
+	"code":1,
+	"message":"创建成功",//异常说明
+	"data":true
+}
+```
+
+### code说明
+
+| 值   | 说明                 |
+| ---- | -------------------- |
+| 1    | 成功                 |
+| 1001 | 接口没有使用post请求 |
+| 9999 | 系统错误             |
+
