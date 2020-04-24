@@ -130,7 +130,7 @@
                 android:paddingTop="5dp"
                 android:paddingEnd="10dp"
                 android:paddingBottom="5dp"
-                android:text="其他登录方式"
+                android:text="@string/other_login_methods"
                 android:textColor="@color/xui_config_color_primary_text" />
 
             <com.xuexiang.xui.widget.alpha.XUIAlphaTextView
@@ -141,7 +141,7 @@
                 android:paddingTop="5dp"
                 android:paddingEnd="10dp"
                 android:paddingBottom="5dp"
-                android:text="忘记密码"
+                android:text="@string/lab_forget_password"
                 android:textColor="@color/xui_config_color_primary_text" />
 
         </FrameLayout>
@@ -169,27 +169,27 @@
             <TextView
                 style="@style/TextStyle.Explain"
                 android:layout_width="wrap_content"
-                android:text="登陆/注册代表您已阅读并同意"
+                android:text="@string/str_login_or_registration"
                 android:textColor="@color/xui_config_color_primary_text" />
 
             <com.xuexiang.xui.widget.alpha.XUIAlphaTextView
                 android:id="@+id/tv_user_protocol"
                 style="@style/TextStyle.Explain"
                 android:layout_width="wrap_content"
-                android:text="用户协议"
+                android:text="@string/str_user_protocol"
                 android:textColor="?attr/colorAccent" />
 
             <TextView
                 style="@style/TextStyle.Explain"
                 android:layout_width="wrap_content"
-                android:text="和"
+                android:text="@string/str_and"
                 android:textColor="@color/xui_config_color_primary_text" />
 
             <com.xuexiang.xui.widget.alpha.XUIAlphaTextView
                 android:id="@+id/tv_privacy_protocol"
                 style="@style/TextStyle.Explain"
                 android:layout_width="wrap_content"
-                android:text="隐私政策"
+                android:text="@string/str_privacy_protocol"
                 android:textColor="?attr/colorAccent" />
 
         </LinearLayout>
