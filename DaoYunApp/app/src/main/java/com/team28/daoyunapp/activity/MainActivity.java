@@ -39,6 +39,7 @@ import com.team28.daoyunapp.fragment.AboutFragment;
 import com.team28.daoyunapp.fragment.news.NewsFragment;
 import com.team28.daoyunapp.fragment.profile.ProfileFragment;
 import com.team28.daoyunapp.fragment.trending.TrendingFragment;
+import com.team28.daoyunapp.utils.ActivityCollectorUtil;
 import com.team28.daoyunapp.utils.Utils;
 import com.team28.daoyunapp.utils.XToastUtils;
 import com.team28.daoyunapp.R;
@@ -49,6 +50,7 @@ import com.xuexiang.xui.utils.ResUtils;
 import com.xuexiang.xui.utils.ThemeUtils;
 import com.xuexiang.xui.widget.imageview.RadiusImageView;
 import com.xuexiang.xutil.XUtil;
+import com.xuexiang.xutil.app.ActivityUtils;
 import com.xuexiang.xutil.common.ClickUtils;
 import com.xuexiang.xutil.common.CollectionUtils;
 import com.xuexiang.xutil.display.Colors;
@@ -91,6 +93,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        ActivityCollectorUtil.addActivity (this);
         initViews();
 
         initListeners();
