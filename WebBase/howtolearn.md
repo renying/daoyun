@@ -46,3 +46,75 @@
 - 页面交互会验证cookie，Csrf。不能直接用调接口的方式post请求。为了安全起见，对调用需求，需要另开接口实现业务逻辑。
 
 
+# yii发布说明
+
+
+
+## 1、linux 安装php-fpm、nginx、git软件
+
+## 2、用git将代码下载下来
+
+## 3、环境配置
+
+###  php-fpm配置：
+
+```nginx
+默认配置路径：/etc/php-fpm.d/www.conf
+需要修改的地方：
+
+listen = /dev/php/php-fpm.sock
+
+listen.owner = root
+listen.group = root
+listen.mode = 0666
+```
+
+### nginx 配置
+
+```nginx
+默认配置路径：/etc/nginx/nginx.conf
+需要修改的地方：
+
+user root;
+
+listen       80;
+server_name  47.94.234.206;
+root         /root/WebBase/web;
+
+location / {
+	index index.php index.html index.htm;
+}
+location ~ \.php$ {
+	root /root/WebBase/web; 
+	fastcgi_pass unix:/dev/php/php-fpm.sock;
+	fastcgi_index index.php;
+	fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+	include fastcgi_params;
+}
+```
+
+###  文件夹权限授予
+
+```nginx
+虽然listen = 0666 可以自动开启权限，但发现并非如此
+要手动赋值比较不会出错
+chmod 1777 /dev/php/php-fpm.sock
+chmod 1777 /dev/php
+chmod 1777 /dev/
+```
+
+###  程序启动
+
+```nginx
+service php-fpm start //启动
+service php-fpm stop  //关闭
+
+service nginx start //启动
+serivce nginx stop  //关闭
+
+```
+
+### 访问
+
+http://47.94.234.206/index.php
+
