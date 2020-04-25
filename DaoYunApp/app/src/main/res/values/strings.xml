@@ -14,6 +14,7 @@
     <string name="menu_starred">收藏</string>
     <string name="menu_search">搜索</string>
     <string name="menu_settings">设置</string>
+    <string name="lab_logout_confirm">是否确认退出？</string>
     <string name="menu_about">关于</string>
 
     <string name="about_copyright">© %1$s xuexiangjys All rights reserved.</string>
@@ -44,10 +45,11 @@
     <string name="title_login_register">登录/注册</string>
     <string name="action_get_verify_code">获取验证码</string>
 
+<!--    登录页面-->
     <string name="title_login">登录</string>
     <string name="title_login_by_verify_code">验证码登录</string>
     <string name="title_register">注册</string>
-    <string name="lab_forget_password">忘记密码?</string>
+    <string name="lab_forget_password">忘记密码</string>
     <string name="lab_login_by_verify_code">验证码登录</string>
     <string name="lab_login_by_password">密码登录</string>
     <string name="tip_please_input_phone_number">请输入手机号码</string>
@@ -66,5 +68,10 @@
     <string name="title_forget_password">重置密码</string>
     <string name="lab_register_account">点击注册即表示同意</string>
     <string name="lab_service_protocol"><![CDATA[<用户协议>]]></string>
+    <string name="other_login_methods">其他登录方式</string>
+    <string name="str_user_protocol">用户协议</string>
+    <string name="str_and">和</string>
+    <string name="str_privacy_protocol">隐私政策</string>
+    <string name="str_login_or_registration">登陆/注册代表您已阅读并同意</string>
 
 </resources>

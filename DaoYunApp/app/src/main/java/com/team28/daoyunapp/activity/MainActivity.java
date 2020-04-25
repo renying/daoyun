@@ -1,20 +1,3 @@
-/*
- * Copyright (C) 2020 xuexiangjys(xuexiangjys@163.com)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- */
-
 package com.team28.daoyunapp.activity;
 
 import android.os.Build;
@@ -39,6 +22,7 @@ import com.team28.daoyunapp.fragment.AboutFragment;
 import com.team28.daoyunapp.fragment.news.NewsFragment;
 import com.team28.daoyunapp.fragment.profile.ProfileFragment;
 import com.team28.daoyunapp.fragment.trending.TrendingFragment;
+import com.team28.daoyunapp.utils.ActivityCollectorUtil;
 import com.team28.daoyunapp.utils.Utils;
 import com.team28.daoyunapp.utils.XToastUtils;
 import com.team28.daoyunapp.R;
@@ -49,6 +33,7 @@ import com.xuexiang.xui.utils.ResUtils;
 import com.xuexiang.xui.utils.ThemeUtils;
 import com.xuexiang.xui.widget.imageview.RadiusImageView;
 import com.xuexiang.xutil.XUtil;
+import com.xuexiang.xutil.app.ActivityUtils;
 import com.xuexiang.xutil.common.ClickUtils;
 import com.xuexiang.xutil.common.CollectionUtils;
 import com.xuexiang.xutil.display.Colors;
@@ -56,10 +41,8 @@ import com.xuexiang.xutil.display.Colors;
 import butterknife.BindView;
 
 /**
- * 程序主页面,只是一个简单的Tab例子
+ * 程序主页面
  *
- * @author xuexiang
- * @since 2019-07-07 23:53
  */
 public class MainActivity extends BaseActivity implements View.OnClickListener, ViewPager.OnPageChangeListener, BottomNavigationView.OnNavigationItemSelectedListener, ClickUtils.OnClick2ExitListener, Toolbar.OnMenuItemClickListener {
 
@@ -91,6 +74,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        ActivityCollectorUtil.addActivity (this);
         initViews();
 
         initListeners();

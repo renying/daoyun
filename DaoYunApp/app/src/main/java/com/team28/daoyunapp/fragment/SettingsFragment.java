@@ -1,35 +1,20 @@
-/*
- * Copyright (C) 2020 xuexiangjys(xuexiangjys@163.com)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- */
-
 package com.team28.daoyunapp.fragment;
 
 import com.team28.daoyunapp.core.BaseFragment;
+import com.team28.daoyunapp.utils.ActivityCollectorUtil;
+import com.team28.daoyunapp.utils.TokenUtils;
 import com.team28.daoyunapp.utils.XToastUtils;
 import com.team28.daoyunapp.R;
 import com.xuexiang.xaop.annotation.SingleClick;
 import com.xuexiang.xpage.annotation.Page;
+import com.xuexiang.xui.widget.dialog.materialdialog.DialogAction;
+import com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog;
 import com.xuexiang.xui.widget.textview.supertextview.SuperTextView;
+
+import java.util.Objects;
 
 import butterknife.BindView;
 
-/**
- * @author xuexiang
- * @since 2019-10-15 22:38
- */
 @Page(name = "设置")
 public class SettingsFragment extends BaseFragment implements SuperTextView.OnSuperTextViewClickListener {
 
@@ -41,8 +26,6 @@ public class SettingsFragment extends BaseFragment implements SuperTextView.OnSu
     SuperTextView menuPush;
     @BindView(R.id.menu_helper)
     SuperTextView menuHelper;
-    @BindView(R.id.menu_change_account)
-    SuperTextView menuChangeAccount;
     @BindView(R.id.menu_logout)
     SuperTextView menuLogout;
 
@@ -57,7 +40,6 @@ public class SettingsFragment extends BaseFragment implements SuperTextView.OnSu
         menuPrivacy.setOnSuperTextViewClickListener(this);
         menuPush.setOnSuperTextViewClickListener(this);
         menuHelper.setOnSuperTextViewClickListener(this);
-        menuChangeAccount.setOnSuperTextViewClickListener(this);
         menuLogout.setOnSuperTextViewClickListener(this);
     }
 
@@ -71,9 +53,27 @@ public class SettingsFragment extends BaseFragment implements SuperTextView.OnSu
             case R.id.menu_helper:
                 XToastUtils.toast(superTextView.getLeftString());
                 break;
-            case R.id.menu_change_account:
             case R.id.menu_logout:
-                XToastUtils.toast(superTextView.getCenterString());
+                new MaterialDialog.Builder(getContext())
+                        .content(R.string.lab_logout_confirm)
+                        .positiveText(R.string.lab_yes)
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(MaterialDialog dialog, DialogAction which) {
+                                dialog.dismiss ();
+                                TokenUtils.handleLogoutSuccess ();
+                                Objects.requireNonNull (getActivity ()).finish ();
+                                ActivityCollectorUtil.finishAllActivity ();
+                            }
+                        })
+                        .negativeText(R.string.lab_no)
+                        .onNegative(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(MaterialDialog dialog, DialogAction which) {
+                                dialog.dismiss ();
+                            }
+                        })
+                        .show();
                 break;
             default:
                 break;
