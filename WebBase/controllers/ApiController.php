@@ -75,6 +75,7 @@ class ApiController extends Controller
                 $userinfodetail=$user;
                 break;
             }
+          }
           if($userinfodetail!=null){
                 $result=array(
                     'code'=>1,
@@ -90,8 +91,9 @@ class ApiController extends Controller
                 );
           }
       }
-    }
-    echo json_encode($result);
+      echo json_encode($result);
   }
+
+
 
 }
