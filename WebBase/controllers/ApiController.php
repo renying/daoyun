@@ -57,4 +57,39 @@ class ApiController extends Controller
     echo json_encode($result);
 
   }
+  public function actionUserLogin()
+  {
+      $request = \Yii::$app->request;
+      $result=array(
+          'code'=>9999,
+          'message'=>'system error',
+          'data'=>null,
+      );
+      if ($request->isPost) {
+          $username = $request->post('ui');
+          $userModel= new User();
+          $userList = $userModel::find()->asArray()->all();
+          $userinfodetail=null;
+          foreach($userList as $user){
+            if(md5($user['UserId'])==$username){
+                $userinfodetail=$user;
+                break;
+            }
+          if($userinfodetail!=null){
+                $result=array(
+                    'code'=>1,
+                    'message'=>'true',
+                    'data'=>$userinfodetail,
+                );
+          }
+          else{
+            $result=array(
+                    'code'=>1002,
+                    'message'=>'can`t find user',
+                    'data'=>null,
+                );
+          }
+      }
+  }
+
 }
