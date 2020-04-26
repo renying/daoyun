@@ -57,7 +57,7 @@ class ApiController extends Controller
     echo json_encode($result);
 
   }
-  public function actionUserLogin()
+  public function actionGetUserinfo()
   {
       $request = \Yii::$app->request;
       $result=array(
