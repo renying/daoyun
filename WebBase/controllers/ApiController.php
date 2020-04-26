@@ -90,6 +90,7 @@ class ApiController extends Controller
                 );
           }
       }
+    }
   }
 
 }
