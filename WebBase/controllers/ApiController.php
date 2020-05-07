@@ -15,7 +15,7 @@ class ApiController extends Controller
     $request = \Yii::$app->request;
     $result=array(
         'code'=>9999,
-        'message'=>'system error',
+        'msg'=>'system error',
         'data'=>null,
     );
     if ($request->isPost) {
@@ -36,14 +36,14 @@ class ApiController extends Controller
         if($isSuccess){
             $result=array(
               'code'=>1,
-              'message'=>'true',
+              'msg'=>'true',
               'data'=>$userId,
             );
         }
         else{
             $result=array(
               'code'=>1002,
-              'message'=>'username or password is wrong',
+              'msg'=>'username or password is wrong',
               'data'=>null,
             );
         }
@@ -51,19 +51,123 @@ class ApiController extends Controller
     else{
         $result=array(
           'code'=>1001,
-          'message'=>'please post the request',
+          'msg'=>'please post the request',
           'data'=>null,
         );
     }
     echo json_encode($result);
 
   }
+  
+  public function actionUserRegister(){
+	$request = \Yii::$app->request;
+    $result=array(
+        'code'=>9999,
+        'msg'=>'system error',
+        'data'=>null,
+    );
+	$username = $request->post('u');
+    $password = md5( $request->post('p'));
+    if ($request->isPost) {
+		$model = new User();
+		
+		$maxid=$model::find()->max('UserId')+1;
+		
+		$model->UserId=$maxid;
+		$model->UserName=$username;
+		$model->PassWord=md5($password);
+		
+		$model->save();
+		$result=array(
+		  'code'=>1,
+		  'msg'=>'true',
+		  'data'=>$maxid,
+		);
+	}
+    else{
+        $result=array(
+          'code'=>1001,
+          'msg'=>'please post the request',
+          'data'=>null,
+        );
+    }
+    echo json_encode($result); 
+  }
+  
+  public function actionUserUpdateinfo(){
+	$request = \Yii::$app->request;
+    $result=array(
+        'code'=>9999,
+        'msg'=>'system error',
+        'data'=>null,
+    );
+	$username = $request->post('ui');
+    if ($request->isPost) {
+		$Usermodel = new User();
+		$userList = $Usermodel->find()->asArray()->all();
+        $userinfo=null;
+		foreach($userList as $user){
+			if(md5($user['UserId'])==$username){
+				$userinfo=$user;
+				break;
+			}
+		}
+		if($userinfo!=null){
+			$model = User::findOne($userinfo['UserId']);
+			if(!empty($request->post('NickName'))){
+				$model->NickName=$request->post('NickName');
+			}
+			if(!empty($request->post('BornDate'))){
+				$model->BornDate=$request->post('BornDate');
+			}
+			if(!empty($request->post('Address'))){
+				$model->Address=$request->post('Address');
+			}
+			if(!empty($request->post('Phone'))){
+				$model->Phone=$request->post('Phone');
+			}
+			if(!empty($request->post('UserCode'))){
+				$model->UserCode=$request->post('UserCode');
+			}
+			if(!empty($request->post('RealName'))){
+				$model->RealName=$request->post('RealName');
+			}
+			if(!empty($request->post('UserSex'))){
+				$model->UserSex=$request->post('UserSex');
+			}
+			$model->save();
+			$result=array(
+			  'code'=>1,
+			  'msg'=>'true',
+			  'data'=>$userinfo['UserId'],
+			);
+		}
+		else{
+			$result=array(
+			  'code'=>1002,
+			  'msg'=>'用户id错误：'.$username,
+			  'data'=>null
+			);
+		}
+		
+	}
+    else{
+        $result=array(
+          'code'=>1001,
+          'msg'=>'please post the request',
+          'data'=>null,
+        );
+    }
+    echo json_encode($result);  
+	  
+  }
+  
   public function actionGetUserinfo()
   {
       $request = \Yii::$app->request;
       $result=array(
           'code'=>9999,
-          'message'=>'system error',
+          'msg'=>'system error',
           'data'=>null,
       );
       if ($request->isPost) {
@@ -80,14 +184,14 @@ class ApiController extends Controller
           if($userinfodetail!=null){
                 $result=array(
                     'code'=>1,
-                    'message'=>'true',
+                    'msg'=>'true',
                     'data'=>$userinfodetail,
                 );
           }
           else{
             $result=array(
                     'code'=>1002,
-                    'message'=>'can`t find user',
+                    'msg'=>'can`t find user',
                     'data'=>null,
                 );
           }
@@ -100,7 +204,7 @@ class ApiController extends Controller
 	  $request = \Yii::$app->request;
       $result=array(
           'code'=>9999,
-          'message'=>'system error',
+          'msg'=>'system error',
           'data'=>null,
       );
       if ($request->isPost) {
@@ -126,7 +230,7 @@ class ApiController extends Controller
           
 		$result=array(
 			'code'=>1,
-			'message'=>'true',
+			'msg'=>'true',
 			'data'=>$classList,
 		);
           
