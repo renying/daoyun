@@ -3,6 +3,7 @@ namespace app\controllers;
 use Yii;
 use yii\web\Controller;
 use app\models\User;
+use app\models\ClassTable;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
@@ -90,6 +91,46 @@ class ApiController extends Controller
                     'data'=>null,
                 );
           }
+      }
+      echo json_encode($result);
+  }
+  
+  public function actionGetClassinfo()
+  {
+	  $request = \Yii::$app->request;
+      $result=array(
+          'code'=>9999,
+          'message'=>'system error',
+          'data'=>null,
+      );
+      if ($request->isPost) {
+          
+		$classModel= new ClassTable();
+		$classList = $classModel::find()->asArray()->all();
+
+		$userModel= new User();
+		$userList = $userModel::find()->asArray()->all();
+		  
+         
+		foreach($classList as &$classItem){
+		  foreach($userList as $user){
+			if($classItem['UserId']==$user['UserId']){
+				$classItem['UserName']=$user['UserName'];
+				$classItem['UserCode']=$user['UserCode'];
+				$classItem['SchoolId']=$user['SchoolId'];
+				break;
+			}
+		  }
+
+		}
+          
+		$result=array(
+			'code'=>1,
+			'message'=>'true',
+			'data'=>$classList,
+		);
+          
+          
       }
       echo json_encode($result);
   }
