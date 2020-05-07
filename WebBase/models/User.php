@@ -38,9 +38,10 @@ class User extends \yii\db\ActiveRecord
     {
         return [
             [['UserId'], 'required'],
-            [['UserId', 'CountryId', 'SchoolId', 'Phone', 'UserCode', 'UserType'], 'integer'],
+            [['UserId', 'CountryId', 'SchoolId', 'Phone', 'UserType'], 'integer'],
             [['BornDate'], 'safe'],
-            [['UserName', 'NickName', 'Address', 'RealName'], 'string', 'max' => 255],
+            [['UserName', 'NickName', 'Address', 'RealName', 'UserCode'], 'string', 'max' => 255],
+            [[ 'PassWord'], 'string', 'max' => 510],
             [['UserId'], 'unique'],
         ];
     }
