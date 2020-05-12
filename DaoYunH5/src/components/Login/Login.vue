@@ -27,6 +27,7 @@
                   class="form-control"
                   id="username"
                   placeholder="输入用户名"
+                  v-model="account"
                 />
               </div>
 
@@ -37,6 +38,7 @@
                   class="form-control"
                   id="userpassword"
                   placeholder="输入密码"
+                  v-model="password"
                 />
               </div>
 
@@ -58,7 +60,7 @@
                 <div class="col-sm-6 text-right">
                   <button
                     class="btn btn-primary w-md waves-effect waves-light"
-                    type="submit"
+                    type="submit" onclick="login()"
                   >
                     登录
                   </button>
@@ -101,7 +103,8 @@ export default {
   name: 'Login',
   data () {
     return {
-      preloader: true
+      preloader: true,
+      result: ''
     }
   },
   created () {
@@ -112,6 +115,40 @@ export default {
     // 关闭载入动画的函数
     showPreloader () {
       this.preloader = false
+    },
+    login () {
+      var t = this
+      var myDate = new Date()
+      this.$axios({
+
+        method: 'post',
+
+        url: 'api/user-login',
+
+        data: {
+
+          u: t.account,
+
+          p: t.password,
+
+          TimeStamp: myDate,
+
+          CheckCode: t.CheckCode
+
+        }
+
+      })
+        .then(function (response) {
+          console.log(response.data)
+          if (response.data === 1) {
+            t.restult = '登陆成功'
+            t.$router.push({path: '/List/List'})
+          } else if (response.data === 1001) {
+            t.result = '内部错误,请重试'
+          } else {
+            t.result = '用户名或密码错误'
+          }
+        })
     }
   }
 }
