@@ -75,7 +75,7 @@ class ApiController extends Controller
 		
 		$model->UserId=$maxid;
 		$model->UserName=$username;
-		$model->PassWord=md5($password);
+		$model->PassWord=$password;
 		
 		$model->save();
 		$result=array(
