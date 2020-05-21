@@ -370,9 +370,10 @@ api/add-classinfo
 | 参数名称  | 参数类型 | 是否必填 | 参数说明                                                     |
 | --------- | -------- | -------- | ------------------------------------------------------------ |
 | ui        | string   | Y        | 当前用户id，非int，需要上传MD5值，即标准MD5(userid)          |
-| ukey      | string   | Y        | 用户token|
+| ukey      | string   | Y        | 用户token                                                    |
 | className | string   | Y        | 课程名称                                                     |
 | classDesc | string   | Y        | 课程简介                                                     |
+| classCode | string   | Y        | 课程编号                                                     |
 | TimeStamp | string   | Y        | 时间戳，格式为：yyyyMMddHHmmss例如：20200411155201           |
 | CheckCode | string   | Y        | 校验码，格式为：标准MD5(ui +className +  TimeStamp + 平台密钥) （加号代表连接符，非数值运算） |
 
@@ -382,6 +383,41 @@ api/add-classinfo
 {
 	"code":1,
 	"message":"创建成功",//异常说明
+	"data":true
+}
+```
+
+### code说明
+
+| 值   | 说明                 |
+| ---- | -------------------- |
+| 1    | 成功                 |
+| 1001 | 接口没有使用post请求 |
+| 9999 | 系统错误             |
+
+## 十、修改密码
+
+### 接口地址：
+
+api/change-pass
+
+###  输入参数：
+
+| 参数名称  | 参数类型 | 是否必填 | 参数说明                                                     |
+| --------- | -------- | -------- | ------------------------------------------------------------ |
+| ui        | string   | Y        | 当前用户id，非int，需要上传MD5值，即标准MD5(userid)          |
+| ukey      | string   | Y        | 用户token                                                    |
+| oldpass   | string   | Y        | 旧密码                                                       |
+| newpass   | string   | Y        | 新密码                                                       |
+| TimeStamp | string   | Y        | 时间戳，格式为：yyyyMMddHHmmss例如：20200411155201           |
+| CheckCode | string   | Y        | 校验码，格式为：标准MD5(ui +className +  TimeStamp + 平台密钥) （加号代表连接符，非数值运算） |
+
+### 返回结果：
+
+```c#
+{
+	"code":1,
+	"message":"修改成功",//异常说明
 	"data":true
 }
 ```

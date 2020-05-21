@@ -290,6 +290,151 @@ class ApiController extends Controller
       echo json_encode($result);
   }
 
+  public function actionAddClassinfo()
+    {
+  	  $request = \Yii::$app->request;
+        $result=array(
+            'code'=>9999,
+            'msg'=>'system error',
+            'data'=>null,
+        );
+        if ($request->isPost) {
+            $usertoken = $request->post('ukey');
+            $tokenModel= new MostopToken();
+            $utoken=$tokenModel->find()->where(['ukey' => $usertoken])->asArray()->one();
+            if($utoken==null)
+            {
+              $result=array(
+                  'code'=>888,
+                  'msg'=>'UserKey is Wrong',
+                  'data'=>null,
+              );
+            }
+            else{
+                $result=array(
+                  'code'=>1,
+                  'msg'=>'课程创建失败',
+                  'data'=>false,
+                );
+                $username = $request->post('ui');
+                $className = $request->post('className');
+                $classDesc = $request->post('classDesc');
+                $classCode = $request->post('classCode');
+                $userModel= new User();
+                $userList = $userModel::find()->asArray()->all();
+                $userinfodetail=null;
+                foreach($userList as $user){
+                    if(md5($user['UserId'])==$username){
+                        $userinfodetail=$user;
+                        break;
+                    }
+                }
+                if($userinfodetail!=null){
+                    $classModel= new ClassTable();
+                    $classModel->UserId=$userinfodetail['UserId'];
+                    $classModel->ClassName=$className;
+                    $classModel->ClassDiscription=$classDesc;
+                    $classModel->ClassNum=$classCode;
+                    $classModel->CreateTime=date("Y-m-d H:i:s");
+                    $classModel->LastUpdateUserId=$userinfodetail['UserId'];
+                    if($classModel->save()){
+                        $result=array(
+                          'code'=>1,
+                          'msg'=>'true',
+                          'data'=>true,
+                        );
+                    }
+                    else{
+                        $result=array(
+                          'code'=>1,
+                          'msg'=>'课程创建失败,课程信息保存失败',
+                          'data'=>false,
+                        );
+                    }
+                }
+                else{
+                    $result=array(
+                      'code'=>1,
+                      'msg'=>'课程创建失败,用户信息获取失败',
+                      'data'=>false,
+                    );
+                }
+            }
+        }
+        echo json_encode($result);
+    }
+    public function actionChangePass()
+    {
+        $request = \Yii::$app->request;
+            $result=array(
+                'code'=>9999,
+                'msg'=>'system error',
+                'data'=>null,
+            );
+        	$username = $request->post('ui');
+        	$oldpass = $request->post('oldpass');
+        	$newpass = $request->post('newpass');
+            if ($request->isPost) {
+                $usertoken = $request->post('ukey');
+                $tokenModel= new MostopToken();
+                $utoken=$tokenModel->find()->where(['ukey' => $usertoken])->asArray()->one();
+                if($utoken==null)
+                {
+                  $result=array(
+                      'code'=>888,
+                      'msg'=>'UserKey is Wrong',
+                      'data'=>null,
+                  );
+                }
+                else{
+                    $Usermodel = new User();
+                    $userList = $Usermodel->find()->asArray()->all();
+                    $userinfo=null;
+                    foreach($userList as $user){
+                        if(md5($user['UserId'])==$username&&$user['PassWord']==md5($oldpass)){
+                            $userinfo=$user;
+                            break;
+                        }
+                    }
+                    if($userinfo!=null){
+                        $model = User::findOne($userinfo['UserId']);
+                        $model->PassWord=md5($newpass);
+
+                        if($model->save()){
+                            $result=array(
+                              'code'=>1,
+                              'msg'=>'修改成功',
+                              'data'=>true,
+                            );
+                        }
+                        else{
+                            $result=array(
+                              'code'=>1,
+                              'msg'=>'修改失败',
+                              'data'=>false,
+                            );
+                        }
+
+                    }
+                    else{
+                        $result=array(
+                          'code'=>1002,
+                          'msg'=>'用户id或密码错误',
+                          'data'=>null
+                        );
+                    }
+        		}
+        	}
+            else{
+                $result=array(
+                  'code'=>1001,
+                  'msg'=>'please post the request',
+                  'data'=>null,
+                );
+            }
+            echo json_encode($result);
+
+      }
 
 
 }
