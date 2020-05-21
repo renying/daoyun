@@ -3,6 +3,7 @@ namespace app\controllers;
 use Yii;
 use yii\web\Controller;
 use app\models\User;
+use app\models\MostopToken;
 use app\models\ClassTable;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -26,6 +27,7 @@ class ApiController extends Controller
         $userList = $userModel::find()->asArray()->all();
         $isSuccess=false;
         $userId='';
+        $token='';
         foreach($userList as $user){
             if($user['UserName']==$username && $user['PassWord']==$password){
                 $isSuccess=true;
@@ -33,12 +35,25 @@ class ApiController extends Controller
                 break;
             }
         }
+        $token=md5(date("Y-m-d H:i:s"));
+        $tokenModel= new MostopToken();
         if($isSuccess){
-            $result=array(
-              'code'=>1,
-              'msg'=>'true',
-              'data'=>$userId,
-            );
+            $tokenModel->deleteAll("userid=".$userId);
+            $tokenModel= new MostopToken();
+            $tokenModel->userid=$userId;
+            $tokenModel->ukey=$token;
+            $tokenModel->addtime=date("Y-m-d H:i:s");
+
+            if($tokenModel->save()){
+                $result=array(
+                  'code'=>1,
+                  'msg'=>'true',
+                  'data'=>array(
+                    'userid'=>$userId,
+                    'ukey'=>$token,
+                  ),
+                );
+            }
         }
         else{
             $result=array(
@@ -103,53 +118,65 @@ class ApiController extends Controller
     );
 	$username = $request->post('ui');
     if ($request->isPost) {
-		$Usermodel = new User();
-		$userList = $Usermodel->find()->asArray()->all();
-        $userinfo=null;
-		foreach($userList as $user){
-			if(md5($user['UserId'])==$username){
-				$userinfo=$user;
-				break;
-			}
+        $usertoken = $request->post('ukey');
+        $tokenModel= new MostopToken();
+        $utoken=$tokenModel->find()->where(['ukey' => $usertoken])->asArray()->one();
+        if($utoken==null)
+        {
+          $result=array(
+              'code'=>888,
+              'msg'=>'UserKey is Wrong',
+              'data'=>null,
+          );
+        }
+        else{
+            $Usermodel = new User();
+            $userList = $Usermodel->find()->asArray()->all();
+            $userinfo=null;
+            foreach($userList as $user){
+                if(md5($user['UserId'])==$username){
+                    $userinfo=$user;
+                    break;
+                }
+            }
+            if($userinfo!=null){
+                $model = User::findOne($userinfo['UserId']);
+                if(!empty($request->post('NickName'))){
+                    $model->NickName=$request->post('NickName');
+                }
+                if(!empty($request->post('BornDate'))){
+                    $model->BornDate=$request->post('BornDate');
+                }
+                if(!empty($request->post('Address'))){
+                    $model->Address=$request->post('Address');
+                }
+                if(!empty($request->post('Phone'))){
+                    $model->Phone=$request->post('Phone');
+                }
+                if(!empty($request->post('UserCode'))){
+                    $model->UserCode=$request->post('UserCode');
+                }
+                if(!empty($request->post('RealName'))){
+                    $model->RealName=$request->post('RealName');
+                }
+                if(!empty($request->post('UserSex'))){
+                    $model->UserSex=$request->post('UserSex');
+                }
+                $model->save();
+                $result=array(
+                  'code'=>1,
+                  'msg'=>'true',
+                  'data'=>$userinfo['UserId'],
+                );
+            }
+            else{
+                $result=array(
+                  'code'=>1002,
+                  'msg'=>'用户id错误：'.$username,
+                  'data'=>null
+                );
+            }
 		}
-		if($userinfo!=null){
-			$model = User::findOne($userinfo['UserId']);
-			if(!empty($request->post('NickName'))){
-				$model->NickName=$request->post('NickName');
-			}
-			if(!empty($request->post('BornDate'))){
-				$model->BornDate=$request->post('BornDate');
-			}
-			if(!empty($request->post('Address'))){
-				$model->Address=$request->post('Address');
-			}
-			if(!empty($request->post('Phone'))){
-				$model->Phone=$request->post('Phone');
-			}
-			if(!empty($request->post('UserCode'))){
-				$model->UserCode=$request->post('UserCode');
-			}
-			if(!empty($request->post('RealName'))){
-				$model->RealName=$request->post('RealName');
-			}
-			if(!empty($request->post('UserSex'))){
-				$model->UserSex=$request->post('UserSex');
-			}
-			$model->save();
-			$result=array(
-			  'code'=>1,
-			  'msg'=>'true',
-			  'data'=>$userinfo['UserId'],
-			);
-		}
-		else{
-			$result=array(
-			  'code'=>1002,
-			  'msg'=>'用户id错误：'.$username,
-			  'data'=>null
-			);
-		}
-		
 	}
     else{
         $result=array(
@@ -172,28 +199,41 @@ class ApiController extends Controller
       );
       if ($request->isPost) {
           $username = $request->post('ui');
-          $userModel= new User();
-          $userList = $userModel::find()->asArray()->all();
-          $userinfodetail=null;
-          foreach($userList as $user){
-            if(md5($user['UserId'])==$username){
-                $userinfodetail=$user;
-                break;
-            }
-          }
-          if($userinfodetail!=null){
-                $result=array(
-                    'code'=>1,
-                    'msg'=>'true',
-                    'data'=>$userinfodetail,
-                );
+          $usertoken = $request->post('ukey');
+          $tokenModel= new MostopToken();
+          $utoken=$tokenModel->find()->where(['ukey' => $usertoken])->asArray()->one();
+          if($utoken==null)
+          {
+              $result=array(
+                  'code'=>888,
+                  'msg'=>'UserKey is Wrong',
+                  'data'=>null,
+              );
           }
           else{
-            $result=array(
+              $userModel= new User();
+              $userList = $userModel::find()->asArray()->all();
+              $userinfodetail=null;
+              foreach($userList as $user){
+                if(md5($user['UserId'])==$username){
+                    $userinfodetail=$user;
+                    break;
+                }
+              }
+              if($userinfodetail!=null){
+                    $result=array(
+                        'code'=>1,
+                        'msg'=>'true',
+                        'data'=>$userinfodetail,
+                    );
+              }
+              else{
+                $result=array(
                     'code'=>1002,
                     'msg'=>'can`t find user',
                     'data'=>null,
                 );
+              }
           }
       }
       echo json_encode($result);
@@ -208,33 +248,44 @@ class ApiController extends Controller
           'data'=>null,
       );
       if ($request->isPost) {
-          
-		$classModel= new ClassTable();
-		$classList = $classModel::find()->asArray()->all();
+          $usertoken = $request->post('ukey');
+          $tokenModel= new MostopToken();
+          $utoken=$tokenModel->find()->where(['ukey' => $usertoken])->asArray()->one();
+          if($utoken==null)
+          {
+            $result=array(
+                'code'=>888,
+                'msg'=>'UserKey is Wrong',
+                'data'=>null,
+            );
+          }
+          else{
+            $classModel= new ClassTable();
+            $classList = $classModel::find()->asArray()->all();
 
-		$userModel= new User();
-		$userList = $userModel::find()->asArray()->all();
-		  
-         
-		foreach($classList as &$classItem){
-		  foreach($userList as $user){
-			if($classItem['UserId']==$user['UserId']){
-				$classItem['UserName']=$user['UserName'];
-				$classItem['UserCode']=$user['UserCode'];
-				$classItem['SchoolId']=$user['SchoolId'];
-				break;
-			}
-		  }
+            $userModel= new User();
+            $userList = $userModel::find()->asArray()->all();
 
-		}
+
+            foreach($classList as &$classItem){
+              foreach($userList as $user){
+                if($classItem['UserId']==$user['UserId']){
+                    $classItem['UserName']=$user['UserName'];
+                    $classItem['UserCode']=$user['UserCode'];
+                    $classItem['SchoolId']=$user['SchoolId'];
+                    break;
+                }
+              }
+
+            }
+
+            $result=array(
+                'code'=>1,
+                'msg'=>'true',
+                'data'=>$classList,
+            );
           
-		$result=array(
-			'code'=>1,
-			'msg'=>'true',
-			'data'=>$classList,
-		);
-          
-          
+          }
       }
       echo json_encode($result);
   }

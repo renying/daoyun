@@ -24,7 +24,10 @@ api/user-login
 {
 	"code":1,
 	"msg":"true",
-	"data":"1"//返回登陆的用户userid
+	"data":{
+        "userid":1,//用户id
+        "ukey":"99b183449091667a53cc4c27caaf8b6a"//token
+    }
 }
 ```
 
@@ -79,6 +82,7 @@ api/user-updateinfo
 | 参数名称  | 参数类型 | 是否必填 | 参数说明                                                     |
 | --------- | -------- | -------- | ------------------------------------------------------------ |
 | ui        | string   | Y        | 用户id，非int，需要上传MD5值，即标准MD5(userid)              |
+| ukey      | string   | Y        | 用户token|
 | NickName  | string   | N        | 昵称                                                         |
 | BornDate  | string   | N        | 生日，例：（1995-05-04）                                     |
 | Address   | string   | N        | 住址                                                         |
@@ -120,6 +124,7 @@ api/get-userinfo
 | 参数名称  | 参数类型 | 是否必填 | 参数说明                                                     |
 | --------- | -------- | -------- | ------------------------------------------------------------ |
 | ui        | string   | Y        | 用户id，非int，需要上传MD5值，即标准MD5(userid)              |
+| ukey      | string   | Y        | 用户token|
 | TimeStamp | string   | Y        | 时间戳，格式为：yyyyMMddHHmmss例如：20200411155201           |
 | CheckCode | string   | Y        | 校验码，格式为：标准MD5(ui+TimeStamp + 平台密钥) （加号代表连接符，非数值运算） |
 
@@ -163,6 +168,7 @@ api/get-classinfo
 
 | 参数名称  | 参数类型 | 是否必填 | 参数说明                                                     |
 | --------- | -------- | -------- | ------------------------------------------------------------ |
+| ukey      | string   | Y        | 用户token|
 | TimeStamp | string   | Y        | 时间戳，格式为：yyyyMMddHHmmss例如：20200411155201           |
 | CheckCode | string   | Y        | 校验码，格式为：标准MD5(TimeStamp + 平台密钥) （加号代表连接符，非数值运算） |
 
@@ -206,7 +212,8 @@ api/get-classuserlist
 | 参数名称  | 参数类型 | 是否必填 | 参数说明                                                     |
 | --------- | -------- | -------- | ------------------------------------------------------------ |
 | ui        | string   | Y        | 用户id，非int，需要上传MD5值，即标准MD5(userid)              |
-| classId   | int      | Y        | 课程编号                                                     |
+| ukey      | string   | Y        | 用户token|
+| classId   | int      | Y        | 课程编号                                                   |
 | TimeStamp | string   | Y        | 时间戳，格式为：yyyyMMddHHmmss例如：20200411155201           |
 | CheckCode | string   | Y        | 校验码，格式为：标准MD5(ui + classId + TimeStamp + 平台密钥) （加号代表连接符，非数值运算） |
 
@@ -260,6 +267,7 @@ api/get-usernoticelist
 | 参数名称  | 参数类型 | 是否必填 | 参数说明                                                     |
 | --------- | -------- | -------- | ------------------------------------------------------------ |
 | ui        | string   | Y        | 用户id，非int，需要上传MD5值，即标准MD5(userid)              |
+| ukey      | string   | Y        | 用户token|
 | TimeStamp | string   | Y        | 时间戳，格式为：yyyyMMddHHmmss例如：20200411155201           |
 | CheckCode | string   | Y        | 校验码，格式为：标准MD5(ui + TimeStamp + 平台密钥) （加号代表连接符，非数值运算） |
 
@@ -309,6 +317,7 @@ api/get-noticeinfolist
 | 参数名称   | 参数类型 | 是否必填 | 参数说明                                                     |
 | ---------- | -------- | -------- | ------------------------------------------------------------ |
 | FromUserId | string   | Y        | 发送消息的用户id，非int，需要上传MD5值，即标准MD5(userid)    |
+| ukey      | string   | Y        | 用户token|
 | ToUserId   | string   | Y        | 接受消息的用户id，非int，需要上传MD5值，即标准MD5(userid)    |
 | TimeStamp  | string   | Y        | 时间戳，格式为：yyyyMMddHHmmss例如：20200411155201           |
 | CheckCode  | string   | Y        | 校验码，格式为：标准MD5(ui + TimeStamp + 平台密钥) （加号代表连接符，非数值运算） |
@@ -361,6 +370,7 @@ api/add-classinfo
 | 参数名称  | 参数类型 | 是否必填 | 参数说明                                                     |
 | --------- | -------- | -------- | ------------------------------------------------------------ |
 | ui        | string   | Y        | 当前用户id，非int，需要上传MD5值，即标准MD5(userid)          |
+| ukey      | string   | Y        | 用户token|
 | className | string   | Y        | 课程名称                                                     |
 | classDesc | string   | Y        | 课程简介                                                     |
 | TimeStamp | string   | Y        | 时间戳，格式为：yyyyMMddHHmmss例如：20200411155201           |
