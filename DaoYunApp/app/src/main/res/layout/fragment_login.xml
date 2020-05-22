@@ -56,23 +56,23 @@
                 app:srcCompat="@drawable/ic_phone" />
 
             <com.xuexiang.xui.widget.edittext.materialedittext.MaterialEditText
-                android:id="@+id/et_phone_number"
+                android:id="@+id/et_account"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="36dp"
-                android:hint="@string/tip_please_input_phone_number"
-                android:inputType="number"
-                app:met_clearButton="true"
-                app:met_errorMessage="@string/tip_phone_number_error"
-                app:met_floatingLabel="normal"
-                app:met_floatingLabelText="@string/title_phone_number"
-                app:met_regexp="@string/regex_phone_number" />
+                android:hint="@string/tip_please_input_account"
+                android:inputType="text"
+                app:met_clearButton="true"/>
+<!--                app:met_errorMessage="@string/tip_phone_number_error"-->
+<!--                app:met_floatingLabel="normal"-->
+<!--                app:met_floatingLabelText="@string/title_phone_number"-->
+<!--                app:met_regexp="@string/regex_phone_number" />-->
 
         </FrameLayout>
 
 
         <FrameLayout
-            android:id="@+id/fl_verify_code"
+            android:id="@+id/fl_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
@@ -86,35 +86,35 @@
                 app:srcCompat="@drawable/ic_password" />
 
             <com.xuexiang.xui.widget.edittext.materialedittext.MaterialEditText
-                android:id="@+id/et_verify_code"
+                android:id="@+id/et_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="36dp"
-                android:hint="@string/hint_please_input_verify_code"
-                android:inputType="number"
+                android:hint="@string/hint_please_input_password"
+                android:inputType="textPassword"
                 app:met_clearButton="false"
-                app:met_errorMessage="@string/tip_verify_code_error"
-                app:met_floatingLabel="normal"
-                app:met_floatingLabelText="@string/lab_verify_code"
-                app:met_maxCharacters="4"
-                app:met_regexp="@string/regex_verify_code" />
+                app:met_errorMessage="@string/tip_verify_password_error"
+                app:met_floatingLabel="normal"/>
+<!--                app:met_floatingLabelText="@string/lab_verify_code"-->
+<!--                app:met_maxCharacters="16"-->
+<!--                app:met_regexp="@string/regex_verify_code" />-->
 
-            <com.xuexiang.xui.widget.button.roundbutton.RoundButton
-                android:id="@+id/btn_get_verify_code"
-                style="@style/RoundButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:paddingStart="10dp"
-                android:paddingTop="3dp"
-                android:paddingEnd="10dp"
-                android:paddingBottom="3dp"
-                android:text="@string/action_get_verify_code"
-                android:textColor="@color/selector_round_button_main_theme_color"
-                android:textSize="13sp"
-                app:rb_borderColor="@color/selector_round_button_main_theme_color"
-                app:rb_borderWidth="1.5dp"
-                app:rb_radius="15dp" />
+<!--            <com.xuexiang.xui.widget.button.roundbutton.RoundButton-->
+<!--                android:id="@+id/btn_get_verify_code"-->
+<!--                style="@style/RoundButton"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_gravity="end"-->
+<!--                android:paddingStart="10dp"-->
+<!--                android:paddingTop="3dp"-->
+<!--                android:paddingEnd="10dp"-->
+<!--                android:paddingBottom="3dp"-->
+<!--                android:text="@string/action_get_verify_code"-->
+<!--                android:textColor="@color/selector_round_button_main_theme_color"-->
+<!--                android:textSize="13sp"-->
+<!--                app:rb_borderColor="@color/selector_round_button_main_theme_color"-->
+<!--                app:rb_borderWidth="1.5dp"-->
+<!--                app:rb_radius="15dp" />-->
 
         </FrameLayout>
 
@@ -124,13 +124,13 @@
             android:layout_height="wrap_content">
 
             <com.xuexiang.xui.widget.alpha.XUIAlphaTextView
-                android:id="@+id/tv_other_login"
+                android:id="@+id/tv_register"
                 style="@style/TextStyle.Explain"
                 android:paddingStart="10dp"
                 android:paddingTop="5dp"
                 android:paddingEnd="10dp"
                 android:paddingBottom="5dp"
-                android:text="@string/other_login_methods"
+                android:text="@string/to_register"
                 android:textColor="@color/xui_config_color_primary_text" />
 
             <com.xuexiang.xui.widget.alpha.XUIAlphaTextView
@@ -152,7 +152,7 @@
         android:id="@+id/btn_login"
         style="@style/SuperButton.Primary.Login"
         android:layout_marginTop="16dp"
-        android:text="@string/title_login_register" />
+        android:text="@string/title_login" />
 
     <FrameLayout
         android:layout_width="match_parent"

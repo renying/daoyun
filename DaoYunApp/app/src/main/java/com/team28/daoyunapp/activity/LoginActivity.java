@@ -12,8 +12,6 @@ import com.xuexiang.xutil.display.Colors;
 /**
  * 登录页面
  *
- * @author xuexiang
- * @since 2019-11-17 22:21
  */
 public class LoginActivity extends BaseActivity {
 
