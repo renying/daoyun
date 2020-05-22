@@ -11,8 +11,13 @@ import '@/assets/css/bootstrap.min.css'
 import ElementUI from 'element-ui'
 import '../node_modules/element-ui/lib/theme-chalk/index.css'
 import axios from 'axios'
+import Resource from 'vue-resource'
 
-axios.defaults.baseURL = 'http://localhost:8081/'
+// axios.defaults.baseURL = 'http://47.94.234.206/'
+axios.defaults.baseURL = '/api'
+
+Vue.use(Resource)
+
 Vue.prototype.$axios = axios
 
 Vue.use(ElementUI)

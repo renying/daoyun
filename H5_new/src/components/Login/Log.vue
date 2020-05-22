@@ -1,8 +1,5 @@
 <template>
   <div>
-    <div id="preloader" v-show="preloader">
-      <div id="status"><div class="spinner"></div></div>
-    </div>
 
     <!-- Begin page -->
     <div class="accountbg"></div>
@@ -41,7 +38,9 @@
                   v-model="password"
                 />
               </div>
-
+              <div>
+                <label v-show = isShow>用户名或密码不正确</label>
+              </div>
               <div class="form-group row m-t-20">
                 <div class="col-sm-6">
                   <div class="custom-control custom-checkbox">
@@ -59,8 +58,8 @@
                 </div>
                 <div class="col-sm-6 text-right">
                   <button
-                    class="btn btn-primary w-md waves-effect waves-light"
-                    type="submit" onclick="login()"
+                    class="btn btn-primary w-md waves-effect waves-light" type="button"
+                    @click="login()"
                   >
                     登录
                   </button>
@@ -69,7 +68,7 @@
 
               <div class="form-group m-t-10 mb-0 row">
                 <div class="col-12 m-t-20">
-                  <router-link to = "Recoverpw" replace><i class="mdi mdi-lock    "></i>忘记密码？</router-link>
+                  <router-link to = "Recoverpw" replace><i class="mdi mdi-lock"></i>忘记密码？</router-link>
                   <!-- <a href="pages-recoverpw.html" class="text-muted"
                     ><i class="mdi mdi-lock    "></i>忘记密码？</a
                   > -->
@@ -103,7 +102,9 @@ export default {
   name: 'Log',
   data () {
     return {
-      radio: '1',
+      isShow: false,
+      // username: '',
+      // userpassword: '',
       account: '',
       password: '',
       restult: ''
@@ -114,52 +115,49 @@ export default {
     setTimeout(this.showPreloader, 2000)
   },
   methods: {
-    getAccount () {
-      this.$axios.get('/Employee/getEmployee?Employee_id=1')
-        .then(function (response) {
-          console.log(response.data)
-        })
-        .catch(function (error) {
-          console.log(error)
-        })
-    },
+    // getAccount () {
+    //   this.$axios.get('/Employee/getEmployee?Employee_id=1')
+    //     .then(function (response) {
+    //       console.log(response.data)
+    //     })
+    //     .catch(function (error) {
+    //       console.log(error)
+    //     })
+    // },
     login () {
       var t = this
       var myDate = new Date()
-      this.$axios({
-        method: 'post',
-        url: '/api/user-login',
-        data: {
-          account: t.account,
-          password: t.password,
-          TimeStamp: myDate,
-          CheckCode: t.CheckCode
+      // 这个代码检查真严格
+      /**
+       * 你就这样写
+       * post就是 $axios.post('xx/xx', ........)
+       * get就是 $axios.get('xxxx/xxx', xxxxxx)
+       */
+      var qs = require('qs')
+      this.$axios.post('/api/user-login', qs.stringify({
+        u: t.account,
+        p: t.password,
+        TimeStamp: myDate
+      }), {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
         }
       })
         .then(function (response) {
           console.log(response.data)
-          if (response.data === 1) {
-            if (t.radio === 1) {
-              t.restult = '登陆成功'
-              t.$router.push({path: '/Cure/input'})
-            } else if (t.radio === 2) {
-              t.restult = '登陆成功'
-              t.$router.push({path: '/HospitalManager'})
-            } else {
-              t.result = '未选择管理员登录或医生登录'
-            }
-          } else if (response.data === 0) {
+          if (response.data.code === 1) {
+            t.restult = '登录成功'
+            t.$router.push({path: 'Homepage'})// 可是他还是没有跳转
+          } else if (response.data.code === 1002) { // 他返回的打他是null
             t.restult = '账户或密码错误'
-          } else if (response.data === -1) {
-            t.restult = '内部错误'
+            t.isShow = true
+          } else if (response.data.code === 1001) {
+            t.restult = '请求错误'
           }
         })
         .catch(function (error) {
           console.log(error)
         })
-    },
-    goPLogin () {
-      this.$router.push({path: '/PLogin'})
     }
   },
   mounted () {
