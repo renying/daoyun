@@ -80,4 +80,9 @@
         <item>@color/app_color_theme_8</item>
     </array>
 
+
+    <string-array name="sex_option">
+        <item>男</item>
+        <item>女</item>
+    </string-array>
 </resources>

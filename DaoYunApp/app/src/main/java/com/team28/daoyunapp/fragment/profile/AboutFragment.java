@@ -15,7 +15,7 @@
  *
  */
 
-package com.team28.daoyunapp.fragment.trending;
+package com.team28.daoyunapp.fragment.profile;
 
 import android.widget.TextView;
 

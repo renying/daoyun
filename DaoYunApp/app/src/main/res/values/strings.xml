@@ -90,5 +90,6 @@
     <string name="tv_oldPwd">旧密码:</string>
     <string name="tv_newPwd">新密码:</string>
     <string name="tv_confirmNewPwd">确认密码:</string>
+    <string name="et_enterAddress">请输入地址</string>
 
 </resources>
