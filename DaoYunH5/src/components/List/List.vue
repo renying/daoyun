@@ -38,7 +38,7 @@
                     <th>操作</th>
                   </tr>
                 </thead>
-                <!-- <tbody>
+                <tbody>
                   <tr>
                     <td class="product-list-img">
                       <img
@@ -858,9 +858,8 @@
                         ><i class="mdi mdi-close font-18"></i
                       ></a>
                     </td>
-                  </tr>！
-                </tbody> -->
-                <router-view></router-view>
+                  </tr>
+                </tbody>
               </table>
             </div>
           </div>
