@@ -22,7 +22,7 @@ android {
 
         javaCompileOptions {
             annotationProcessorOptions {
-                arguments = [ moduleName : project.getName() ]
+                arguments = [moduleName: project.getName()]
             }
         }
     }
@@ -88,6 +88,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation deps.junit
     androidTestImplementation deps.runner
     androidTestImplementation deps.espresso.core
@@ -112,7 +113,8 @@ dependencies {
 
     //ANR异常捕获
     implementation 'com.github.anrwatchdog:anrwatchdog:1.4.0'
-
+    //日志打印
+    implementation 'com.orhanobut:logger:2.2.0'
 
     //美团多渠道打包
     implementation 'com.meituan.android.walle:library:1.1.6'
@@ -121,5 +123,3 @@ dependencies {
 apply from: 'x-library.gradle'
 //walle多渠道打包
 apply from: 'multiple-channel.gradle'
-
-

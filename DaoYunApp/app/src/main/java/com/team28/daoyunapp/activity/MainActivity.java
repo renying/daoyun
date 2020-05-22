@@ -1,5 +1,6 @@
 package com.team28.daoyunapp.activity;
 
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -16,16 +17,18 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+import com.orhanobut.logger.Logger;
 import com.team28.daoyunapp.core.BaseActivity;
 import com.team28.daoyunapp.core.BaseFragment;
-import com.team28.daoyunapp.fragment.AboutFragment;
-import com.team28.daoyunapp.fragment.news.NewsFragment;
+import com.team28.daoyunapp.fragment.trending.AboutFragment;
+import com.team28.daoyunapp.fragment.news.ClassesFragment;
 import com.team28.daoyunapp.fragment.profile.ProfileFragment;
-import com.team28.daoyunapp.fragment.trending.TrendingFragment;
+import com.team28.daoyunapp.fragment.profile.TrendingFragment;
+import com.team28.daoyunapp.utils.ActivityCollectorUtil;
 import com.team28.daoyunapp.utils.Utils;
 import com.team28.daoyunapp.utils.XToastUtils;
 import com.team28.daoyunapp.R;
-import com.team28.daoyunapp.fragment.SettingsFragment;
+import com.team28.daoyunapp.fragment.profile.SettingsFragment;
 import com.xuexiang.xaop.annotation.SingleClick;
 import com.xuexiang.xui.adapter.FragmentAdapter;
 import com.xuexiang.xui.utils.ResUtils;
@@ -34,6 +37,7 @@ import com.xuexiang.xui.widget.imageview.RadiusImageView;
 import com.xuexiang.xutil.XUtil;
 import com.xuexiang.xutil.common.ClickUtils;
 import com.xuexiang.xutil.common.CollectionUtils;
+import com.xuexiang.xutil.data.SPUtils;
 import com.xuexiang.xutil.display.Colors;
 
 import butterknife.BindView;
@@ -61,6 +65,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @BindView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
 
+    SharedPreferences spf;
+
     private String[] mTitles;
 
     @Override
@@ -72,9 +78,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        initViews();
 
+        ActivityCollectorUtil.addActivity (this);
+        spf = SPUtils.getSharedPreferences ("user_info");
+        initViews();
         initListeners();
+        Logger.d (spf.getAll ());
     }
 
     @Override
@@ -92,7 +101,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
         //主页内容填充
         BaseFragment[] fragments = new BaseFragment[]{
-                new NewsFragment (),
+                new ClassesFragment (),
                 new TrendingFragment (),
                 new ProfileFragment ()
         };
@@ -122,10 +131,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 ivAvatar.setImageTintList(ResUtils.getColors(R.color.xui_config_color_gray_3));
             }
         }
+        // 初始化数据
 
-        // TODO: 2019-10-09 初始化数据
         ivAvatar.setImageResource(R.drawable.ic_default_head);
-        tvAvatar.setText(R.string.app_name);
+
+        tvAvatar.setText(spf.getString ("NickName",""));
+
         tvSign.setText("这个家伙很懒，什么也没有留下～～");
         navHeader.setOnClickListener(this);
     }
@@ -168,6 +179,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
      * @return
      */
     private boolean handleNavigationItemSelected(@NonNull MenuItem menuItem) {
+        View headerView = navView.getHeaderView(0);
+        TextView tvAvatar = headerView.findViewById(R.id.tv_avatar);
+        tvAvatar.setText(spf.getString ("NickName",""));
+
         int index = CollectionUtils.arrayIndexOf(mTitles, menuItem.getTitle());
         if (index != -1) {
             toolbar.setTitle(menuItem.getTitle());
@@ -232,6 +247,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
      */
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+
+
+
         int index = CollectionUtils.arrayIndexOf(mTitles, menuItem.getTitle());
         if (index != -1) {
             toolbar.setTitle(menuItem.getTitle());
