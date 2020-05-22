@@ -16,22 +16,23 @@
 
                             <div class="form-group">
                                 <label for="account">账号</label>
-                                <input type="text" class="form-control" id="account" placeholder="输入账号">
+                                <input type="text" class="form-control" id="account" placeholder="输入账号" v-model="account" disabled>
                             </div>
 
                             <div class="form-group">
                                 <label for="oldpassword">旧密码</label>
-                                <input type="password" class="form-control" id="oldpassword" placeholder="输入旧密码">
+                                <input type="password" class="form-control" id="oldpassword" placeholder="输入旧密码" v-model="oldpassword">
                             </div>
 
                             <div class="form-group">
                                 <label for="newpassword">新密码</label>
-                                <input type="password" class="form-control" id="newpassword" placeholder="输入新密码">
+                                <input type="password" class="form-control" id="newpassword" placeholder="输入新密码" v-model="newpassword">
                             </div>
 
                             <div class="form-group row m-t-20">
                                 <div class="col-12 text-right">
-                                    <button class="btn btn-primary w-md waves-effect waves-light" type="submit">确认修改</button>
+                                    <button class="btn btn-primary w-md waves-effect waves-light" type="button"
+                    @click="updatecode()">确认修改</button>
                                 </div>
                             </div>
                         </form>
@@ -53,7 +54,10 @@ export default {
   name: 'RecoverPassword',
   data () {
     return {
-      preloader: true
+      preloader: true,
+      account: localStorage.getItem('account'),
+      oldpassword: '',
+      newpassword: ''
     }
   },
   created () {
@@ -64,6 +68,36 @@ export default {
     // 关闭载入动画的函数
     showPreloader () {
       this.preloader = false
+    },
+    updatecode () {
+      var t = this
+      var myDate = new Date()
+      var qs = require('qs')
+      this.$axios.post('api/change-pass', qs.stringify({
+        ui: localStorage.getItem('userid'),
+        ukey: localStorage.getItem('ukey'),
+        oldpass: t.oldpassword,
+        newpass: t.newpassword,
+        TimeStamp: myDate
+      }), {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      })
+        .then(function (response) {
+          console.log(response.data)
+          if (response.data.code === 1) {
+            t.restult = '修改成功'
+          } else if (response.data.code === 9999) {
+            t.restult = '系统错误'
+            t.isShow = true
+          } else if (response.data.code === 1001) {
+            t.restult = '请求错误'
+          }
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
     }
   }
 }

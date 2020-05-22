@@ -98,7 +98,16 @@
 </template>
 
 <script>
+import {mapGetters} from 'vuex'
 export default {
+  computed: {
+    count () {
+      return this.$store.state.ukey
+    },
+    ...mapGetters([
+      'getToken'
+    ])
+  },
   name: 'Log',
   data () {
     return {
@@ -147,8 +156,13 @@ export default {
           console.log(response.data)
           if (response.data.code === 1) {
             t.restult = '登录成功'
-            t.$router.push({path: 'Homepage'})// 可是他还是没有跳转
-          } else if (response.data.code === 1002) { // 他返回的打他是null
+            // this.$store.commit('setToken', JSON.stringify(response.data.data.ukey))
+            // this.$store.commit('setAccount', JSON.stringify(response.data.data.ui))
+            localStorage.setItem('ukey', JSON.stringify(response.data.data.ukey))
+            localStorage.setItem('userid', JSON.stringify(t.$md5(response.data.data.userid)))
+            localStorage.setItem('account', JSON.stringify(t.account))
+            t.$router.push({path: 'Homepage'})
+          } else if (response.data.code === 1002) {
             t.restult = '账户或密码错误'
             t.isShow = true
           } else if (response.data.code === 1001) {
