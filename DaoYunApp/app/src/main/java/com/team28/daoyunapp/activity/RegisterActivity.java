@@ -3,22 +3,22 @@ package com.team28.daoyunapp.activity;
 import android.os.Bundle;
 import android.view.KeyEvent;
 
+import com.team28.daoyunapp.core.BaseActivity;
+import com.team28.daoyunapp.fragment.RegisterFragment;
 import com.xuexiang.xui.utils.KeyboardUtils;
 import com.xuexiang.xui.utils.StatusBarUtils;
-import com.team28.daoyunapp.core.BaseActivity;
-import com.team28.daoyunapp.fragment.LoginFragment;
 import com.xuexiang.xutil.display.Colors;
 
 /**
- * 登录页面
+ * 注册页面
  *
  */
-public class LoginActivity extends BaseActivity {
+public class RegisterActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        openPage(LoginFragment.class, getIntent().getExtras());
+        openPage(RegisterFragment.class, getIntent().getExtras());
     }
 
     @Override

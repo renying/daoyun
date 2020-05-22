@@ -81,7 +81,7 @@
                     android:maxLines="2"
                     android:singleLine="false"
                     android:textColor="?attr/xui_config_color_content_text"
-                    tools:text="从rocketmq topic的创建机制可知，一个topic对应有多个消息队列，那么我们在发送消息时，是如何选择消息队列进行发送的？" />
+                    tools:text="从rocketmq topic的创建机制可知，一个topic对应有多个消息队列，那么我们在发送消息时？" />
 
                 <FrameLayout
                         android:layout_width="match_parent"

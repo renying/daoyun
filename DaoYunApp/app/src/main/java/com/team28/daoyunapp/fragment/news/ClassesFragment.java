@@ -1,57 +1,49 @@
-/*
- * Copyright (C) 2020 xuexiangjys(xuexiangjys@163.com)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- */
-
 package com.team28.daoyunapp.fragment.news;
+
+import android.view.Gravity;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 import com.alibaba.android.vlayout.DelegateAdapter;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
-import com.alibaba.android.vlayout.layout.GridLayoutHelper;
 import com.alibaba.android.vlayout.layout.LinearLayoutHelper;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.team28.daoyunapp.adapter.entity.NewInfo;
 import com.team28.daoyunapp.R;
 import com.team28.daoyunapp.adapter.base.delegate.SimpleDelegateAdapter;
-import com.team28.daoyunapp.adapter.base.delegate.SingleDelegateAdapter;
 import com.team28.daoyunapp.core.BaseFragment;
 import com.team28.daoyunapp.utils.DemoDataProvider;
 import com.team28.daoyunapp.utils.Utils;
-import com.team28.daoyunapp.utils.XToastUtils;
+import com.team28.daoyunapp.widget.ContentPage;
 import com.xuexiang.xpage.annotation.Page;
 import com.xuexiang.xpage.enums.CoreAnim;
 import com.xuexiang.xui.adapter.recyclerview.RecyclerViewHolder;
-import com.xuexiang.xui.adapter.simple.AdapterItem;
 import com.xuexiang.xui.widget.actionbar.TitleBar;
-import com.xuexiang.xui.widget.banner.widget.banner.SimpleImageBanner;
-import com.xuexiang.xui.widget.imageview.ImageLoader;
-import com.xuexiang.xui.widget.imageview.RadiusImageView;
+import com.xuexiang.xui.widget.tabbar.EasyIndicator;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 
 /**
- * 首页动态
- *
- * @author xuexiang
- * @since 2019-10-30 00:15
+ * 班课
  */
 @Page(anim = CoreAnim.none)
-public class NewsFragment extends BaseFragment {
+public class ClassesFragment extends BaseFragment {
+
+    @BindView(R.id.easy_indicator)
+    EasyIndicator mEasyIndicator;
+    @BindView(R.id.news_view_pager)
+    ViewPager mViewPager;
+
+    private Map<ContentPage, View> mPageMap = new HashMap<> ();
 
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
@@ -59,6 +51,45 @@ public class NewsFragment extends BaseFragment {
     SmartRefreshLayout refreshLayout;
 
     private SimpleDelegateAdapter<NewInfo> mNewsAdapter;
+
+    private View getPageView(ContentPage page) {
+        View view = mPageMap.get(page);
+        if (view == null) {
+            TextView textView = new TextView(getContext());
+            textView.setTextAppearance(getContext(), R.style.TextStyle_Content_Match);
+            textView.setGravity(Gravity.CENTER);
+            textView.setText(String.format("这个是%s页面的内容", page.name()));
+            view = textView;
+            mPageMap.put(page, view);
+        }
+        return view;
+    }
+    private PagerAdapter mPagerAdapter = new PagerAdapter() {
+        @Override
+        public boolean isViewFromObject(View view, Object object) {
+            return view == object;
+        }
+
+        @Override
+        public int getCount() {
+            return ContentPage.size();
+        }
+
+
+        @Override
+        public Object instantiateItem( final ViewGroup container, int position) {
+            ContentPage page = ContentPage.getPage(position);
+            View view = getPageView(page);
+            ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            container.addView(view, params);
+            return view;
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            container.removeView((View) object);
+        }
+    };
 
     /**
      * @return 返回为 null意为不需要导航栏
@@ -71,11 +102,11 @@ public class NewsFragment extends BaseFragment {
     /**
      * 布局的资源id
      *
-     * @return
+     * @return 布局
      */
     @Override
     protected int getLayoutId() {
-        return R.layout.fragment_news;
+        return R.layout.fragment_classes;
     }
 
     /**
@@ -83,21 +114,16 @@ public class NewsFragment extends BaseFragment {
      */
     @Override
     protected void initViews() {
+        mEasyIndicator.setTabTitles(ContentPage.getPageNames());
+        mEasyIndicator.setViewPager(mViewPager, mPagerAdapter);
+        mViewPager.setOffscreenPageLimit(ContentPage.size() - 1);
+        mViewPager.setCurrentItem(1);
+
         VirtualLayoutManager virtualLayoutManager = new VirtualLayoutManager(getContext());
         recyclerView.setLayoutManager(virtualLayoutManager);
         RecyclerView.RecycledViewPool viewPool = new RecyclerView.RecycledViewPool();
         recyclerView.setRecycledViewPool(viewPool);
         viewPool.setMaxRecycledViews(0, 10);
-
-        //资讯的标题
-        SingleDelegateAdapter titleAdapter = new SingleDelegateAdapter(R.layout.adapter_title_item) {
-            @Override
-            public void onBindViewHolder(@NonNull RecyclerViewHolder holder, int position) {
-                holder.text(R.id.tv_title, "资讯");
-                holder.text(R.id.tv_action, "更多");
-                holder.click(R.id.tv_action, v -> XToastUtils.toast("更多"));
-            }
-        };
 
         //资讯
         mNewsAdapter = new SimpleDelegateAdapter<NewInfo>(R.layout.adapter_news_card_view_list_item, new LinearLayoutHelper()) {
@@ -117,7 +143,6 @@ public class NewsFragment extends BaseFragment {
         };
 
         DelegateAdapter delegateAdapter = new DelegateAdapter(virtualLayoutManager);
-        delegateAdapter.addAdapter(titleAdapter);
         delegateAdapter.addAdapter(mNewsAdapter);
 
         recyclerView.setAdapter(delegateAdapter);

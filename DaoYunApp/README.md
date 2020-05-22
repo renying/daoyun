@@ -5,9 +5,9 @@ Android工程，快速搭建（集成了XUI、XUtil、XAOP、XPage、XUpdate、X
 
 ## 效果
 
-暂无
+![你演示效果裂了](https://images.cnblogs.com/cnblogs_com/SoShun/1749957/o_2004241325011587732536913.gif)
 
-## 集成介绍（请star支持）
+## 集成介绍
 
 > 本项目是项目androidx项目。精选了X系列最实用的几个库，可大大提高开发的效率。
 
