@@ -35,6 +35,7 @@ import com.xuexiang.xui.utils.ResUtils;
 import com.xuexiang.xui.widget.actionbar.TitleBar;
 import com.xuexiang.xui.widget.edittext.materialedittext.MaterialEditText;
 import com.xuexiang.xutil.app.ActivityUtils;
+import com.xuexiang.xutil.data.SPUtils;
 import com.xuexiang.xutil.tip.ToastUtils;
 
 import java.util.Objects;
@@ -61,7 +62,7 @@ public class RegisterFragment extends BaseFragment {
 
     private CountDownButtonHelper mCountDownHelper;
 
-    SharedPreferences spf = getContext ().getSharedPreferences ("user_info", Context.MODE_PRIVATE);
+    SharedPreferences spf;
 
     @Override
     protected TitleBar initTitle () {
@@ -80,6 +81,8 @@ public class RegisterFragment extends BaseFragment {
 
     @Override
     protected void initViews () {
+        spf = SPUtils.getSharedPreferences ("user_info");
+
         //隐私政策弹窗
         SettingSPUtils spUtils = SettingSPUtils.getInstance ();
         if (! spUtils.isAgreePrivacy ()) {
@@ -125,8 +128,6 @@ public class RegisterFragment extends BaseFragment {
 
     private void registerByPassword ( String account, String password ) {
 
-        Logger.d("account = "+account+"\npassword = "+password);
-
         XHttp.post (Api.REGISTER)
                 .params ("u", account)
                 .params ("p", password)
@@ -134,13 +135,9 @@ public class RegisterFragment extends BaseFragment {
                     @Override
                     public void onSuccess ( String response ) throws Throwable {
                         Logger.d(response);
-                        SharedPreferences.Editor editor = spf.edit ();
-                        editor.putString ("ui",response);
-                        editor.apply ();
-                        if (TokenUtils.handleLoginSuccess (account)) {
-                            popToBack ();
-                            ActivityUtils.startActivity (MainActivity.class);
-                        }
+
+                        popToBack ();
+                        openNewPage (LoginFragment.class);
                     }
 
                     @Override

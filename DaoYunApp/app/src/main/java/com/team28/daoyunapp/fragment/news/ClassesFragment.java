@@ -56,7 +56,7 @@ public class ClassesFragment extends BaseFragment {
         View view = mPageMap.get(page);
         if (view == null) {
             TextView textView = new TextView(getContext());
-            textView.setTextAppearance(getContext(), R.style.TextStyle_Content_Match);
+//            textView.setTextAppearance(getContext(), R.style.TextStyle_Content_Match);
             textView.setGravity(Gravity.CENTER);
             textView.setText(String.format("这个是%s页面的内容", page.name()));
             view = textView;

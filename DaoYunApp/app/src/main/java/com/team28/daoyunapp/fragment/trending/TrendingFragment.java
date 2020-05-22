@@ -1,4 +1,4 @@
-package com.team28.daoyunapp.fragment.profile;
+package com.team28.daoyunapp.fragment.trending;
 
 import com.team28.daoyunapp.R;
 import com.team28.daoyunapp.core.BaseFragment;
