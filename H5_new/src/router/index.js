@@ -7,17 +7,18 @@ import Myjoin from '@/components/Manager/Class/Myjoin'
 import Drug from '@/components/Manager/Drug/Drug'
 import Patient from '@/components/Manager/Patient/Patient'
 import PLogin from '@/components/Login/PLogin'
-import Visitor from '@/components/Visitor'
-import Initial from '@/components/Visitor/Initial'
-import Setting from '@/components/Visitor/Setting'
-import Queue from '@/components/Visitor/Queue'
-import Doctor from '@/components/Visitor/Doctor'
-import Pifu from '@/components/Visitor/Pifu'
-import Ear from '@/components/Visitor/Ear'
-import Child from '@/components/Visitor/Child'
+import User from '@/components/User/User'
+import UserInfo from '@/components/User/UserInfo'
+import Queue from '@/components/uSER/Queue'
+import Doctor from '@/components/uSER/Doctor'
+import Pifu from '@/components/uSER/Pifu'
+import Ear from '@/components/uSER/Ear'
+import Child from '@/components/uSER/Child'
 import Cure from '@/components/Cure/Cure'
 import Input from '@/components/Cure/Input'
 import Advice from '@/components/Cure/Advice'
+import RecoverPassword from '@/components/User/RecoverPassword'
+
 Vue.use(Router)
 
 export default new Router({
@@ -34,19 +35,19 @@ export default new Router({
       component: PLogin
     },
     {
-      path: '/Visitor',
-      name: 'Visitor',
-      component: Visitor,
+      path: '/User',
+      name: 'User',
+      component: User,
       children: [
         {
-          path: '/Visitor/Initial',
-          name: 'Initial',
-          component: Initial
+          path: '/User/UserInfo',
+          name: 'UserInfo',
+          component: UserInfo
         },
         {
-          path: '/Visitor/Setting',
-          name: 'Setting',
-          component: Setting
+          path: '/User/RecoverPassword',
+          name: 'RecoverPassword',
+          component: RecoverPassword
         },
         {
           path: '/Visitor/Queue',
