@@ -17,6 +17,7 @@ import Child from '@/components/Visitor/Child'
 import Cure from '@/components/Cure/Cure'
 import Input from '@/components/Cure/Input'
 import Advice from '@/components/Cure/Advice'
+import RecoverPassword from '@/components/RecoverPassword/RecoverPassword'
 Vue.use(Router)
 
 export default new Router({
@@ -31,6 +32,11 @@ export default new Router({
       path: '/PLogin',
       name: 'PLogin',
       component: PLogin
+    },
+    {
+      path: '/RecoverPassword',
+      name: 'RecoverPassword',
+      component: RecoverPassword
     },
     {
       path: '/Visitor',
