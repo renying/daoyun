@@ -12,6 +12,7 @@ import ElementUI from 'element-ui'
 import '../node_modules/element-ui/lib/theme-chalk/index.css'
 import axios from 'axios'
 import Resource from 'vue-resource'
+import md5 from 'js-md5'
 
 // axios.defaults.baseURL = 'http://47.94.234.206/'
 axios.defaults.baseURL = '/api'
@@ -19,6 +20,7 @@ axios.defaults.baseURL = '/api'
 Vue.use(Resource)
 
 Vue.prototype.$axios = axios
+Vue.prototype.$md5 = md5
 
 Vue.use(ElementUI)
 
@@ -30,5 +32,11 @@ new Vue({
   router,
   axios,
   components: { App },
-  template: '<App/>'
+  template: '<App/>',
+  data () {
+    return {
+      // ukey: null,
+      // ui: ''
+    }
+  }
 })

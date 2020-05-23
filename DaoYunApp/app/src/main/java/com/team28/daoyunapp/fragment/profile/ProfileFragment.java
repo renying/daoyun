@@ -2,12 +2,10 @@ package com.team28.daoyunapp.fragment.profile;
 
 import com.team28.daoyunapp.R;
 import com.team28.daoyunapp.core.BaseFragment;
-import com.team28.daoyunapp.fragment.trending.AboutFragment;
 import com.xuexiang.xaop.annotation.SingleClick;
 import com.xuexiang.xpage.annotation.Page;
 import com.xuexiang.xpage.enums.CoreAnim;
 import com.xuexiang.xui.widget.actionbar.TitleBar;
-import com.xuexiang.xui.widget.imageview.RadiusImageView;
 import com.xuexiang.xui.widget.textview.supertextview.SuperTextView;
 
 import butterknife.BindView;

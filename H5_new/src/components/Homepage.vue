@@ -5,6 +5,10 @@
         <el-menu-item index="2">我创建的</el-menu-item>
     </el-menu>
     <div style="height: 30px; witdh: 100%"></div>
+    <button class="btn btn-primary w-md waves-effect waves-light" type="button"
+                    @click="exit()">
+                    注销
+                    </button>
     <router-view/>
   </div>
 </template>
@@ -26,6 +30,13 @@ export default {
         this.$router.push({path: '/Homepage/Myjoin'})
       }
       console.log(val, valkey)
+    },
+    exit () {
+      console.log('注销')
+      localStorage.removeItem('ukey')
+      localStorage.removeItem('account')
+      localStorage.removeItem('userid')
+      this.$router.push({path: '/'})
     }
   },
   mounted () {

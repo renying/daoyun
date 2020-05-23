@@ -27,20 +27,59 @@
 
         </com.xuexiang.xui.widget.textview.supertextview.SuperTextView>
 
+
+        <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+                android:id="@+id/tv_info_username"
+                android:layout_width="match_parent"
+                android:layout_marginTop="20dp"
+                android:layout_height="50dp"
+                app:sLeftTextString="用户名" />
+
         <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
                 android:id="@+id/tv_info_realname"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_marginTop="20dp"
-                app:sRightTextString="右中"
+                app:sCenterViewGravity="right_center"
+                app:sEditTextHint="请输入真实姓名"
                 app:sEnableEdit="true"
-                app:sEditTextHint="请输入真实姓名"/>
+                app:sLeftTextString="真实姓名" />
+
+        <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+                android:id="@+id/tv_info_nickname"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                app:sCenterViewGravity="left_center"
+                app:sEditTextHint="请输入昵称"
+                app:sEnableEdit="true"
+                app:sLeftTextString="昵称" />
 
         <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
                 android:id="@+id/tv_info_bornDate"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                app:sEnableEdit="true"/>
+                android:layout_marginTop="10dp"
+                app:sCenterViewGravity="right_center"
+                app:sCenterViewMarginLeft="10dp"
+                app:sLeftTextString="出生日期" />
+
+        <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+                android:id="@+id/tv_info_sex"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                app:sCenterViewGravity="right_center"
+                app:sCenterViewMarginLeft="10dp"
+                app:sLeftTextString="性别" />
+
+        <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+                android:id="@+id/tv_info_address"
+                android:layout_width="match_parent"
+                android:layout_marginTop="10dp"
+                android:layout_height="50dp"
+                app:sCenterViewGravity="left_center"
+                app:sEditTextHint="请输入地址"
+                app:sEnableEdit="true"
+                app:sLeftTextString="居住地址" />
+
 
     </LinearLayout>
 
