@@ -21,4 +21,17 @@ public class Api {
     public static String CREATECLASS = BASE_URL +"api/get-api/add-createclass";
     //修改密码
     public static String CHANGEPASSWORD = BASE_URL +"api/change-pass";
+
+    public static String param_ui = "ui";
+    public static String param_ukey = "ukey";
+    public static String param_nickName = "NickName";
+    public static String param_bornDate = "BornDate";
+    public static String param_address = "Address";
+    public static String param_phone = "Phone";
+    public static String param_userCode = "UserCode";
+    public static String param_realName = "RealName";
+    public static String param_userSex = "UserSex";
+
+
+
 }

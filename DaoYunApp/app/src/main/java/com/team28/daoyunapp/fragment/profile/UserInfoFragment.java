@@ -9,8 +9,15 @@ import com.orhanobut.logger.Logger;
 import com.team28.daoyunapp.R;
 import com.team28.daoyunapp.activity.LoginActivity;
 import com.team28.daoyunapp.core.BaseFragment;
+import com.team28.daoyunapp.core.http.Api;
+import com.team28.daoyunapp.core.http.CustomApiResult;
+import com.team28.daoyunapp.core.http.callback.TipCallBack;
+import com.team28.daoyunapp.utils.TokenUtils;
 import com.team28.daoyunapp.utils.XToastUtils;
 import com.xuexiang.xaop.annotation.SingleClick;
+import com.xuexiang.xhttp2.XHttp;
+import com.xuexiang.xhttp2.callback.CallBackProxy;
+import com.xuexiang.xhttp2.exception.ApiException;
 import com.xuexiang.xpage.annotation.Page;
 import com.xuexiang.xui.utils.ResUtils;
 import com.xuexiang.xui.utils.Utils;
@@ -23,6 +30,7 @@ import com.xuexiang.xui.widget.picker.widget.listener.OnTimeSelectChangeListener
 import com.xuexiang.xui.widget.picker.widget.listener.OnTimeSelectListener;
 import com.xuexiang.xui.widget.textview.supertextview.SuperTextView;
 import com.xuexiang.xutil.app.ActivityUtils;
+import com.xuexiang.xutil.app.FragmentUtils;
 import com.xuexiang.xutil.common.StringUtils;
 import com.xuexiang.xutil.data.DateUtils;
 import com.xuexiang.xutil.data.SPUtils;
@@ -43,9 +51,7 @@ import butterknife.OnClick;
 @Page(name = "个人信息")
 public class UserInfoFragment extends BaseFragment {
 
-    private TimePickerView mDatePicker;
-
-    SharedPreferences spf;
+    private SharedPreferences spf;
 
     @BindView(R.id.tv_info_username)
     SuperTextView userName;
@@ -85,7 +91,7 @@ public class UserInfoFragment extends BaseFragment {
     }
 
     @SingleClick
-    @OnClick({R.id.tv_info_bornDate, R.id.tv_info_sex})
+    @OnClick({R.id.tv_info_bornDate, R.id.tv_info_sex, R.id.btn_update_userInfo})
     public void onViewClicked ( View view ) {
         switch ((view.getId ())) {
             case R.id.tv_info_bornDate:
@@ -94,14 +100,16 @@ public class UserInfoFragment extends BaseFragment {
             case R.id.tv_info_sex:
                 showSexPickerView ();
                 break;
+            case R.id.btn_update_userInfo:
+                updateUserInfo ();
             default:
                 break;
         }
     }
 
     private void showDatePicker () {
-        mDatePicker = new TimePickerBuilder (getContext (), ( date, v ) -> bornDate.setCenterString (DateUtils.date2String (date, DateUtils.yyyyMMdd.get ())))
-                .setTimeSelectChangeListener (date -> Logger.d ("pvTime", "onTimeSelectChanged"))
+        TimePickerView mDatePicker = new TimePickerBuilder (getContext (), ( date, v ) -> bornDate.setCenterString (DateUtils.date2String (date, DateUtils.yyyyMMdd.get ())))
+                .setTimeSelectChangeListener (date -> Logger.d ("TimeSelecting"))
                 .setTitleText ("日期选择")
                 .build ();
         mDatePicker.show ();
@@ -124,5 +132,34 @@ public class UserInfoFragment extends BaseFragment {
                 .build();
         pvOptions.setPicker(mSexOption);
         pvOptions.show();
+    }
+
+    private void updateUserInfo(){
+        XHttp.post (Api.UPDATEINFO)
+                .params (Api.param_ui,spf.getString (Api.param_ui,""))
+                .params (Api.param_ukey, TokenUtils.getToken ())
+                .params (Api.param_nickName,nickName.getCenterEditValue ())
+                .params (Api.param_bornDate,bornDate.getCenterEditValue ())
+                .params (Api.param_realName,realName.getCenterEditValue ())
+                .params (Api.param_address,address.getCenterEditValue ())
+                .params (Api.param_userSex,userSex.getCenterEditValue ())
+                .execute (new CallBackProxy<CustomApiResult<String>,String> (new TipCallBack<String> () {
+                    @Override
+                    public void onSuccess ( String response ) throws Throwable {
+                        SPUtils.putString (spf, Api.param_nickName, nickName.getCenterEditValue ());
+                        SPUtils.putString (spf, Api.param_bornDate,bornDate.getCenterEditValue ());
+                        SPUtils.putString (spf, Api.param_realName,realName.getCenterEditValue ());
+                        SPUtils.putString (spf, Api.param_address,address.getCenterEditValue ());
+                        SPUtils.putString (spf, Api.param_userSex,userSex.getCenterEditValue ());
+                        XToastUtils.success ("修改成功");
+                        popToBack ();
+                    }
+
+                    @Override
+                    public void onError ( ApiException e ) {
+                        Logger.d(e);
+                        super.onError (e);
+                    }
+                }){});
     }
 }

@@ -81,6 +81,7 @@
     <string name="str_and">和</string>
     <string name="str_privacy_protocol">隐私政策</string>
     <string name="str_login_or_registration">登陆/注册代表您已阅读并同意</string>
+    <string name="str_app_logo">Logo</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -91,5 +92,6 @@
     <string name="tv_newPwd">新密码:</string>
     <string name="tv_confirmNewPwd">确认密码:</string>
     <string name="et_enterAddress">请输入地址</string>
+    <string name="update_user_info">修改资料</string>
 
 </resources>

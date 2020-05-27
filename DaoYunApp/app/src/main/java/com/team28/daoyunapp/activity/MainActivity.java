@@ -15,6 +15,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager.widget.ViewPager;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.orhanobut.logger.Logger;
@@ -39,6 +41,7 @@ import com.xuexiang.xutil.common.ClickUtils;
 import com.xuexiang.xutil.common.CollectionUtils;
 import com.xuexiang.xutil.data.SPUtils;
 import com.xuexiang.xutil.display.Colors;
+import com.xuexiang.xutil.net.JSONUtils;
 
 import butterknife.BindView;
 
@@ -78,12 +81,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         ActivityCollectorUtil.addActivity (this);
         spf = SPUtils.getSharedPreferences ("user_info");
         initViews();
         initListeners();
-        Logger.d (spf.getAll ());
+        Logger.json (JSON.toJSONString (spf.getAll ()));
     }
 
     @Override
@@ -242,8 +244,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     /**
      * 底部导航栏点击事件
      *
-     * @param menuItem
-     * @return
+     * @param menuItem 菜单组件
+     * @return Boolean
      */
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -264,7 +266,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     /**
      * 更新侧边栏菜单选中状态
      *
-     * @param menuItem
+     * @param menuItem 菜单组件
      */
     private void updateSideNavStatus(MenuItem menuItem) {
         MenuItem side = navView.getMenu().findItem(menuItem.getItemId());

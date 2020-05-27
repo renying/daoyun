@@ -1,5 +1,9 @@
 package com.team28.daoyunapp.fragment.profile;
 
+import android.content.SharedPreferences;
+
+import com.alibaba.fastjson.JSON;
+import com.orhanobut.logger.Logger;
 import com.team28.daoyunapp.core.BaseFragment;
 import com.team28.daoyunapp.utils.ActivityCollectorUtil;
 import com.team28.daoyunapp.utils.TokenUtils;
@@ -10,6 +14,7 @@ import com.xuexiang.xpage.annotation.Page;
 import com.xuexiang.xui.widget.dialog.materialdialog.DialogAction;
 import com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog;
 import com.xuexiang.xui.widget.textview.supertextview.SuperTextView;
+import com.xuexiang.xutil.data.SPUtils;
 
 import java.util.Objects;
 
@@ -29,6 +34,8 @@ public class SettingsFragment extends BaseFragment implements SuperTextView.OnSu
     @BindView(R.id.menu_logout)
     SuperTextView menuLogout;
 
+    private SharedPreferences spf;
+
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_settings;
@@ -41,6 +48,8 @@ public class SettingsFragment extends BaseFragment implements SuperTextView.OnSu
         menuChangePwd.setOnSuperTextViewClickListener(this);
         menuHelper.setOnSuperTextViewClickListener(this);
         menuLogout.setOnSuperTextViewClickListener(this);
+
+        spf = SPUtils.getSharedPreferences ("user_info");
     }
 
     @SingleClick
@@ -48,12 +57,16 @@ public class SettingsFragment extends BaseFragment implements SuperTextView.OnSu
     public void onClick(SuperTextView superTextView) {
         switch(superTextView.getId()) {
             case R.id.menu_common:
-            case R.id.menu_privacy:
-            case R.id.menu_accountSafety:
-                openNewPage (ChangePwdFragment.class);
-                break;
             case R.id.menu_helper:
                 XToastUtils.toast(superTextView.getLeftString());
+                Logger.json (JSON.toJSONString (spf.getAll ()));
+                Logger.d (TokenUtils.getToken ());
+                break;
+            case R.id.menu_privacy:
+                XToastUtils.toast(superTextView.getLeftString());
+                break;
+            case R.id.menu_accountSafety:
+                openNewPage (ChangePwdFragment.class);
                 break;
             case R.id.menu_logout:
                 new MaterialDialog.Builder(getContext())

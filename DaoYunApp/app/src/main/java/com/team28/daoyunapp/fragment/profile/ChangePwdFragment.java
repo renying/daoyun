@@ -6,6 +6,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import com.orhanobut.logger.Logger;
 import com.team28.daoyunapp.R;
 import com.team28.daoyunapp.core.BaseFragment;
@@ -13,6 +15,7 @@ import com.team28.daoyunapp.core.http.Api;
 import com.team28.daoyunapp.core.http.CustomApiResult;
 import com.team28.daoyunapp.core.http.callback.TipCallBack;
 import com.team28.daoyunapp.utils.TokenUtils;
+import com.team28.daoyunapp.utils.XToastUtils;
 import com.xuexiang.xaop.annotation.SingleClick;
 import com.xuexiang.xhttp2.XHttp;
 import com.xuexiang.xhttp2.callback.CallBackProxy;
@@ -23,6 +26,8 @@ import com.xuexiang.xui.utils.ResUtils;
 import com.xuexiang.xui.widget.actionbar.TitleBar;
 import com.xuexiang.xui.widget.edittext.PasswordEditText;
 import com.xuexiang.xui.widget.edittext.materialedittext.MaterialEditText;
+import com.xuexiang.xui.widget.edittext.materialedittext.validation.METValidator;
+import com.xuexiang.xui.widget.edittext.materialedittext.validation.RegexpValidator;
 import com.xuexiang.xutil.data.SPUtils;
 import com.xuexiang.xutil.tip.ToastUtils;
 
@@ -39,13 +44,13 @@ import butterknife.OnClick;
 public class ChangePwdFragment extends BaseFragment {
 
     @BindView(R.id.et_old_password)
-    PasswordEditText etOldPassword;
+    MaterialEditText etOldPassword;
     @BindView(R.id.et_new_password)
-    PasswordEditText etNewPassword;
+    MaterialEditText etNewPassword;
     @BindView(R.id.et_confirm_new_password)
-    PasswordEditText etConfirmPassword;
+    MaterialEditText etConfirmPassword;
 
-    SharedPreferences spf;
+    private SharedPreferences spf;
 
     private CountDownButtonHelper mCountDownHelper;
 
@@ -57,6 +62,15 @@ public class ChangePwdFragment extends BaseFragment {
     @Override
     protected void initViews () {
         spf = SPUtils.getSharedPreferences ("user_info");
+        etConfirmPassword.validateWith (new METValidator ("两次输入密码必须保持一致") {
+            @Override
+            public boolean isValid ( @NonNull CharSequence text, boolean isEmpty ) {
+                if (! isEmpty) {
+                    return etNewPassword.getEditValue ().equals (etConfirmPassword.getEditValue ());
+                }
+                return false;
+            }
+        });
     }
 
     @SingleClick
@@ -64,45 +78,33 @@ public class ChangePwdFragment extends BaseFragment {
     public void onViewClicked ( View view ) {
         switch (view.getId ()) {
             case R.id.btn_change_password:
-//                if (etOldPassword.validate ()) {
-//                    if (etNewPassword.validate ()) {
-//                        if (etConfirmPassword.validate ()) {
-//                            if (etNewPassword.getEditValue ().equals (etConfirmPassword.getEditValue ())) {
-//                                changePassword (etOldPassword.getEditValue (), etNewPassword.getEditValue ());
-//                            } else {
-//                                ToastUtils.toast ("新密码与确认密码不一致");
-//                            }
-//                        }
-//                    }
-//                }
+                changePassword (etOldPassword.getEditValue (),etNewPassword.getEditValue ());
                 break;
             default:
                 break;
         }
     }
-
-    private void changePassword(String oldPwd, String newPwd){
-        XHttp.post (Api.LOGIN)
-                .params ("ui", spf.getString ("ui",""))
+    private void changePassword ( String oldPwd, String newPwd ) {
+        XHttp.post (Api.CHANGEPASSWORD)
+                .params ("ui", spf.getString ("ui", ""))
                 .params ("ukey", TokenUtils.getToken ())
-                .params ("oldpass",oldPwd)
-                .params ("newpass",newPwd)
+                .params ("oldpass", oldPwd)
+                .params ("newpass", newPwd)
                 .execute (new CallBackProxy<CustomApiResult<Boolean>, Boolean> (new TipCallBack<Boolean> () {
                     @Override
                     public void onSuccess ( Boolean response ) throws Throwable {
                         Logger.d (response);
-                        ToastUtils.toast ("修改成功");
+                        XToastUtils.toast ("修改成功");
                     }
-
                     @Override
                     public void onError ( ApiException e ) {
+                        Logger.d(e);
                         super.onError (e);
                     }
 
                 }) {
                 });
     }
-
 
     @Override
     public void onDestroyView () {

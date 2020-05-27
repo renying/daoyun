@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -102,7 +103,8 @@ public class RegisterFragment extends BaseFragment {
                     if (etPassword.validate ()) {
                         if (etPassword.getEditValue ().equals (etPasswordConfirm.getEditValue ()))
                             registerByPassword (etAccount.getEditValue (), etPassword.getEditValue ());
-                        else{
+                        else {
+                            Logger.d (etAccount.getEditValue () + "\n" + etPassword.getEditValue ());
                             XToastUtils.error ("两次密码不一样");
                         }
                     }
@@ -134,14 +136,15 @@ public class RegisterFragment extends BaseFragment {
                 .execute (new CallBackProxy<CustomApiResult<String>, String> (new TipCallBack<String> () {
                     @Override
                     public void onSuccess ( String response ) throws Throwable {
-                        Logger.d(response);
-
+                        Logger.d (response);
+                        XToastUtils.success ("注册成功");
                         popToBack ();
                         openNewPage (LoginFragment.class);
                     }
 
                     @Override
                     public void onError ( ApiException e ) {
+                        Logger.d (e);
                         super.onError (e);
                     }
                 }) {

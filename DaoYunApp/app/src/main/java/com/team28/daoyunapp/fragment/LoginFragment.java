@@ -30,6 +30,7 @@ import com.team28.daoyunapp.utils.SettingSPUtils;
 import com.team28.daoyunapp.utils.TokenUtils;
 import com.team28.daoyunapp.utils.XToastUtils;
 import com.xuexiang.xutil.app.ActivityUtils;
+import com.xuexiang.xutil.data.SPUtils;
 import com.xuexiang.xutil.tip.ToastUtils;
 
 import butterknife.BindView;
@@ -147,9 +148,10 @@ public class LoginFragment extends BaseFragment {
                     @Override
                     public void onSuccess ( JSONObject response ) {
                         Logger.json (response.toJSONString ());
-                        getUserInfo (response.getString ("userid"),response.getString ("ukey"));
+                        String ukey = response.getString ("ukey");
+                        getUserInfo (response.getString ("userid"),ukey);
 
-                        if (TokenUtils.handleLoginSuccess (response.getString ("ukey"))) {
+                        if (TokenUtils.handleLoginSuccess (ukey)) {
 
                             popToBack ();
                             ActivityUtils.startActivity (MainActivity.class);
@@ -189,7 +191,7 @@ public class LoginFragment extends BaseFragment {
                         editor.putString ("Phone",response.getString ("Phone"));
 
                         if(!editor.commit ()){
-                            ToastUtils.toast ("用户信息加载失败");
+                            XToastUtils.error ("用户信息加载失败");
                         }
 
                     }

@@ -13,64 +13,86 @@
             android:layout_marginEnd="16dp"
             android:orientation="vertical">
 
-        <com.xuexiang.xui.widget.textview.label.LabelTextView
+        <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/tv_oldPwd"
-                android:textColor="#333333"
-                android:textSize="14sp"/>
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-        <com.xuexiang.xui.widget.edittext.PasswordEditText
-                android:id="@+id/et_old_password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/enter_old_pwd"
-                android:inputType="textPassword"
-                android:textAlignment="viewStart"
-                app:pet_enableIconAlpha="true"
-                app:pet_hoverShowsPw="true"
-                app:pet_iconHide="@drawable/pwd_hide"
-                app:pet_iconShow="@drawable/pwd_show"/>
+            <com.xuexiang.xui.widget.textview.label.LabelTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/tv_oldPwd"
+                    android:textColor="#333333"
+                    android:textSize="14sp" />
 
-        <com.xuexiang.xui.widget.textview.label.LabelTextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/tv_newPwd"
-                android:textColor="#333333"
-                android:textSize="14sp" />
+            <com.xuexiang.xui.widget.edittext.materialedittext.MaterialEditText
+                    android:id="@+id/et_old_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/enter_old_pwd"
+                    android:inputType="textPassword"
+                    app:met_passWordButton="true"
+                    app:met_allowEmpty="false"
+                    app:met_clearButton="true"/>
+        </LinearLayout>
 
-        <com.xuexiang.xui.widget.edittext.PasswordEditText
-                android:id="@+id/et_new_password"
+        <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/enter_new_pwd"
-                android:inputType="textPassword"
-                app:met_clearButton="false"
-                app:pet_enableIconAlpha="true"
-                app:pet_hoverShowsPw="true"
-                app:pet_iconHide="@drawable/pwd_hide"
-                app:pet_iconShow="@drawable/pwd_show"/>
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-        <com.xuexiang.xui.widget.textview.label.LabelTextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/tv_confirmNewPwd"
-                android:textColor="#333333"
-                android:textSize="14sp" />
+            <com.xuexiang.xui.widget.textview.label.LabelTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/tv_newPwd"
+                    android:textColor="#333333"
+                    android:textSize="14sp" />
 
-        <com.xuexiang.xui.widget.edittext.PasswordEditText
-                android:id="@+id/et_confirm_new_password"
+            <com.xuexiang.xui.widget.edittext.materialedittext.MaterialEditText
+                    android:id="@+id/et_new_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/enter_new_pwd"
+                    android:inputType="textPassword"
+                    app:met_passWordButton="true"
+                    app:met_autoValidate="true"
+                    app:met_minCharacters="1"
+                    app:met_maxCharacters="16"
+                    app:met_allowEmpty="false"
+                    app:met_validateOnFocusLost="true"
+                    app:met_clearButton="true"/>
+
+        </LinearLayout>
+
+        <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                android:hint="@string/confirm_new_pwd"
-                app:pet_enableIconAlpha="true"
-                app:pet_hoverShowsPw="true"
-                app:pet_iconHide="@drawable/pwd_hide"
-                app:pet_iconShow="@drawable/pwd_show"/>
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+            <com.xuexiang.xui.widget.textview.label.LabelTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/tv_confirmNewPwd"
+                    android:textColor="#333333"
+                    android:textSize="14sp" />
+
+            <com.xuexiang.xui.widget.edittext.materialedittext.MaterialEditText
+                    android:id="@+id/et_confirm_new_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/confirm_new_pwd"
+                    android:inputType="textPassword"
+                    app:met_minCharacters="1"
+                    app:met_maxCharacters="16"
+                    app:met_autoValidate="true"
+                    app:met_passWordButton="true"
+                    app:met_allowEmpty="false"
+                    app:met_validateOnFocusLost="true"
+                    app:met_clearButton="true"/>
+        </LinearLayout>
 
         <com.xuexiang.xui.widget.textview.supertextview.SuperButton
                 android:id="@+id/btn_change_password"
