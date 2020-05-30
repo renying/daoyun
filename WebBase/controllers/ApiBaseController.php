@@ -64,7 +64,7 @@ class ApiBaseController extends Controller
                   'msg'=>'UserKey is outdate',
                   'data'=>'beforeAction',
                 );
-                $tokenModel->deleteAll("ukey=".$usertoken);
+                $tokenModel->deleteAll("ukey='".$usertoken."'");
               }
               if($result==null){
                 return true;
