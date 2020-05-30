@@ -8,6 +8,9 @@ use app\models\ClassTable;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
+
+date_default_timezone_set("Asia/Shanghai");
+
 class ApiController extends ApiBaseController
 {
   
