@@ -5,6 +5,8 @@ use yii\web\Controller;
 use app\models\User;
 use app\models\MostopToken;
 use app\models\ClassTable;
+use app\models\StdClass;
+use app\models\CheckIn;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
@@ -320,7 +322,64 @@ class ApiController extends ApiBaseController
 
   public function actionGetClassuserlist(){
     $request = \Yii::$app->request;
-    $usertoken = $request->post('ukey');
+    $userid = $request->post('ui');
+    $classid = $request->post('classid');
+
+    $classModel= new ClassTable();
+    $classInfo = $classModel::find()->where(['ClassId' => $classid])->asArray()->one();
+    $res=array();
+
+    $realId=0;
+
+    if($classInfo!=null){
+      $userModel= new User();
+      $userList = $userModel::find()->asArray()->all();
+      $stdModel = new StdClass();
+      $stdList=$stdModel::find()->where(['ClassId' => $classid])->asArray()->all();
+      if($stdList!=null){
+        $res['UserCount']=count($stdList);
+        $resUserList=array();
+        foreach($stdList as $classItem){
+          foreach($userList as $user){
+            $resuserinfo=array();
+            if(md5($user['UserId'])==$userid){
+              $realId=$user['UserId'];
+            }
+            if($classItem['UserId']==$user['UserId']){
+              $resuserinfo['UserId']=$user['UserId'];
+              $resuserinfo['UserName']=$user['UserName'];
+              $resuserinfo['UserCode']=$user['UserCode'];
+              $resUserList[]=$resuserinfo;
+              break;
+            }
+          }
+        }
+        $res['UserList']=$resUserList;
+
+        $CheckinModel = new CheckIn();
+        $chklist= $CheckinModel::find()->where(['UserId' => $realId])->asArray()->all();
+        $res['CheckCount']=count($chklist);
+      }
+      else{
+        $res['UserCount']=0;
+        $res['UserList']=null;
+      }
+      $res['ClassName']=$classInfo['ClassName'];
+
+      $result=array(
+        'code'=>1,
+        'msg'=>'true',
+        'data'=>$res,
+      );
+
+    }
+    else{
+      $result=array(
+        'code'=>1001,
+        'msg'=>'不存在此课程信息',
+        'data'=>false,
+      );
+    }
     echo json_encode($result);
   }
 }
