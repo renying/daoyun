@@ -474,5 +474,61 @@ class ApiController extends ApiBaseController
     }
     echo json_encode($result);
   }
+  /*
+  * 十二、加入班课接口
+  */
+  public function actionChooseClass(){
+    $request = \Yii::$app->request;
+    $result=array();
+    $username = $request->post('ui');
+    $classId = $request->post('classId');
+    $userModel= new User();
+    $userList = $userModel::find()->asArray()->all();
+    $userinfodetail=null;
+    foreach($userList as $user){
+      if(md5($user['UserId'])==$username){
+        $userinfodetail=$user;
+        break;
+      }
+    }
+    if($userinfodetail!=null){
+      $stdModel = new StdClass();
+      $stdList=$stdModel::find()->where(['UserId' => $userinfodetail['UserId'],'ClassId' => $classId])->asArray()->all();
+      if($stdList!=null){
+        $result=array(
+          'code'=>1002,
+          'msg'=>'已加入当前课程，无需再次加入',
+          'data'=>false,
+        );
+      }
+      else{
+        $stdModel->UserId=$userinfodetail['UserId'];
+        $stdModel->ClassId=$classId;
+        if($stdModel->save()){
+         
+          $result=array(
+            'code'=>1,
+            'msg'=>'加入成功',
+            'data'=>true,
+          );
+        }
+        else{
+          $result=array(
+            'code'=>1003,
+            'msg'=>'加入课程异常',
+            'data'=>false,
+          );
+        }
+      }
+    }
+    else{
+      $result=array(
+        'code'=>1002,
+        'msg'=>'can`t find this user',
+        'data'=>null,
+      );
+    }
+    echo json_encode($result);
+  }
 
 }
