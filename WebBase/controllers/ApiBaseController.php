@@ -31,6 +31,7 @@ class ApiBaseController extends Controller
     {
         $request = \Yii::$app->request;
         if ($request->isPost) {
+            $result=null;
             if(!parent::beforeAction($action))
             {
               $result=array(
