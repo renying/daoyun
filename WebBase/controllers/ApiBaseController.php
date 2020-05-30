@@ -59,7 +59,7 @@ class ApiBaseController extends Controller
                   'data'=>'beforeAction',
                 );
               }
-              else if(strtotime($utoken['addtime'])<date('Y-m-d H:i:s', strtotime('-1hour')))
+              else if(strtotime($utoken['addtime'])<strtotime(date('Y-m-d H:i:s', strtotime('-1hour'))))
               {
                 $result=array(
                   'code'=>889,

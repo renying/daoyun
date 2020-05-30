@@ -24,7 +24,7 @@ class ApiController extends ApiBaseController
     return parent::beforeAction($action);  
   }
   /*
-  * 用户登陆接口
+  * 一、登陆校验接口
   */
   public function actionUserLogin()
   {
@@ -76,7 +76,9 @@ class ApiController extends ApiBaseController
     echo json_encode($result);
 
   }
-  
+  /*
+  * 二、用户注册接口 
+  */
   public function actionUserRegister()
   {
     $request = \Yii::$app->request;
@@ -100,6 +102,9 @@ class ApiController extends ApiBaseController
 
     echo json_encode($result);
   }
+  /*
+  * 三、用户信息修改接口 
+  */
   public function actionUserUpdateinfo(){
   	$request = \Yii::$app->request;
     
@@ -153,7 +158,9 @@ class ApiController extends ApiBaseController
     }
     echo json_encode($result);
   }
-
+  /*
+  * 四、用户信息获取接口 
+  */
   public function actionGetUserinfo()
   {
     $request = \Yii::$app->request;
@@ -186,7 +193,9 @@ class ApiController extends ApiBaseController
 
     echo json_encode($result);
   }
-
+  /*
+  * 五、班课信息获取接口
+  */
   public function actionGetClassinfo()
   {
      $request = \Yii::$app->request;
@@ -216,110 +225,9 @@ class ApiController extends ApiBaseController
       );
       echo json_encode($result);
   }
-
-  public function actionAddClassinfo()
-  {
-    $request = \Yii::$app->request;
-
-    $result=array(
-      'code'=>1,
-      'msg'=>'课程创建失败',
-      'data'=>false,
-    );
-    $username = $request->post('ui');
-    $className = $request->post('className');
-    $classDesc = $request->post('classDesc');
-    $classCode = $request->post('classCode');
-    $userModel= new User();
-    $userList = $userModel::find()->asArray()->all();
-    $userinfodetail=null;
-    foreach($userList as $user){
-      if(md5($user['UserId'])==$username){
-        $userinfodetail=$user;
-        break;
-      }
-    }
-    if($userinfodetail!=null){
-      $classModel= new ClassTable();
-      $classModel->UserId=$userinfodetail['UserId'];
-      $classModel->ClassName=$className;
-      $classModel->ClassDiscription=$classDesc;
-      $classModel->ClassNum=$classCode;
-      $classModel->CreateTime=date("Y-m-d H:i:s");
-      $classModel->LastUpdateUserId=$userinfodetail['UserId'];
-      if($classModel->save()){
-        $result=array(
-          'code'=>1,
-          'msg'=>'true',
-          'data'=>true,
-        );
-      }
-      else{
-        $result=array(
-          'code'=>1,
-          'msg'=>'课程创建失败,课程信息保存失败',
-          'data'=>false,
-        );
-      }
-    }
-    else{
-      $result=array(
-        'code'=>1,
-        'msg'=>'课程创建失败,用户信息获取失败',
-        'data'=>false,
-      );
-    }
-
-
-    echo json_encode($result);
-  }
-
-  public function actionChangePass()
-  {
-    $request = \Yii::$app->request;
-    
-    $username = $request->post('ui');
-    $oldpass = $request->post('oldpass');
-    $newpass = $request->post('newpass');
-    
-    $Usermodel = new User();
-    $userList = $Usermodel->find()->asArray()->all();
-    $userinfo=null;
-    foreach($userList as $user){
-      if(md5($user['UserId'])==$username&&$user['PassWord']==md5($oldpass)){
-        $userinfo=$user;
-        break;
-      }
-    }
-    if($userinfo!=null){
-      $model = User::findOne($userinfo['UserId']);
-      $model->PassWord=md5($newpass);
-      if($model->save()){
-        $result=array(
-          'code'=>1,
-          'msg'=>'修改成功',
-          'data'=>true,
-        );
-      }
-      else{
-        $result=array(
-          'code'=>1,
-          'msg'=>'修改失败',
-          'data'=>false,
-        );
-      }
-    }
-    else{
-      $result=array(
-        'code'=>1002,
-        'msg'=>'用户id或密码错误',
-        'data'=>null
-      );
-    }
-    echo json_encode($result);
-
-  }
-
+    /*
+  * 六、班课成员信息获取接口 
+  */
   public function actionGetClassuserlist(){
     $request = \Yii::$app->request;
     $userid = $request->post('ui');
@@ -382,4 +290,189 @@ class ApiController extends ApiBaseController
     }
     echo json_encode($result);
   }
+  /*
+  * 九、创建班课接口 
+  */
+  public function actionAddClassinfo()
+  {
+    $request = \Yii::$app->request;
+
+    $result=array(
+      'code'=>1,
+      'msg'=>'课程创建失败',
+      'data'=>false,
+    );
+    $username = $request->post('ui');
+    $className = $request->post('className');
+    $classDesc = $request->post('classDesc');
+    $classCode = $request->post('classCode');
+    $userModel= new User();
+    $userList = $userModel::find()->asArray()->all();
+    $userinfodetail=null;
+    foreach($userList as $user){
+      if(md5($user['UserId'])==$username){
+        $userinfodetail=$user;
+        break;
+      }
+    }
+    if($userinfodetail!=null){
+      $classModel= new ClassTable();
+      $classModel->UserId=$userinfodetail['UserId'];
+      $classModel->ClassName=$className;
+      $classModel->ClassDiscription=$classDesc;
+      $classModel->ClassNum=$classCode;
+      $classModel->CreateTime=date("Y-m-d H:i:s");
+      $classModel->LastUpdateUserId=$userinfodetail['UserId'];
+      if($classModel->save()){
+        $result=array(
+          'code'=>1,
+          'msg'=>'true',
+          'data'=>true,
+        );
+      }
+      else{
+        $result=array(
+          'code'=>1001,
+          'msg'=>'课程创建失败,课程信息保存失败',
+          'data'=>false,
+        );
+      }
+    }
+    else{
+      $result=array(
+        'code'=>1002,
+        'msg'=>'课程创建失败,用户信息获取失败',
+        'data'=>false,
+      );
+    }
+
+
+    echo json_encode($result);
+  }
+  /*
+  * 十、修改密码接口 
+  */
+  public function actionChangePass()
+  {
+    $request = \Yii::$app->request;
+    
+    $username = $request->post('ui');
+    $oldpass = $request->post('oldpass');
+    $newpass = $request->post('newpass');
+    
+    $Usermodel = new User();
+    $userList = $Usermodel->find()->asArray()->all();
+    $userinfo=null;
+    foreach($userList as $user){
+      if(md5($user['UserId'])==$username&&$user['PassWord']==md5($oldpass)){
+        $userinfo=$user;
+        break;
+      }
+    }
+    if($userinfo!=null){
+      $model = User::findOne($userinfo['UserId']);
+      $model->PassWord=md5($newpass);
+      if($model->save()){
+        $result=array(
+          'code'=>1,
+          'msg'=>'修改成功',
+          'data'=>true,
+        );
+      }
+      else{
+        $result=array(
+          'code'=>1,
+          'msg'=>'修改失败',
+          'data'=>false,
+        );
+      }
+    }
+    else{
+      $result=array(
+        'code'=>1002,
+        'msg'=>'用户id或密码错误',
+        'data'=>null
+      );
+    }
+    echo json_encode($result);
+  }
+  /*
+  * 十一、课堂签到接口
+  */
+  public function actionCheckin()
+  {
+    $request = \Yii::$app->request;
+    $result=array();
+    $username = $request->post('ui');
+    $classId = $request->post('classId');
+    //一小时之内不能重复签到
+    //一个课程一天不能超过4次签到
+    $userModel= new User();
+    $userList = $userModel::find()->asArray()->all();
+    $userinfodetail=null;
+    foreach($userList as $user){
+      if(md5($user['UserId'])==$username){
+        $userinfodetail=$user;
+        break;
+      }
+    }
+    if($userinfodetail!=null){
+      $CheckinModel = new CheckIn();
+      $searchdate=date("Y-m-d");
+      $chklist= $CheckinModel::find()->where(['UserId' => $userinfodetail['UserId'],'ClassId' => $classId])->andWhere(['like','CheckDate',$searchdate])->orderBy('CheckDate desc')->asArray()->all();
+
+      if(count($chklist)>3){
+        $result=array(
+          'code'=>1003,
+          'msg'=>'当前课程签到次数已满，无法签到',
+          'data'=>false,
+        );
+      }
+      else{
+        foreach($chklist as $chk){
+          if(strtotime($chk['CheckDate'])>strtotime(date('Y-m-d H:i:s', strtotime('-1hour')))){
+            $result=array(
+              'code'=>1004,
+              'msg'=>'一小时之内不能重复签到，无法签到',
+              'data'=>false,
+            );
+            break;
+          }
+        }
+      }
+      if($result==null)
+      {
+        $CheckinModel->UserId=$userinfodetail['UserId'];
+        $CheckinModel->ClassId=$classId;
+        $CheckinModel->CheckDate=date("Y-m-d H:i:s");
+        $CheckinModel->CheckState=1;
+        
+        if($CheckinModel->save()){
+          $chklist= $CheckinModel::find()->where(['UserId' => $userinfodetail['UserId']])->asArray()->all();
+          $result=array(
+            'code'=>1,
+            'msg'=>'true',
+            'data'=>count($chklist)*2,
+          );
+        }
+        else{
+          $result=array(
+            'code'=>1001,
+            'msg'=>'签到失败',
+            'data'=>false,
+          );
+        }
+        
+      }
+    }
+    else{
+      $result=array(
+        'code'=>1002,
+        'msg'=>'can`t find this user',
+        'data'=>null,
+      );
+    }
+    echo json_encode($result);
+  }
+
 }
