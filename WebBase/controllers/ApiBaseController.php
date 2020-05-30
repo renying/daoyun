@@ -20,6 +20,7 @@ use app\models\MostopToken;
  */
 class ApiBaseController extends Controller
 {
+
     /**
      * @var bool whether to enable CSRF validation for the actions in this controller.
      * CSRF validation is enabled only when both this property and [[\yii\web\Request::enableCsrfValidation]] are true.
@@ -57,7 +58,7 @@ class ApiBaseController extends Controller
                   'data'=>'beforeAction',
                 );
               }
-              else if(strtotime($utoken['addtime'])>date('Y-m-d H:i:s', strtotime('-1hour')))
+              else if(strtotime($utoken['addtime'])<date('Y-m-d H:i:s', strtotime('-1hour')))
               {
                 $result=array(
                   'code'=>889,
