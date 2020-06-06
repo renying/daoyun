@@ -1,9 +1,9 @@
 <template>
   <div>
-    <el-menu :default-active="activeIndex" mode="horizontal" @select="handleSelect">
-        <el-menu-item index="1">我加入的</el-menu-item>
-        <el-menu-item index="2">我创建的</el-menu-item>
-    </el-menu>
+    <el-tabs type="border-card">
+      <el-tab-pane label="我加入的">用户管理</el-tab-pane>
+      <el-tab-pane label="我创建的">配置管理</el-tab-pane>
+    </el-tabs>
     <div style="height: 30px; witdh: 100%"></div>
     <button class="btn btn-primary w-md waves-effect waves-light" type="button"
                     @click="exit()">
