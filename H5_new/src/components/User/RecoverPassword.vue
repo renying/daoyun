@@ -71,26 +71,6 @@ export default {
     },
     updatecode () {
       var t = this
-<<<<<<< HEAD
-      // var myDate = new Date()
-      // var qs = require('qs')
-      const params = new URLSearchParams()
-      params.append('userid', localStorage.getItem('userid'))
-      params.append('ukey', localStorage.getItem('ukey'))
-      params.append('oldpass', t.oldpassword)
-      params.append('newpass', t.newpass)
-      // this.$axios.post('api/change-pass', qs.stringify({
-      //   ui: localStorage.getItem('userid'),
-      //   ukey: localStorage.getItem('ukey'),
-      //   oldpass: t.oldpassword,
-      //   newpass: t.newpassword
-      // }), {
-      //   headers: {
-      //     'Content-Type': 'application/x-www-form-urlencoded'
-      //   }
-      // })
-      this.$axios.post('api/change-pass', params, {
-=======
       var myDate = new Date()
       var qs = require('qs')
       this.$axios.post('api/change-pass', qs.stringify({
@@ -100,7 +80,6 @@ export default {
         newpass: t.newpassword,
         TimeStamp: myDate
       }), {
->>>>>>> 1168eb91b67deaacc54b2e4c3de5a1b502153ac6
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
         }
