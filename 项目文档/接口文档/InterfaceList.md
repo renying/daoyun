@@ -335,6 +335,7 @@ api/get-noticeinfolist
                 "ToName":"王五",//接受消息的用户
                 "InfoContent":"由于五一假期，课程顺延至下周末上课",//消息内容
                 "ReadType":False,//是否已读
+                "InfoDate": "2020-06-09 22:32:47",
                 "NoticeType":1//1、班课通知，2、用户消息
             },
             ...
@@ -343,6 +344,7 @@ api/get-noticeinfolist
                 "ToName":"王五",//接受消息的用户
                 "InfoContent":"你笔记借我看一下",//消息内容
                 "ReadType":False,//是否已读
+                "InfoDate": "2020-06-09 22:32:47",
                 "NoticeType":2//1、班课通知，2、用户消息
             }
         ]
