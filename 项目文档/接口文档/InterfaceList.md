@@ -168,6 +168,7 @@ api/get-classinfo
 
 | 参数名称  | 参数类型 | 是否必填 | 参数说明                                                     |
 | --------- | -------- | -------- | ------------------------------------------------------------ |
+| ui        | string   | Y        | 用户id，非int，需要上传MD5值，即标准MD5(userid)              |
 | ukey      | string   | Y        | 用户token|
 | TimeStamp | string   | Y        | 时间戳，格式为：yyyyMMddHHmmss例如：20200411155201           |
 | CheckCode | string   | Y        | 校验码，格式为：标准MD5(TimeStamp + 平台密钥) （加号代表连接符，非数值运算） |
@@ -226,7 +227,7 @@ api/get-classuserlist
 | --------- | -------- | -------- | ------------------------------------------------------------ |
 | ui        | string   | Y        | 用户id，非int，需要上传MD5值，即标准MD5(userid)              |
 | ukey      | string   | Y        | 用户token|
-| classId   | int      | Y        | 课程编号                                                   |
+| classid   | int      | Y        | 课程编号                                                   |
 | TimeStamp | string   | Y        | 时间戳，格式为：yyyyMMddHHmmss例如：20200411155201           |
 | CheckCode | string   | Y        | 校验码，格式为：标准MD5(ui + classId + TimeStamp + 平台密钥) （加号代表连接符，非数值运算） |
 
