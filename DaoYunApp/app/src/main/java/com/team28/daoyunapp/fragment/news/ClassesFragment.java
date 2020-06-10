@@ -1,5 +1,6 @@
 package com.team28.daoyunapp.fragment.news;
 
+import android.content.SharedPreferences;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,18 +15,21 @@ import com.alibaba.android.vlayout.DelegateAdapter;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
 import com.alibaba.android.vlayout.layout.LinearLayoutHelper;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
-import com.team28.daoyunapp.adapter.entity.NewInfo;
+import com.team28.daoyunapp.adapter.entity.Course;
 import com.team28.daoyunapp.R;
 import com.team28.daoyunapp.adapter.base.delegate.SimpleDelegateAdapter;
 import com.team28.daoyunapp.core.BaseFragment;
+import com.team28.daoyunapp.core.http.Api;
 import com.team28.daoyunapp.utils.DemoDataProvider;
-import com.team28.daoyunapp.utils.Utils;
 import com.team28.daoyunapp.widget.ContentPage;
 import com.xuexiang.xpage.annotation.Page;
 import com.xuexiang.xpage.enums.CoreAnim;
 import com.xuexiang.xui.adapter.recyclerview.RecyclerViewHolder;
+import com.xuexiang.xui.utils.WidgetUtils;
 import com.xuexiang.xui.widget.actionbar.TitleBar;
+import com.xuexiang.xui.widget.dialog.LoadingDialog;
 import com.xuexiang.xui.widget.tabbar.EasyIndicator;
+import com.xuexiang.xutil.data.SPUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -46,20 +50,25 @@ public class ClassesFragment extends BaseFragment {
     private Map<ContentPage, View> mPageMap = new HashMap<> ();
 
     @BindView(R.id.recyclerView)
-    RecyclerView recyclerView;
+    RecyclerView recyclerViewCreated;
+
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout refreshLayout;
 
-    private SimpleDelegateAdapter<NewInfo> mNewsAdapter;
+    private LoadingDialog mLoadingDialog;
+    private SimpleDelegateAdapter<Course> mNewsAdapter;
+
+    private SharedPreferences spf;
 
     private View getPageView(ContentPage page) {
         View view = mPageMap.get(page);
         if (view == null) {
+
             TextView textView = new TextView(getContext());
 //            textView.setTextAppearance(getContext(), R.style.TextStyle_Content_Match);
             textView.setGravity(Gravity.CENTER);
             textView.setText(String.format("这个是%s页面的内容", page.name()));
-            view = textView;
+            view = refreshLayout;
             mPageMap.put(page, view);
         }
         return view;
@@ -114,30 +123,28 @@ public class ClassesFragment extends BaseFragment {
      */
     @Override
     protected void initViews() {
-        mEasyIndicator.setTabTitles(ContentPage.getPageNames());
-        mEasyIndicator.setViewPager(mViewPager, mPagerAdapter);
-        mViewPager.setOffscreenPageLimit(ContentPage.size() - 1);
-        mViewPager.setCurrentItem(1);
+        spf = SPUtils.getSharedPreferences (Api.SPFNAME);
+        mLoadingDialog = WidgetUtils.getLoadingDialog(getContext())
+                .setIconScale(0.4F)
+                .setLoadingSpeed(8);
 
         VirtualLayoutManager virtualLayoutManager = new VirtualLayoutManager(getContext());
-        recyclerView.setLayoutManager(virtualLayoutManager);
+        recyclerViewCreated.setLayoutManager(virtualLayoutManager);
         RecyclerView.RecycledViewPool viewPool = new RecyclerView.RecycledViewPool();
-        recyclerView.setRecycledViewPool(viewPool);
+        recyclerViewCreated.setRecycledViewPool(viewPool);
         viewPool.setMaxRecycledViews(0, 10);
 
         //资讯
-        mNewsAdapter = new SimpleDelegateAdapter<NewInfo>(R.layout.adapter_news_card_view_list_item, new LinearLayoutHelper()) {
+        mNewsAdapter = new SimpleDelegateAdapter<Course>(R.layout.adapter_news_card_view_list_item, new LinearLayoutHelper()) {
             @Override
-            protected void bindData(@NonNull RecyclerViewHolder holder, int position, NewInfo model) {
-                if (model != null) {
-                    holder.text(R.id.tv_title, model.getTitle());
-                    holder.text(R.id.tv_summary, model.getSummary());
-                    holder.text(R.id.tv_praise, model.getPraise() == 0 ? "点赞" : String.valueOf(model.getPraise()));
-                    holder.text(R.id.tv_comment, model.getComment() == 0 ? "评论" : String.valueOf(model.getComment()));
-                    holder.text(R.id.tv_read, "阅读量 " + model.getRead());
-                    holder.image(R.id.iv_image, model.getImageUrl());
+            protected void bindData(@NonNull RecyclerViewHolder holder, int position, Course item) {
+                if (item != null) {
+                    holder.text(R.id.tv_title, item.getName ());
+                    holder.text(R.id.tv_summary, item.getDesc ());
+                    holder.text(R.id.tv_praise, "签到");
+                    holder.text(R.id.tv_comment, "举手");
+                    holder.text(R.id.tv_read, "抢答");
 
-                    holder.click(R.id.card_view, v -> Utils.goWeb(getContext(), model.getDetailUrl()));
                 }
             }
         };
@@ -145,24 +152,27 @@ public class ClassesFragment extends BaseFragment {
         DelegateAdapter delegateAdapter = new DelegateAdapter(virtualLayoutManager);
         delegateAdapter.addAdapter(mNewsAdapter);
 
-        recyclerView.setAdapter(delegateAdapter);
+        recyclerViewCreated.setAdapter(delegateAdapter);
+
+        mEasyIndicator.setTabTitles(ContentPage.getPageNames());
+        mEasyIndicator.setViewPager(mViewPager, mPagerAdapter);
+        mViewPager.setOffscreenPageLimit(ContentPage.size() - 1);
+        mViewPager.setCurrentItem(1);
     }
 
     @Override
     protected void initListeners() {
         //下拉刷新
         refreshLayout.setOnRefreshListener(refreshLayout -> {
-            // TODO: 2020-02-25 这里只是模拟了网络请求
             refreshLayout.getLayout().postDelayed(() -> {
-                mNewsAdapter.refresh(DemoDataProvider.getDemoNewInfos());
+                mNewsAdapter.refresh(DemoDataProvider.getCreatedClassInfos ());
                 refreshLayout.finishRefresh();
             }, 1000);
         });
         //上拉加载
         refreshLayout.setOnLoadMoreListener(refreshLayout -> {
-            // TODO: 2020-02-25 这里只是模拟了网络请求
             refreshLayout.getLayout().postDelayed(() -> {
-                mNewsAdapter.loadMore(DemoDataProvider.getDemoNewInfos());
+                mNewsAdapter.loadMore(DemoDataProvider.getCreatedClassInfos ());
                 refreshLayout.finishLoadMore();
             }, 1000);
         });

@@ -22,6 +22,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.orhanobut.logger.Logger;
 import com.team28.daoyunapp.core.BaseActivity;
 import com.team28.daoyunapp.core.BaseFragment;
+import com.team28.daoyunapp.core.http.Api;
 import com.team28.daoyunapp.fragment.profile.AboutFragment;
 import com.team28.daoyunapp.fragment.news.ClassesFragment;
 import com.team28.daoyunapp.fragment.profile.ProfileFragment;
@@ -82,10 +83,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         super.onCreate(savedInstanceState);
 
         ActivityCollectorUtil.addActivity (this);
-        spf = SPUtils.getSharedPreferences ("user_info");
+        spf = SPUtils.getSharedPreferences (Api.SPFNAME);
+        Logger.json (JSON.toJSONString (spf.getAll ()));
         initViews();
         initListeners();
-        Logger.json (JSON.toJSONString (spf.getAll ()));
     }
 
     @Override
@@ -183,7 +184,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private boolean handleNavigationItemSelected(@NonNull MenuItem menuItem) {
         View headerView = navView.getHeaderView(0);
         TextView tvAvatar = headerView.findViewById(R.id.tv_avatar);
-        tvAvatar.setText(spf.getString ("NickName",""));
+        tvAvatar.setText(SPUtils.getString (spf,"NickName",""));
 
         int index = CollectionUtils.arrayIndexOf(mTitles, menuItem.getTitle());
         if (index != -1) {
@@ -198,7 +199,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_privacy:
-                Utils.showPrivacyDialog(this, null);
+//                Utils.showPrivacyDialog(this, null);
                 break;
             default:
                 break;
@@ -249,8 +250,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
      */
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-
-
 
         int index = CollectionUtils.arrayIndexOf(mTitles, menuItem.getTitle());
         if (index != -1) {

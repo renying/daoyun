@@ -52,8 +52,6 @@ public class SplashActivity extends BaseSplashActivity implements CancelAdapt {
             }
             startSplash(enableAlphaAnim);
         }
-//        initSplashView(R.drawable.xui_config_bg_splash);
-//        startSplash(false);
     }
 
 

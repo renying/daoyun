@@ -1,29 +1,18 @@
 package com.team28.daoyunapp.fragment;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.orhanobut.logger.Logger;
-import com.team28.daoyunapp.MyApp;
 import com.team28.daoyunapp.R;
 import com.team28.daoyunapp.activity.LoginActivity;
-import com.team28.daoyunapp.activity.MainActivity;
 import com.team28.daoyunapp.core.BaseFragment;
 import com.team28.daoyunapp.core.http.Api;
 import com.team28.daoyunapp.core.http.CustomApiResult;
 import com.team28.daoyunapp.core.http.callback.TipCallBack;
 import com.team28.daoyunapp.utils.PrivacyUtils;
 import com.team28.daoyunapp.utils.SettingSPUtils;
-import com.team28.daoyunapp.utils.TokenUtils;
 import com.team28.daoyunapp.utils.XToastUtils;
 import com.xuexiang.xaop.annotation.SingleClick;
 import com.xuexiang.xhttp2.XHttp;
@@ -37,9 +26,6 @@ import com.xuexiang.xui.widget.actionbar.TitleBar;
 import com.xuexiang.xui.widget.edittext.materialedittext.MaterialEditText;
 import com.xuexiang.xutil.app.ActivityUtils;
 import com.xuexiang.xutil.data.SPUtils;
-import com.xuexiang.xutil.tip.ToastUtils;
-
-import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.OnClick;

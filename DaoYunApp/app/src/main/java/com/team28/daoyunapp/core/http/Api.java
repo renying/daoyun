@@ -2,7 +2,7 @@ package com.team28.daoyunapp.core.http;
 
 public class Api {
 
-    public static final String BASE_URL="http://47.94.234.206/";
+    private static final String BASE_URL="http://47.94.234.206/";
     //登录接口
     public static String LOGIN = BASE_URL +"api/user-login";
     //注册接口
@@ -32,6 +32,6 @@ public class Api {
     public static String param_realName = "RealName";
     public static String param_userSex = "UserSex";
 
-
+    public static String SPFNAME = "user_info";
 
 }

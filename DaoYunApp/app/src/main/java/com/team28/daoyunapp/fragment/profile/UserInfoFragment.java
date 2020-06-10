@@ -78,11 +78,12 @@ public class UserInfoFragment extends BaseFragment {
     @Override
     protected void initViews () {
 
-        spf = SPUtils.getSharedPreferences ("user_info");
+        spf = SPUtils.getSharedPreferences (Api.SPFNAME);
         mSexOption = ResUtils.getStringArray(R.array.sex_option);
 
         userName.setRightString (spf.getString ("UserName", ""));
         realName.setCenterEditString (spf.getString ("RealName", ""));
+//        realName.setCenterTextColor (111111);
         nickName.setCenterEditString (spf.getString ("NickName", ""));
         bornDate.setCenterString (spf.getString ("BornDate", ""));
         userSex.setCenterString(mSexOption[StringUtils.toInt (spf.getString ("UserSex","1"))]);
