@@ -199,32 +199,75 @@ class ApiController extends ApiBaseController
   */
   public function actionGetClassinfo()
   {
-     $request = \Yii::$app->request;
-     
-      
-      $classModel= new ClassTable();
+    $request = \Yii::$app->request;
+    $realUser=null;
+    $result=array();
+    $res=array();
+   
+    $userid = $request->post('ui');
+    $classModel= new ClassTable();
+    
+
+    $userModel= new User();
+    $userList = $userModel::find()->asArray()->all();
+
+
+    foreach($userList as $user){
+      if(md5($user['UserId'])==$userid){
+        $realUser=$user;
+      }
+    }
+    if($realUser!=null){
+      $stdModel = new StdClass();
+      $stdList = $stdModel::find()->where(['UserId' => $realUser['UserId']])->asArray()->all();
+      $classids = [];
+
+      foreach ($stdList as $key => $value) {
+        $classids[]=$value['ClassId'];
+      }
+
       $classList = $classModel::find()->asArray()->all();
-
-      $userModel= new User();
-      $userList = $userModel::find()->asArray()->all();
-
-      foreach($classList as &$classItem){
+      $joined=[];
+      $created=[];
+      foreach($classList as $classItem){
+        $classinfo=array();
+        $classinfo['ClassId']=$classItem['ClassId'];
+        $classinfo['ClassName']=$classItem['ClassName'];
+        $classinfo['ClassCode']=$classItem['ClassNum'];
+        $classinfo['ClassDesc']=$classItem['ClassDiscription'];
+        $classinfo['CreateTime']=$classItem['CreateTime'];
         foreach($userList as $user){
           if($classItem['UserId']==$user['UserId']){
-            $classItem['UserName']=$user['UserName'];
-            $classItem['UserCode']=$user['UserCode'];
-            $classItem['SchoolId']=$user['SchoolId'];
+            $classinfo['UserName']=$user['UserName'];
+            $classinfo['UserCode']=$user['UserCode'];
+            $classinfo['SchoolId']=$user['SchoolId'];
             break;
           }
         }
+        if($classItem['UserId']==$realUser['UserId']){
+          $created[]=$classinfo;
+        }
+        else if(in_array($classItem['ClassId'], $classids)){
+          $joined[]=$classinfo;
+        }
 
       }
+      $res['Joined']=$joined;
+      $res['Created']=$created;
       $result=array(
         'code'=>1,
         'msg'=>'true',
-        'data'=>$classList,
+        'data'=>$res,
       );
-      echo json_encode($result);
+    }
+    else{
+      $result=array(
+        'code'=>1002,
+        'msg'=>'用户信息有误',
+        'data'=>false,
+      );
+    }
+    echo json_encode($result);
   }
     /*
   * 六、班课成员信息获取接口 
