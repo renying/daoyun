@@ -178,15 +178,28 @@ api/get-classinfo
 {
 	"code":1,
 	"message":"true",//异常说明
-	"data":{
-        "ClassId":1,
-        "ClassName":"23650",//课程名称
-        "ClassCode":"23650",//课程号
-        "ClassDesc":"课程说明",
-        "CreateTime":"2020-04-15",//创建时间
-        "UserName":"创建人用户名",
-        "UserCode":"创建人工号",
-        "SchoolInfo":"院系信息",
+	"data":
+	{
+	"Joined":[{
+		"ClassId":1,
+		"ClassName":"23650",//课程名称
+		"ClassCode":"23650",//课程号
+		"ClassDesc":"课程说明",
+		"CreateTime":"2020-04-15",//创建时间
+		"UserName":"创建人用户名",
+		"UserCode":"创建人工号",
+		"SchoolInfo":"院系信息",
+	}],
+	"Created":[{
+		"ClassId":1,
+		"ClassName":"23650",//课程名称
+		"ClassCode":"23650",//课程号
+		"ClassDesc":"课程说明",
+		"CreateTime":"2020-04-15",//创建时间
+		"UserName":"创建人用户名",
+		"UserCode":"创建人工号",
+		"SchoolInfo":"院系信息",
+	}],
     }
 }
 ```
