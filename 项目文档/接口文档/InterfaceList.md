@@ -168,6 +168,7 @@ api/get-classinfo
 
 | 参数名称  | 参数类型 | 是否必填 | 参数说明                                                     |
 | --------- | -------- | -------- | ------------------------------------------------------------ |
+| ui        | string   | Y        | 用户id，非int，需要上传MD5值，即标准MD5(userid)              |
 | ukey      | string   | Y        | 用户token|
 | TimeStamp | string   | Y        | 时间戳，格式为：yyyyMMddHHmmss例如：20200411155201           |
 | CheckCode | string   | Y        | 校验码，格式为：标准MD5(TimeStamp + 平台密钥) （加号代表连接符，非数值运算） |
@@ -178,15 +179,28 @@ api/get-classinfo
 {
 	"code":1,
 	"message":"true",//异常说明
-	"data":{
-        "ClassId":1,
-        "ClassName":"23650",//课程名称
-        "ClassCode":"23650",//课程号
-        "ClassDesc":"课程说明",
-        "CreateTime":"2020-04-15",//创建时间
-        "UserName":"创建人用户名",
-        "UserCode":"创建人工号",
-        "SchoolInfo":"院系信息",
+	"data":
+	{
+	"Joined":[{
+		"ClassId":1,
+		"ClassName":"23650",//课程名称
+		"ClassCode":"23650",//课程号
+		"ClassDesc":"课程说明",
+		"CreateTime":"2020-04-15",//创建时间
+		"UserName":"创建人用户名",
+		"UserCode":"创建人工号",
+		"SchoolInfo":"院系信息",
+	}],
+	"Created":[{
+		"ClassId":1,
+		"ClassName":"23650",//课程名称
+		"ClassCode":"23650",//课程号
+		"ClassDesc":"课程说明",
+		"CreateTime":"2020-04-15",//创建时间
+		"UserName":"创建人用户名",
+		"UserCode":"创建人工号",
+		"SchoolInfo":"院系信息",
+	}],
     }
 }
 ```
@@ -213,7 +227,7 @@ api/get-classuserlist
 | --------- | -------- | -------- | ------------------------------------------------------------ |
 | ui        | string   | Y        | 用户id，非int，需要上传MD5值，即标准MD5(userid)              |
 | ukey      | string   | Y        | 用户token|
-| classId   | int      | Y        | 课程编号                                                   |
+| classid   | int      | Y        | 课程编号                                                   |
 | TimeStamp | string   | Y        | 时间戳，格式为：yyyyMMddHHmmss例如：20200411155201           |
 | CheckCode | string   | Y        | 校验码，格式为：标准MD5(ui + classId + TimeStamp + 平台密钥) （加号代表连接符，非数值运算） |
 
@@ -335,6 +349,7 @@ api/get-noticeinfolist
                 "ToName":"王五",//接受消息的用户
                 "InfoContent":"由于五一假期，课程顺延至下周末上课",//消息内容
                 "ReadType":False,//是否已读
+                "InfoDate": "2020-06-09 22:32:47",
                 "NoticeType":1//1、班课通知，2、用户消息
             },
             ...
@@ -343,6 +358,7 @@ api/get-noticeinfolist
                 "ToName":"王五",//接受消息的用户
                 "InfoContent":"你笔记借我看一下",//消息内容
                 "ReadType":False,//是否已读
+                "InfoDate": "2020-06-09 22:32:47",
                 "NoticeType":2//1、班课通知，2、用户消息
             }
         ]

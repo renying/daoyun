@@ -7,6 +7,7 @@ use app\models\MostopToken;
 use app\models\ClassTable;
 use app\models\StdClass;
 use app\models\CheckIn;
+use app\models\Info;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
@@ -198,32 +199,75 @@ class ApiController extends ApiBaseController
   */
   public function actionGetClassinfo()
   {
-     $request = \Yii::$app->request;
-     
-      
-      $classModel= new ClassTable();
+    $request = \Yii::$app->request;
+    $realUser=null;
+    $result=array();
+    $res=array();
+   
+    $userid = $request->post('ui');
+    $classModel= new ClassTable();
+    
+
+    $userModel= new User();
+    $userList = $userModel::find()->asArray()->all();
+
+
+    foreach($userList as $user){
+      if(md5($user['UserId'])==$userid){
+        $realUser=$user;
+      }
+    }
+    if($realUser!=null){
+      $stdModel = new StdClass();
+      $stdList = $stdModel::find()->where(['UserId' => $realUser['UserId']])->asArray()->all();
+      $classids = [];
+
+      foreach ($stdList as $key => $value) {
+        $classids[]=$value['ClassId'];
+      }
+
       $classList = $classModel::find()->asArray()->all();
-
-      $userModel= new User();
-      $userList = $userModel::find()->asArray()->all();
-
-      foreach($classList as &$classItem){
+      $joined=[];
+      $created=[];
+      foreach($classList as $classItem){
+        $classinfo=array();
+        $classinfo['ClassId']=$classItem['ClassId'];
+        $classinfo['ClassName']=$classItem['ClassName'];
+        $classinfo['ClassCode']=$classItem['ClassNum'];
+        $classinfo['ClassDesc']=$classItem['ClassDiscription'];
+        $classinfo['CreateTime']=$classItem['CreateTime'];
         foreach($userList as $user){
           if($classItem['UserId']==$user['UserId']){
-            $classItem['UserName']=$user['UserName'];
-            $classItem['UserCode']=$user['UserCode'];
-            $classItem['SchoolId']=$user['SchoolId'];
+            $classinfo['UserName']=$user['UserName'];
+            $classinfo['UserCode']=$user['UserCode'];
+            $classinfo['SchoolId']=$user['SchoolId'];
             break;
           }
         }
+        if($classItem['UserId']==$realUser['UserId']){
+          $created[]=$classinfo;
+        }
+        else if(in_array($classItem['ClassId'], $classids)){
+          $joined[]=$classinfo;
+        }
 
       }
+      $res['Joined']=$joined;
+      $res['Created']=$created;
       $result=array(
         'code'=>1,
         'msg'=>'true',
-        'data'=>$classList,
+        'data'=>$res,
       );
-      echo json_encode($result);
+    }
+    else{
+      $result=array(
+        'code'=>1002,
+        'msg'=>'用户信息有误',
+        'data'=>false,
+      );
+    }
+    echo json_encode($result);
   }
     /*
   * 六、班课成员信息获取接口 
@@ -290,6 +334,124 @@ class ApiController extends ApiBaseController
     }
     echo json_encode($result);
   }
+  /*
+  * 七、消息通知列表获取
+  */
+  public function actionGetUsernoticelist(){
+    $request = \Yii::$app->request;
+    $userid = $request->post('ui');
+    $infoModel= new Info();
+    $userModel= new User();
+    $userList = $userModel::find()->asArray()->all();
+    $realUser=null;
+    $result=array();
+    $res=array();
+    $resMd5=array();
+    foreach($userList as $user){
+      if(md5($user['UserId'])==$userid){
+        $realUser=$user;
+      }
+    }
+    if($realUser['UserId']>0){
+      $infolist= $infoModel::find()->where(['ToUserId' => $realUser['UserId']])->asArray()->all();
+      foreach($infolist as $infoItem){
+        foreach($userList as $user){
+          $infoinfo=array();
+          if($infoItem['FromUserId']==$user['UserId']){
+
+            $infoinfo['FromName']=$user['UserName'];
+            $infoinfo['NoticeType']=$infoItem['InfoType'];
+            $infoinfo['HasNew']=$infoItem['ReadType']==0;
+            if(!in_array($user['UserName'], $resMd5)){
+              $resMd5[]=$user['UserName'];
+              $res[]=$infoinfo;
+            }
+            else{
+              if($infoinfo['HasNew']){
+                foreach ($resMd5 as $key => $v)
+                {
+                    if($v==$user['UserName'])
+                    {
+                      $res[$key]['HasNew']=true;
+                    }
+                }
+              }
+
+            }
+            break;
+          }
+        }
+      }
+      $result=array(
+        'code'=>1,
+        'msg'=>'true',
+        'data'=> array('NoticeList' => $res ),
+      );
+
+    }
+    else{
+      $result=array(
+        'code'=>1002,
+        'msg'=>'用户信息有误',
+        'data'=>false,
+      );
+    }
+    echo json_encode($result);
+  }
+
+  public function actionGetNoticeinfolist(){
+    $request = \Yii::$app->request;
+    $FromUserId = $request->post('FromUserId');
+    $ToUserId = $request->post('ToUserId');
+    $infoModel= new Info();
+    $userModel= new User();
+    $userList = $userModel::find()->asArray()->all();
+    $result=array();
+    $res=array();
+    $fromUser=null;
+    $toUser=null;
+    foreach($userList as $user){
+      if(md5($user['UserId'])==$FromUserId){
+        $fromUser=$user;
+      }
+      if(md5($user['UserId'])==$ToUserId){
+        $toUser=$user;
+      }
+    }
+    if($fromUser!=null&&$toUser!=null){
+      $infolist= $infoModel::find()->where(['ToUserId' => $toUser['UserId'],'FromUserId' => $fromUser['UserId']])->asArray()->all();
+      foreach($infolist as $infoItem){
+        $infoinfo=array();
+        $infoinfo['FromName']=$fromUser['UserName'];
+        $infoinfo['ToName']=$toUser['UserName'];
+        $infoinfo['NoticeType']=$infoItem['InfoType'];
+        $infoinfo['InfoContent']=$infoItem['InfoContent'];
+        $infoinfo['InfoDate']=$infoItem['InfoDate'];
+        $infoinfo['ReadType']=$infoItem['ReadType']==1;
+        $res[]=$infoinfo;  
+      }
+      $result=array(
+        'code'=>1,
+        'msg'=>'true',
+        'data'=> array('NoticeList' => $res ),
+      );
+      Info::updateAll(['ReadType' => 1],['ToUserId' => $toUser['UserId'],'FromUserId' => $fromUser['UserId']]);
+    }
+    else{
+      $result=array(
+        'code'=>1002,
+        'msg'=>'用户信息有误',
+        'data'=>false,
+      );
+    }
+
+
+
+
+    echo json_encode($result);
+  }
+
+
   /*
   * 九、创建班课接口 
   */

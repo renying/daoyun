@@ -2,16 +2,16 @@
   <div>
     <ul v-loading="loadingEmployee">
     </ul>
-    <el-row>
-      <el-button type="success" @click="addEmployee">添加新员工</el-button>
-    </el-row>
     <div style="height: 30px;"></div>
     <el-row>
-      <el-table :data="message.filter(data => !search || data.e_name.toLowerCase().includes(search.toLowerCase()))" style="width: 100%">
-        <el-table-column prop="e_name" label="姓名"></el-table-column>
-        <el-table-column prop="account" label="账号"></el-table-column>
-        <el-table-column prop="e_sex" :formatter="formatRole" label="性别"></el-table-column>
-        <el-table-column prop="department.de_name" label="部门"></el-table-column>
+      <el-table style="width: 100%">
+        <el-table-column prop="c_name" label="课程名称"></el-table-column>
+        <el-table-column prop="c_id" label="课程编号"></el-table-column>
+        <el-table-column prop="c_description" label="课程说明"></el-table-column>
+        <el-table-column prop="c_creattime" label="创建时间"></el-table-column>
+        <el-table-column prop="c_uname" label="创建人用户名"></el-table-column>
+        <el-table-column prop="c_unum" label="创建人工号"></el-table-column>
+        <el-table-column prop="c_school" label="院系信息"></el-table-column>
         <el-table-column fixed="right" width="250px">
           <template slot="header">
             <el-input v-model="search" size="mini" placeholder="输入关键字搜索"/>
@@ -19,7 +19,7 @@
           <template slot-scope="scope">
             <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
             <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
-          </template>
+          </template>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          zz
         </el-table-column>
       </el-table>
     </el-row>
@@ -68,7 +68,7 @@
 
 <script>
 export default {
-  name: 'Employee',
+  name: 'Myjoin',
   data () {
     return {
       loadingEmployee: true,
@@ -77,15 +77,14 @@ export default {
       size: 5,
       message: [],
       search: '',
-      employeeInfo: {
-        e_id: '',
-        account: '',
-        department_id: '',
-        e_code: '',
-        e_name: '',
-        e_sex: '',
-        position: '',
-        title: ''
+      classInfo: {
+        c_name: '',
+        c_id: '',
+        c_description: '',
+        c_creattime: '',
+        c_uname: '',
+        c_unum: '',
+        c_school: ''
       },
       saveDialogVisible: false
     }
@@ -97,29 +96,12 @@ export default {
     formatRole (row, column) { // 表格数据转换 性别
       return row.e_sex === '1' ? '男' : row.e_sex === '0' ? '女' : '未知'
     },
-    getAllEmployee () {
+    getClassInfo () {
       console.log('getAllEmployee')
       var t = this
       this.$axios({
         method: 'get',
         url: '/Employee/GetAllEmployee?currentPage=' + t.currentPage + '&size=' + t.size
-      })
-        .then(function (response) {
-          t.message = response.data.content
-          t.totalPages = response.data.totalPages * t.size
-          console.log(t.message)
-          t.loadingEmployee = false
-        })
-        .catch(function (error) {
-          console.log(error)
-        })
-    },
-    getEmployeePage (currentPage) {
-      console.log('getEmployeePage')
-      var t = this
-      this.$axios({
-        method: 'get',
-        url: '/Employee/GetAllEmployee?currentPage=' + (currentPage - 1) + '&size=' + t.size
       })
         .then(function (response) {
           t.message = response.data.content
