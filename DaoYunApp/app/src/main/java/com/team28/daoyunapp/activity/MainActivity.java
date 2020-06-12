@@ -28,6 +28,7 @@ import com.team28.daoyunapp.fragment.news.ClassesFragment;
 import com.team28.daoyunapp.fragment.profile.ProfileFragment;
 import com.team28.daoyunapp.fragment.trending.TrendingFragment;
 import com.team28.daoyunapp.utils.ActivityCollectorUtil;
+import com.team28.daoyunapp.utils.DemoDataProvider;
 import com.team28.daoyunapp.utils.Utils;
 import com.team28.daoyunapp.utils.XToastUtils;
 import com.team28.daoyunapp.R;
@@ -95,6 +96,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void initViews() {
+        DemoDataProvider.getCourses ();
         mTitles = ResUtils.getStringArray(R.array.home_titles);
         toolbar.setTitle(mTitles[0]);
         toolbar.inflateMenu(R.menu.menu_main);
@@ -178,8 +180,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     /**
      * 处理侧边栏点击事件
      *
-     * @param menuItem
-     * @return
+     * @param menuItem 侧边栏组件
+     * @return boolean
      */
     private boolean handleNavigationItemSelected(@NonNull MenuItem menuItem) {
         View headerView = navView.getHeaderView(0);
