@@ -18,6 +18,7 @@ import Cure from '@/components/Cure/Cure'
 import Input from '@/components/Cure/Input'
 import Advice from '@/components/Cure/Advice'
 import RecoverPassword from '@/components/User/RecoverPassword'
+import MyInfo from '@/components/MyInfo/MyInfo'
 
 Vue.use(Router)
 
@@ -119,6 +120,11 @@ export default new Router({
           component: Advice
         }
       ]
+    },
+    {
+      path: '/MyInfo/MyInfo',
+      name: 'MyInfo',
+      component: MyInfo
     }
   ]
 })
