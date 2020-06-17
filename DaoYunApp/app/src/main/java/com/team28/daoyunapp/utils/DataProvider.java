@@ -1,14 +1,12 @@
 package com.team28.daoyunapp.utils;
 
-import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.drawable.Drawable;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.orhanobut.logger.Logger;
 import com.team28.daoyunapp.adapter.entity.Course;
-import com.team28.daoyunapp.R;
+import com.team28.daoyunapp.adapter.entity.Member;
 import com.team28.daoyunapp.core.http.Api;
 import com.team28.daoyunapp.core.http.CustomApiResult;
 import com.team28.daoyunapp.core.http.callback.TipCallBack;
@@ -17,25 +15,21 @@ import com.xuexiang.xaop.util.MD5Utils;
 import com.xuexiang.xhttp2.XHttp;
 import com.xuexiang.xhttp2.callback.CallBackProxy;
 import com.xuexiang.xhttp2.exception.ApiException;
-import com.xuexiang.xui.adapter.simple.AdapterItem;
-import com.xuexiang.xui.utils.ResUtils;
-import com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog;
 import com.xuexiang.xutil.data.SPUtils;
-import com.xuexiang.xutil.tip.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-
-import static com.xuexiang.xutil.XUtil.getContext;
 
 /**
  * 演示数据
  *
- * @author xuexiang
- * @since 2018/11/23 下午5:52
+ * @author zengjun
  */
-public class DemoDataProvider {
+public class DataProvider {
+    private static int course_id;
+    private static int userCount;
+    private static int checkCount;
+    private static List<Member>members = new ArrayList<> ();
 
     private static SharedPreferences spf = SPUtils.getSharedPreferences (Api.SPFNAME);
 
@@ -50,6 +44,7 @@ public class DemoDataProvider {
                 .execute (new CallBackProxy<CustomApiResult<JSONObject>, JSONObject> (new TipCallBack<JSONObject> () {
                     @Override
                     public void onSuccess ( JSONObject response ) {
+//                        Logger.d (response);
                         Logger.json (response.toJSONString ());
                         JSONArray courses = response.getJSONArray ("Created");
                         if (createdCourses.size () < courses.size ()) {
@@ -77,13 +72,8 @@ public class DemoDataProvider {
                     public void onError ( ApiException e ) {
                         Logger.d (e.getDetailMessage ());
                         super.onError (e);
-                        new MaterialDialog.Builder (getContext ())
-                                .iconRes (R.drawable.icon_tip)
-                                .title ("注意")
-                                .content ("Token已过期，请重新登录")
-                                .positiveText (R.string.lab_submit)
-                                .show ();
                         TokenUtils.handleLogoutSuccess ();
+                        XToastUtils.error ("Token已过期，请重新登录");
                         ActivityCollectorUtil.finishAllActivity ();
                     }
 
@@ -95,6 +85,37 @@ public class DemoDataProvider {
                 });
     }
 
+    public static void getClassMembers () {
+        XHttp.post (Api.CLASSUSERLIST)
+                .params (Api.param_ukey, SPUtils.getString (spf, Api.param_ukey, ""))
+                .params (Api.param_ui, MD5Utils.encode (SPUtils.getString (spf, Api.param_ui, "")))
+                .params (Api.param_classid,getCourse_id ())
+                .execute (new CallBackProxy<CustomApiResult<JSONObject>,JSONObject> (new TipCallBack<JSONObject> () {
+                    @Override
+                    public void onSuccess ( JSONObject response ) throws Throwable {
+                        Logger.json (response.toJSONString ());
+                        JSONArray remembers = response.getJSONArray ("UserList");
+                        checkCount = response.getInteger ("CheckCount");
+                        userCount = remembers.size ();
+                        if ( members.size () < remembers.size ()) {
+                            for (Object item : remembers) {
+                                JSONObject member = (JSONObject) item;
+                                members.add (new Member (member.getString ("UserId"),member.getString ("UserName"),member.getString ("UserCode")));
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError ( ApiException e ) {
+                        super.onError (e);
+                    }
+                }){
+                });
+    }
+
+    public static void clearMembers(){
+        members.clear ();
+    }
 
     /**
      * @return list “我创建的”课程列表
@@ -112,5 +133,55 @@ public class DemoDataProvider {
     public static List<Course> getJoinedClassInfos () {
 
         return joinedCourses;
+    }
+
+    /**
+     * @return list 成员列表
+     */
+    @MemoryCache
+    public static List<Member> getMembers () {
+        return members;
+    }
+
+    public static Course getChoosedCourse () {
+        int pos = findPos (createdCourses, course_id);
+        if (pos != - 1) {
+            return createdCourses.get (pos);
+        }else{
+            return joinedCourses.get (findPos (joinedCourses, course_id));
+        }
+    }
+
+    private static int findPos ( List<Course> courses, int id ) {
+        for (int i = 0; i < courses.size (); i++) {
+            if (courses.get (i).getID () == id) {
+                return i;
+            }
+        }
+        return - 1;
+    }
+
+    public static int getCourse_id () {
+        return course_id;
+    }
+
+    public static void setCourse_id ( int course_id ) {
+        DataProvider.course_id = course_id;
+    }
+
+    public static int getUserCount () {
+        return userCount;
+    }
+
+    public static void setUserCount ( int userCount ) {
+        DataProvider.userCount = userCount;
+    }
+
+    public static int getCheckCount () {
+        return checkCount;
+    }
+
+    public static void setCheckCount ( int checkCount ) {
+        DataProvider.checkCount = checkCount;
     }
 }

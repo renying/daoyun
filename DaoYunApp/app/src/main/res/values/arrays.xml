@@ -24,6 +24,12 @@
         <item>@string/menu_profile</item>
     </string-array>
 
+    <string-array name="course_titles">
+        <item>@string/title_member</item>
+        <item>@string/title_inform</item>
+        <item>@string/title_detail</item>
+    </string-array>
+
     <string-array name="adBlockUrl">
         <item>ubmcmm.baidustatic.com</item>
         <item>gss1.bdstatic.com/</item>

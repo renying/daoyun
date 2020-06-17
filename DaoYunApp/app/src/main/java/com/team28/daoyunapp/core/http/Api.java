@@ -31,7 +31,7 @@ public class Api {
     public static String param_userCode = "UserCode";
     public static String param_realName = "RealName";
     public static String param_userSex = "UserSex";
-
+    public static String param_classid = "classid";
     public static String SPFNAME = "user_info";
 
 }

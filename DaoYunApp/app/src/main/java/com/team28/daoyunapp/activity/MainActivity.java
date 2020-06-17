@@ -16,7 +16,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager.widget.ViewPager;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.orhanobut.logger.Logger;
@@ -24,11 +23,11 @@ import com.team28.daoyunapp.core.BaseActivity;
 import com.team28.daoyunapp.core.BaseFragment;
 import com.team28.daoyunapp.core.http.Api;
 import com.team28.daoyunapp.fragment.profile.AboutFragment;
-import com.team28.daoyunapp.fragment.news.ClassesFragment;
+import com.team28.daoyunapp.fragment.creating.ClassesFragment;
 import com.team28.daoyunapp.fragment.profile.ProfileFragment;
-import com.team28.daoyunapp.fragment.trending.TrendingFragment;
+import com.team28.daoyunapp.fragment.joining.JoiningFragment;
 import com.team28.daoyunapp.utils.ActivityCollectorUtil;
-import com.team28.daoyunapp.utils.DemoDataProvider;
+import com.team28.daoyunapp.utils.DataProvider;
 import com.team28.daoyunapp.utils.Utils;
 import com.team28.daoyunapp.utils.XToastUtils;
 import com.team28.daoyunapp.R;
@@ -43,7 +42,6 @@ import com.xuexiang.xutil.common.ClickUtils;
 import com.xuexiang.xutil.common.CollectionUtils;
 import com.xuexiang.xutil.data.SPUtils;
 import com.xuexiang.xutil.display.Colors;
-import com.xuexiang.xutil.net.JSONUtils;
 
 import butterknife.BindView;
 
@@ -67,6 +65,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
      */
     @BindView(R.id.nav_view)
     NavigationView navView;
+
     @BindView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
 
@@ -96,7 +95,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void initViews() {
-        DemoDataProvider.getCourses ();
+        DataProvider.getCourses ();
         mTitles = ResUtils.getStringArray(R.array.home_titles);
         toolbar.setTitle(mTitles[0]);
         toolbar.inflateMenu(R.menu.menu_main);
@@ -107,7 +106,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         //主页内容填充
         BaseFragment[] fragments = new BaseFragment[]{
                 new ClassesFragment (),
-                new TrendingFragment (),
+                new JoiningFragment (),
                 new ProfileFragment ()
         };
         FragmentAdapter<BaseFragment> adapter = new FragmentAdapter<>(getSupportFragmentManager(), fragments);

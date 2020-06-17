@@ -94,5 +94,16 @@
     <string name="et_enterAddress">请输入地址</string>
     <string name="update_user_info">修改资料</string>
     <string name="lab_submit">确定</string>
+    <string name="title_activity_course_detail">CourseDetailActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="title_member">成员</string>
+    <string name="title_inform">消息</string>
+    <string name="title_detail">详情</string>
+    <string name="course_name">课程名称</string>
+    <string name="course_creator">创建人</string>
+    <string name="course_bornDate">创建时间</string>
+    <string name="course_code">课程号</string>
 
 </resources>
