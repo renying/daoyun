@@ -22,6 +22,8 @@ import com.orhanobut.logger.Logger;
 import com.team28.daoyunapp.core.BaseActivity;
 import com.team28.daoyunapp.core.BaseFragment;
 import com.team28.daoyunapp.core.http.Api;
+import com.team28.daoyunapp.fragment.creating.CreateClassFragment;
+import com.team28.daoyunapp.fragment.joining.JoinClassFragment;
 import com.team28.daoyunapp.fragment.profile.AboutFragment;
 import com.team28.daoyunapp.fragment.creating.ClassesFragment;
 import com.team28.daoyunapp.fragment.profile.ProfileFragment;
@@ -34,9 +36,12 @@ import com.team28.daoyunapp.R;
 import com.team28.daoyunapp.fragment.profile.SettingsFragment;
 import com.xuexiang.xaop.annotation.SingleClick;
 import com.xuexiang.xui.adapter.FragmentAdapter;
+import com.xuexiang.xui.adapter.simple.AdapterItem;
+import com.xuexiang.xui.adapter.simple.XUISimpleAdapter;
 import com.xuexiang.xui.utils.ResUtils;
 import com.xuexiang.xui.utils.ThemeUtils;
 import com.xuexiang.xui.widget.imageview.RadiusImageView;
+import com.xuexiang.xui.widget.popupwindow.popup.XUISimplePopup;
 import com.xuexiang.xutil.XUtil;
 import com.xuexiang.xutil.common.ClickUtils;
 import com.xuexiang.xutil.common.CollectionUtils;
@@ -72,6 +77,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     SharedPreferences spf;
 
     private String[] mTitles;
+
+    private XUISimplePopup mMenuPopup;
 
     @Override
     protected int getLayoutId() {
@@ -199,9 +206,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_privacy:
-//                Utils.showPrivacyDialog(this, null);
+            case R.id.create_course:
+                openNewPage (CreateClassFragment.class);
                 break;
+            case R.id.join_course:
+                openNewPage (JoinClassFragment.class);
             default:
                 break;
         }

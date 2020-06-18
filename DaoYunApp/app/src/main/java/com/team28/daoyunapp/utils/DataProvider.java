@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.orhanobut.logger.Logger;
+import com.team28.daoyunapp.R;
 import com.team28.daoyunapp.adapter.entity.Course;
 import com.team28.daoyunapp.adapter.entity.Member;
 import com.team28.daoyunapp.core.http.Api;
@@ -15,6 +16,7 @@ import com.xuexiang.xaop.util.MD5Utils;
 import com.xuexiang.xhttp2.XHttp;
 import com.xuexiang.xhttp2.callback.CallBackProxy;
 import com.xuexiang.xhttp2.exception.ApiException;
+import com.xuexiang.xui.adapter.simple.AdapterItem;
 import com.xuexiang.xutil.data.SPUtils;
 
 import java.util.ArrayList;
@@ -26,6 +28,7 @@ import java.util.List;
  * @author zengjun
  */
 public class DataProvider {
+    private static boolean checkAble;
     private static int course_id;
     private static int userCount;
     private static int checkCount;
@@ -113,6 +116,11 @@ public class DataProvider {
                 });
     }
 
+    public static AdapterItem[] menuItems = new AdapterItem[]{
+            new AdapterItem("创建班课", R.drawable.createc),
+            new AdapterItem("加入班课", R.drawable.joinc)
+    };
+
     public static void clearMembers(){
         members.clear ();
     }
@@ -183,5 +191,13 @@ public class DataProvider {
 
     public static void setCheckCount ( int checkCount ) {
         DataProvider.checkCount = checkCount;
+    }
+
+    public static boolean isCheckAble () {
+        return checkAble;
+    }
+
+    public static void setCheckAble ( boolean checkAble ) {
+        DataProvider.checkAble = checkAble;
     }
 }

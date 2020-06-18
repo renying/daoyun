@@ -87,13 +87,13 @@ public class JoiningFragment extends BaseFragment {
                 if (item != null) {
                     holder.text(R.id.tv_title, item.getName ());
                     holder.text(R.id.tv_summary, item.getDesc ());
-                    holder.text(R.id.tv_praise, "签到");
-                    holder.text(R.id.tv_comment, "举手");
-                    holder.text(R.id.tv_read, "抢答");
 
                     holder.click (R.id.card_view,v -> {
+                        DataProvider.setCheckCount (0);
+                        DataProvider.setCheckAble (true);
+                        DataProvider.clearMembers ();
                         DataProvider.setCourse_id (item.getID ());
-                        Logger.d (DataProvider.getCourse_id ());
+                        DataProvider.getClassMembers ();
                         ActivityUtils.startActivityWithBundle (CourseDetailActivity.class,"key",item);
                     });
                 }

@@ -3,10 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_privacy"
-        android:icon="@drawable/ic_add_white_24dp"
-        android:orderInCategory="100"
-        android:title="隐私政策"
-        app:showAsAction="always" />
+        android:id="@+id/create_course"
+        android:icon="@drawable/ccourse"
+        android:orderInCategory="1"
+        android:title="@string/create_course"
+        app:showAsAction="ifRoom"/>
+
+    <item
+            android:id="@+id/join_course"
+            android:icon="@drawable/jcourse"
+            android:orderInCategory="2"
+            android:title="@string/join_course"
+            app:showAsAction="ifRoom"/>
 
 </menu>

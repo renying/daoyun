@@ -105,5 +105,16 @@
     <string name="course_creator">创建人</string>
     <string name="course_bornDate">创建时间</string>
     <string name="course_code">课程号</string>
+    <string name="checkon">签到</string>
+    <string name="class_name">课程名称</string>
+    <string name="input_class_name">请输入课程名称</string>
+    <string name="class_desc">课程简介</string>
+    <string name="input_class_desc">请输入课程简介</string>
+    <string name="class_code">课程编号</string>
+    <string name="input_class_code">请输入课程编号</string>
+    <string name="create">创建</string>
+    <string name="join">加入</string>
+    <string name="create_course">创建班课</string>
+    <string name="join_course">加入班课</string>
 
 </resources>

@@ -17,10 +17,16 @@ public class Api {
     public static String CLASSUSERLIST = BASE_URL +"api/get-classuserlist";
     //消息通知列表获取
     public static String USERNOTICELIST = BASE_URL +"api/get-usernoticelist";
+    //消息通知详情
+    public static String NOTICEINFOLIST = BASE_URL +"api/get-noticeinfolist";
     //创建班课
-    public static String CREATECLASS = BASE_URL +"api/get-api/add-createclass";
+    public static String CREATECLASS = BASE_URL +"api/add-classinfo";
     //修改密码
     public static String CHANGEPASSWORD = BASE_URL +"api/change-pass";
+    //签到
+    public static String CHECKIN = BASE_URL +"api/checkin";
+    //加入班课接口
+    public static String CHOOSECLASS = BASE_URL +"api/choose-class";
 
     public static String param_ui = "ui";
     public static String param_ukey = "ukey";

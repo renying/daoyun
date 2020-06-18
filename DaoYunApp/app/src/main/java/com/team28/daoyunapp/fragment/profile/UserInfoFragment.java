@@ -21,6 +21,8 @@ import com.xuexiang.xhttp2.exception.ApiException;
 import com.xuexiang.xpage.annotation.Page;
 import com.xuexiang.xui.utils.ResUtils;
 import com.xuexiang.xui.utils.Utils;
+import com.xuexiang.xui.utils.WidgetUtils;
+import com.xuexiang.xui.widget.dialog.LoadingDialog;
 import com.xuexiang.xui.widget.picker.widget.OptionsPickerView;
 import com.xuexiang.xui.widget.picker.widget.TimePickerView;
 import com.xuexiang.xui.widget.picker.widget.builder.OptionsPickerBuilder;
@@ -66,6 +68,7 @@ public class UserInfoFragment extends BaseFragment {
     @BindView(R.id.tv_info_address)
     SuperTextView address;
 
+    private LoadingDialog mLoadingDialog;
 
     private String[] mSexOption;
     private int sexSelectOption = 0;
@@ -77,7 +80,10 @@ public class UserInfoFragment extends BaseFragment {
 
     @Override
     protected void initViews () {
-
+        mLoadingDialog = WidgetUtils.getLoadingDialog (getContext ())
+                .setIconScale (0.4F)
+                .setLoadingSpeed (8);
+        mLoadingDialog.show ();
         spf = SPUtils.getSharedPreferences (Api.SPFNAME);
         mSexOption = ResUtils.getStringArray(R.array.sex_option);
 
@@ -153,13 +159,25 @@ public class UserInfoFragment extends BaseFragment {
                         SPUtils.putString (spf, Api.param_address,address.getCenterEditValue ());
                         SPUtils.putString (spf, Api.param_userSex,userSex.getCenterEditValue ());
                         XToastUtils.success ("修改成功");
+                        mLoadingDialog.dismiss ();
                         popToBack ();
                     }
 
                     @Override
                     public void onError ( ApiException e ) {
                         Logger.d(e);
+                        mLoadingDialog.dismiss ();
                         super.onError (e);
+                    }
+
+                    @Override
+                    public void onStart () {
+                        mLoadingDialog.show ();
+                    }
+
+                    @Override
+                    public void onCompleted () {
+                        mLoadingDialog.dismiss ();
                     }
                 }){});
     }
