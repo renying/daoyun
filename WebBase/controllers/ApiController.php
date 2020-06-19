@@ -566,7 +566,7 @@ class ApiController extends ApiBaseController
     $request = \Yii::$app->request;
     $result=array();
     $username = $request->post('ui');
-    $classId = $request->post('classId');
+    $classId = $request->post('classid');
     if($classId==null){
       $result=array(
           'code'=>1005,
