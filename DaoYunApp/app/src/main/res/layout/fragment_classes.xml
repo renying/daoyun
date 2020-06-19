@@ -8,25 +8,13 @@
         android:background="@color/xui_config_color_white"
         android:orientation="vertical">
 
-    <com.xuexiang.xui.widget.tabbar.EasyIndicator
-            android:id="@+id/easy_indicator"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:indicator_height="42dp"
-            app:indicator_textSize="14sp"
-            app:indicator_width="0dp" />
-
-    <androidx.viewpager.widget.ViewPager
-            android:id="@+id/news_view_pager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
             android:id="@+id/refreshLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:srlEnableAutoLoadMore="true"
-            app:srlEnableLoadMore="true">
+            app:srlEnableLoadMore="true"
+            app:srlEnableOverScrollDrag="true">
 
         <com.scwang.smartrefresh.header.MaterialHeader
                 android:layout_width="match_parent"
@@ -45,6 +33,5 @@
                 android:layout_height="wrap_content" />
 
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
-
 
 </LinearLayout>

@@ -5,8 +5,8 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="menu_news">班课</string>
-    <string name="menu_trending">圈子</string>
+    <string name="menu_news">我创建的</string>
+    <string name="menu_trending">我加入的</string>
     <string name="menu_profile">我的</string>
 
     <string name="menu_notifications">通知</string>
@@ -93,5 +93,28 @@
     <string name="tv_confirmNewPwd">确认密码:</string>
     <string name="et_enterAddress">请输入地址</string>
     <string name="update_user_info">修改资料</string>
+    <string name="lab_submit">确定</string>
+    <string name="title_activity_course_detail">CourseDetailActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="title_member">成员</string>
+    <string name="title_inform">消息</string>
+    <string name="title_detail">详情</string>
+    <string name="course_name">课程名称</string>
+    <string name="course_creator">创建人</string>
+    <string name="course_bornDate">创建时间</string>
+    <string name="course_code">课程号</string>
+    <string name="checkon">签到</string>
+    <string name="class_name">课程名称</string>
+    <string name="input_class_name">请输入课程名称</string>
+    <string name="class_desc">课程简介</string>
+    <string name="input_class_desc">请输入课程简介</string>
+    <string name="class_code">课程编号</string>
+    <string name="input_class_code">请输入课程编号</string>
+    <string name="create">创建</string>
+    <string name="join">加入</string>
+    <string name="create_course">创建班课</string>
+    <string name="join_course">加入班课</string>
 
 </resources>

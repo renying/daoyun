@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/xui_config_color_white"
+        android:orientation="vertical">
+
+    <com.xuexiang.xui.widget.layout.XUILinearLayout
+            android:id="@+id/checkOn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical">
+
+        <ImageView
+                android:id="@+id/image_check"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:layout_gravity="center_horizontal"
+                android:contentDescription="@string/checkon"
+                app:srcCompat="@drawable/check" />
+
+        <com.xuexiang.xui.widget.textview.label.LabelTextView
+                android:id="@+id/exe_sign_in"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/checkon"
+                android:textColor="@color/xui_config_color_dark_blue_gray" />
+    </com.xuexiang.xui.widget.layout.XUILinearLayout>
+
+    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+            android:id="@+id/tv_check_count"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            app:sLeftTextString="签到次数">
+
+    </com.xuexiang.xui.widget.textview.supertextview.SuperTextView>
+
+    <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
+            android:id="@+id/tv_user_count"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            app:sLeftTextString="成员总数">
+
+    </com.xuexiang.xui.widget.textview.supertextview.SuperTextView>
+
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+            android:id="@+id/refreshLayout_member"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:srlEnableAutoLoadMore="true"
+            app:srlEnableLoadMore="true"
+            app:srlEnableOverScrollDrag="true">
+
+        <com.scwang.smartrefresh.header.MaterialHeader
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView_member"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:overScrollMode="never"
+                tools:listitem="@layout/adapter_member_card_view_list_item" />
+
+        <!--    注意修改包名时，这里也需要修改    -->
+        <com.team28.daoyunapp.widget.MaterialFooter
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+</LinearLayout>

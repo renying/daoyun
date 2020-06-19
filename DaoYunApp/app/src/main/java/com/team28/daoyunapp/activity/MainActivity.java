@@ -16,32 +16,37 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager.widget.ViewPager;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.orhanobut.logger.Logger;
 import com.team28.daoyunapp.core.BaseActivity;
 import com.team28.daoyunapp.core.BaseFragment;
+import com.team28.daoyunapp.core.http.Api;
+import com.team28.daoyunapp.fragment.creating.CreateClassFragment;
+import com.team28.daoyunapp.fragment.joining.JoinClassFragment;
 import com.team28.daoyunapp.fragment.profile.AboutFragment;
-import com.team28.daoyunapp.fragment.news.ClassesFragment;
+import com.team28.daoyunapp.fragment.creating.ClassesFragment;
 import com.team28.daoyunapp.fragment.profile.ProfileFragment;
-import com.team28.daoyunapp.fragment.trending.TrendingFragment;
+import com.team28.daoyunapp.fragment.joining.JoiningFragment;
 import com.team28.daoyunapp.utils.ActivityCollectorUtil;
+import com.team28.daoyunapp.utils.DataProvider;
 import com.team28.daoyunapp.utils.Utils;
 import com.team28.daoyunapp.utils.XToastUtils;
 import com.team28.daoyunapp.R;
 import com.team28.daoyunapp.fragment.profile.SettingsFragment;
 import com.xuexiang.xaop.annotation.SingleClick;
 import com.xuexiang.xui.adapter.FragmentAdapter;
+import com.xuexiang.xui.adapter.simple.AdapterItem;
+import com.xuexiang.xui.adapter.simple.XUISimpleAdapter;
 import com.xuexiang.xui.utils.ResUtils;
 import com.xuexiang.xui.utils.ThemeUtils;
 import com.xuexiang.xui.widget.imageview.RadiusImageView;
+import com.xuexiang.xui.widget.popupwindow.popup.XUISimplePopup;
 import com.xuexiang.xutil.XUtil;
 import com.xuexiang.xutil.common.ClickUtils;
 import com.xuexiang.xutil.common.CollectionUtils;
 import com.xuexiang.xutil.data.SPUtils;
 import com.xuexiang.xutil.display.Colors;
-import com.xuexiang.xutil.net.JSONUtils;
 
 import butterknife.BindView;
 
@@ -65,12 +70,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
      */
     @BindView(R.id.nav_view)
     NavigationView navView;
+
     @BindView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
 
     SharedPreferences spf;
 
     private String[] mTitles;
+
+    private XUISimplePopup mMenuPopup;
 
     @Override
     protected int getLayoutId() {
@@ -82,10 +90,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         super.onCreate(savedInstanceState);
 
         ActivityCollectorUtil.addActivity (this);
-        spf = SPUtils.getSharedPreferences ("user_info");
+        spf = SPUtils.getSharedPreferences (Api.SPFNAME);
+        Logger.json (JSON.toJSONString (spf.getAll ()));
         initViews();
         initListeners();
-        Logger.json (JSON.toJSONString (spf.getAll ()));
     }
 
     @Override
@@ -94,6 +102,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void initViews() {
+        DataProvider.getCourses ();
         mTitles = ResUtils.getStringArray(R.array.home_titles);
         toolbar.setTitle(mTitles[0]);
         toolbar.inflateMenu(R.menu.menu_main);
@@ -104,7 +113,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         //主页内容填充
         BaseFragment[] fragments = new BaseFragment[]{
                 new ClassesFragment (),
-                new TrendingFragment (),
+                new JoiningFragment (),
                 new ProfileFragment ()
         };
         FragmentAdapter<BaseFragment> adapter = new FragmentAdapter<>(getSupportFragmentManager(), fragments);
@@ -177,13 +186,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     /**
      * 处理侧边栏点击事件
      *
-     * @param menuItem
-     * @return
+     * @param menuItem 侧边栏组件
+     * @return boolean
      */
     private boolean handleNavigationItemSelected(@NonNull MenuItem menuItem) {
         View headerView = navView.getHeaderView(0);
         TextView tvAvatar = headerView.findViewById(R.id.tv_avatar);
-        tvAvatar.setText(spf.getString ("NickName",""));
+        tvAvatar.setText(SPUtils.getString (spf,"NickName",""));
 
         int index = CollectionUtils.arrayIndexOf(mTitles, menuItem.getTitle());
         if (index != -1) {
@@ -197,9 +206,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_privacy:
-                Utils.showPrivacyDialog(this, null);
+            case R.id.create_course:
+                openNewPage (CreateClassFragment.class);
                 break;
+            case R.id.join_course:
+                openNewPage (JoinClassFragment.class);
             default:
                 break;
         }
@@ -249,8 +260,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
      */
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-
-
 
         int index = CollectionUtils.arrayIndexOf(mTitles, menuItem.getTitle());
         if (index != -1) {

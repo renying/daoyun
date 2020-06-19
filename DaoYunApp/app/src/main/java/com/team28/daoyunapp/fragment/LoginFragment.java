@@ -1,6 +1,5 @@
 package com.team28.daoyunapp.fragment;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.view.View;
@@ -20,7 +19,9 @@ import com.xuexiang.xpage.annotation.Page;
 import com.xuexiang.xpage.enums.CoreAnim;
 import com.xuexiang.xui.utils.CountDownButtonHelper;
 import com.xuexiang.xui.utils.ResUtils;
+import com.xuexiang.xui.utils.WidgetUtils;
 import com.xuexiang.xui.widget.actionbar.TitleBar;
+import com.xuexiang.xui.widget.dialog.LoadingDialog;
 import com.xuexiang.xui.widget.edittext.materialedittext.MaterialEditText;
 import com.team28.daoyunapp.R;
 import com.team28.daoyunapp.activity.MainActivity;
@@ -31,11 +32,9 @@ import com.team28.daoyunapp.utils.TokenUtils;
 import com.team28.daoyunapp.utils.XToastUtils;
 import com.xuexiang.xutil.app.ActivityUtils;
 import com.xuexiang.xutil.data.SPUtils;
-import com.xuexiang.xutil.tip.ToastUtils;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-
 
 /**
  * 登录页面
@@ -51,7 +50,11 @@ public class LoginFragment extends BaseFragment {
     @BindView(R.id.et_password)
     MaterialEditText etPassword;
 
+    private SharedPreferences spf;
+
     private CountDownButtonHelper mCountDownHelper;
+
+    private LoadingDialog mLoadingDialog;
 
     @Override
     protected int getLayoutId () {
@@ -71,6 +74,10 @@ public class LoginFragment extends BaseFragment {
     @Override
     protected void initViews () {
 
+        spf = SPUtils.getSharedPreferences ("user_info");
+        mLoadingDialog = WidgetUtils.getLoadingDialog(getContext())
+                .setIconScale(0.4F)
+                .setLoadingSpeed(8);
         //隐私政策弹窗
         SettingSPUtils spUtils = SettingSPUtils.getInstance ();
         if (! spUtils.isAgreePrivacy ()) {
@@ -88,6 +95,7 @@ public class LoginFragment extends BaseFragment {
             case R.id.btn_login:
                 if (etAccount.validate ()) {
                     if (etPassword.validate ()) {
+                        mLoadingDialog.show();
                         loginByPassword (etAccount.getEditValue (), etPassword.getEditValue ());
                     }
                 }
@@ -110,37 +118,7 @@ public class LoginFragment extends BaseFragment {
         }
     }
 
-//    /**
-//     * 获取验证码
-//     */
-//    private void getVerifyCode ( String phoneNumber ) {
-//        // TODO: 2019-11-18 这里只是界面演示而已
-//        XToastUtils.warning ("只是演示，验证码请随便输");
-//        mCountDownHelper.start ();
-//    }
-//
-//    /**
-//     * 根据验证码登录
-//     *
-//     * @param phoneNumber 手机号
-//     * @param verifyCode  验证码
-//     */
-//    private void loginByVerifyCode ( String phoneNumber, String verifyCode ) {
-//        // TODO: 2019-11-18 这里只是界面演示而已
-//        String token = RandomUtils.getRandomNumbersAndLetters (16);
-//        if (TokenUtils.handleLoginSuccess (token)) {
-//            popToBack ();
-//            ActivityUtils.startActivity (MainActivity.class);
-//        }
-//    }
-
     private void loginByPassword ( String account, String password ) {
-        //获取当前时间
-//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmss", Locale.getDefault());// HH:mm:ss//获取当前时间
-//        Date date = new Date(System.currentTimeMillis());
-//        String timeStamp = "Date获取当前日期时间"+simpleDateFormat.format(date);
-        //通信
-
         XHttp.post (Api.LOGIN)
                 .params ("u", account)
                 .params ("p", password)
@@ -149,10 +127,14 @@ public class LoginFragment extends BaseFragment {
                     public void onSuccess ( JSONObject response ) {
                         Logger.json (response.toJSONString ());
                         String ukey = response.getString ("ukey");
-                        getUserInfo (response.getString ("userid"),ukey);
+                        String ui = response.getString ("userid");
+                        SPUtils.put (spf,Api.param_ui,ui);
+                        SPUtils.put (spf,Api.param_ukey,response.getString (Api.param_ukey));
+
+                        getUserInfo (ui,ukey);
 
                         if (TokenUtils.handleLoginSuccess (ukey)) {
-
+                            mLoadingDialog.dismiss ();
                             popToBack ();
                             ActivityUtils.startActivity (MainActivity.class);
                         }
@@ -160,10 +142,16 @@ public class LoginFragment extends BaseFragment {
 
                     @Override
                     public void onError ( ApiException e ) {
+                        mLoadingDialog.dismiss ();
                         Logger.d(e);
                         super.onError (e);
                     }
 
+                    @Override
+                    public void onCompleted () {
+
+                        mLoadingDialog.dismiss ();
+                    }
                 }) {
                 });
     }
@@ -176,30 +164,31 @@ public class LoginFragment extends BaseFragment {
                     @Override
                     public void onSuccess ( JSONObject response ) {
                         Logger.json (response.toJSONString ());
-                        SharedPreferences spf = getContext ().getSharedPreferences ("user_info", Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = spf.edit ();
-                        editor.putString ("UserName",response.getString ("UserName"));
-                        editor.putString ("NickName",response.getString ("NickName"));
-                        editor.putString ("BornDate",response.getString ("BornDate"));
-                        editor.putString ("UserSex",response.getString ("UserSex"));
-                        editor.putString ("UserType",response.getString ("UserType"));
-                        editor.putString ("CountryId",response.getString ("CountryId"));
-                        editor.putString ("Address",response.getString ("Address"));
-                        editor.putString ("SchoolId",response.getString ("SchoolId"));
-                        editor.putString ("UserCode",response.getString ("UserCode"));
-                        editor.putString ("RealName",response.getString ("RealName"));
-                        editor.putString ("Phone",response.getString ("Phone"));
 
-                        if(!editor.commit ()){
-                            XToastUtils.error ("用户信息加载失败");
-                        }
-
+                        SPUtils.put (spf,"UserName",response.getString ("UserName"));
+                        SPUtils.put (spf,"NickName",response.getString ("NickName"));
+                        SPUtils.put (spf,"BornDate",response.getString ("BornDate"));
+                        SPUtils.put (spf,"UserSex",response.getString ("UserSex"));
+                        SPUtils.put (spf,"UserType",response.getString ("UserType"));
+                        SPUtils.put (spf,"CountryId",response.getString ("CountryId"));
+                        SPUtils.put (spf,"Address",response.getString ("Address"));
+                        SPUtils.put (spf,"SchoolId",response.getString ("SchoolId"));
+                        SPUtils.put (spf,"UserCode",response.getString ("UserCode"));
+                        SPUtils.put (spf,"RealName",response.getString ("RealName"));
+                        SPUtils.put (spf,"Phone",response.getString ("Phone"));
+                        mLoadingDialog.dismiss ();
                     }
 
                     @Override
                     public void onError ( ApiException e ) {
+                        mLoadingDialog.dismiss ();
                         Logger.d (e);
                         super.onError (e);
+                    }
+
+                    @Override
+                    public void onCompleted () {
+                        mLoadingDialog.dismiss ();
                     }
                 }){});
     }
@@ -209,6 +198,7 @@ public class LoginFragment extends BaseFragment {
         if (mCountDownHelper != null) {
             mCountDownHelper.recycle ();
         }
+        mLoadingDialog.recycle();
         super.onDestroyView ();
     }
 }
