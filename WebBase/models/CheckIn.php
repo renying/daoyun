@@ -31,7 +31,6 @@ class CheckIn extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id'], 'required'],
             [['id', 'UserId', 'ClassId', 'CheckState'], 'integer'],
             [['CheckDate'], 'safe'],
             [['id'], 'unique'],
