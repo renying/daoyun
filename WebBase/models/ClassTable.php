@@ -31,7 +31,6 @@ class ClassTable extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['ClassId'], 'required'],
             [['ClassId', 'UserId', 'ClassNum', 'LastUpdateUserId'], 'integer'],
             [['ClassDiscription'], 'string'],
             [['CreateTime', 'UpdateTime'], 'safe'],

@@ -566,7 +566,14 @@ class ApiController extends ApiBaseController
     $request = \Yii::$app->request;
     $result=array();
     $username = $request->post('ui');
-    $classId = $request->post('classId');
+    $classId = $request->post('classid');
+    if($classId==null){
+      $result=array(
+          'code'=>1005,
+          'msg'=>'课程id错误，无法签到',
+          'data'=>false,
+        );
+    }
     //一小时之内不能重复签到
     //一个课程一天不能超过4次签到
     $userModel= new User();
