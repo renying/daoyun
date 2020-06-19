@@ -18,10 +18,6 @@
         app:contentPaddingRight="16dp"
         app:contentPaddingTop="5dp">
 
-    <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
 
         <LinearLayout
                 android:layout_width="match_parent"
@@ -31,8 +27,8 @@
 
             <com.xuexiang.xui.widget.imageview.RadiusImageView
                     android:id="@+id/iv_member_image"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:layout_marginEnd="8dp"
                     android:scaleType="centerCrop"
                     android:src="@drawable/xui_ic_default_img"
@@ -48,7 +44,7 @@
                 <TextView
                         android:id="@+id/tv_member_name"
                         style="@style/TextStyle.Content"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="4dp"
                         android:ellipsize="end"
                         android:gravity="start|center_vertical"
                         android:maxLines="1"
@@ -59,7 +55,7 @@
                 <TextView
                         android:id="@+id/tv_member_code"
                         style="@style/TextStyle.Explain"
-                        android:layout_marginTop="3dp"
+                        android:layout_marginTop="2dp"
                         android:ellipsize="end"
                         android:gravity="start|center_vertical"
                         android:maxLines="2"
@@ -68,9 +64,6 @@
                         tools:text="000000000" />
 
             </LinearLayout>
-
-        </LinearLayout>
-
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>

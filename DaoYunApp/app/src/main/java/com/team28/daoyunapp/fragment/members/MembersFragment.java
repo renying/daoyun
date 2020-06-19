@@ -1,9 +1,8 @@
 package com.team28.daoyunapp.fragment.members;
 
 import android.content.SharedPreferences;
-import android.provider.ContactsContract;
 import android.view.View;
-import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,7 +13,6 @@ import com.alibaba.android.vlayout.layout.LinearLayoutHelper;
 import com.orhanobut.logger.Logger;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.team28.daoyunapp.R;
-import com.team28.daoyunapp.activity.RegisterActivity;
 import com.team28.daoyunapp.adapter.base.delegate.SimpleDelegateAdapter;
 import com.team28.daoyunapp.adapter.entity.Member;
 import com.team28.daoyunapp.core.BaseFragment;
@@ -34,10 +32,8 @@ import com.xuexiang.xui.adapter.recyclerview.RecyclerViewHolder;
 import com.xuexiang.xui.utils.WidgetUtils;
 import com.xuexiang.xui.widget.actionbar.TitleBar;
 import com.xuexiang.xui.widget.dialog.LoadingDialog;
-import com.xuexiang.xui.widget.layout.XUILinearLayout;
-import com.xuexiang.xui.widget.textview.label.LabelTextView;
+import com.xuexiang.xui.widget.layout.ExpandableLayout;
 import com.xuexiang.xui.widget.textview.supertextview.SuperTextView;
-import com.xuexiang.xutil.app.ActivityUtils;
 import com.xuexiang.xutil.data.SPUtils;
 
 import java.util.Objects;
@@ -54,15 +50,17 @@ public class MembersFragment extends BaseFragment{
 
     @BindView(R.id.refreshLayout_member)
     SmartRefreshLayout refreshLayout;
+    @BindView (R.id.layout_exe)
+    ExpandableLayout layoutExe;
 
-    @BindView(R.id.tv_check_count)
-    SuperTextView checkCount;
+    @BindView(R.id.tv_exe)
+    TextView checkExe;
     @BindView(R.id.tv_user_count)
     SuperTextView userCount;
     @BindView(R.id.checkOn)
-    XUILinearLayout checkOn;
+    ExpandableLayout checkOn;
     @BindView(R.id.exe_sign_in)
-    LabelTextView exeSignIn;
+    SuperTextView exeSignIn;
 
 
     private SimpleDelegateAdapter<Member> mMemberAdapter;
@@ -76,6 +74,7 @@ public class MembersFragment extends BaseFragment{
 
     @Override
     protected void initViews () {
+        checkExe.setClickable (false);
         mLoadingDialog = WidgetUtils.getLoadingDialog (getContext ())
                 .setIconScale (0.4F)
                 .setLoadingSpeed (8);
@@ -84,8 +83,12 @@ public class MembersFragment extends BaseFragment{
         spf = SPUtils.getSharedPreferences (Api.SPFNAME);
 
         if (DataProvider.isCheckAble ()){
+            layoutExe.setExpanded (true);
+            checkOn.setExpanded (true);
             checkOn.setClickable (true);
         }else {
+            layoutExe.setExpanded (false);
+            checkOn.setExpanded (false);
             checkOn.setClickable (false);
         }
 
@@ -110,7 +113,7 @@ public class MembersFragment extends BaseFragment{
         delegateAdapter.addAdapter (mMemberAdapter);
 
         recyclerView.setAdapter (delegateAdapter);
-        checkCount.setRightString (DataProvider.getCheckCount () + "次");
+        checkExe.setText ("当前获得 "+DataProvider.getCheckCount ()*2+"积分");
     }
 
     @Override
@@ -134,7 +137,9 @@ public class MembersFragment extends BaseFragment{
     protected void initListeners () {
         //下拉刷新
         refreshLayout.setOnRefreshListener (refreshLayout -> refreshLayout.getLayout ().postDelayed (() -> {
-            checkCount.setRightString (DataProvider.getCheckCount () + "次");
+            Logger.d (DataProvider.getPoint ());
+            checkExe.setText ("当前获得 "+DataProvider.getPoint ()+" 积分");
+            exeSignIn.setCenterString ("签到次数："+DataProvider.getCheckCount ());
             userCount.setRightString (DataProvider.getUserCount () + "人");
             mMemberAdapter.refresh (DataProvider.getMembers ());
             refreshLayout.finishRefresh ();
@@ -154,18 +159,21 @@ public class MembersFragment extends BaseFragment{
                 .params (Api.param_ukey, SPUtils.getString (spf, Api.param_ukey, ""))
                 .params (Api.param_ui, MD5Utils.encode (SPUtils.getString (spf, Api.param_ui, "")))
                 .params (Api.param_classid, DataProvider.getCourse_id ())
-                .execute (new CallBackProxy<CustomApiResult<Boolean>, Boolean> (new TipCallBack<Boolean> () {
+                .execute (new CallBackProxy<CustomApiResult<String>, String> (new TipCallBack<String> () {
                     @Override
-                    public void onSuccess ( Boolean response ) throws Throwable {
-                        Logger.d (response);
+                    public void onSuccess ( String response ) throws Throwable {
+                        DataProvider.setCheckCount (DataProvider.getCheckCount ()+1);
+                        checkExe.setText ("当前获得 "+response+" 积分");
+                        exeSignIn.setCenterString ("签到次数："+DataProvider.getCheckCount ());
                         XToastUtils.success ("签到成功");
                         checkOn.setClickable (false);
+                        mLoadingDialog.dismiss ();
                     }
 
                     @Override
                     public void onError ( ApiException e ) {
                         mLoadingDialog.dismiss ();
-                        Logger.d (e);
+                        Logger.d (e.getDetailMessage ());
                         super.onError (e);
                     }
 

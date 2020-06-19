@@ -67,9 +67,6 @@ public class ProfileFragment extends BaseFragment implements SuperTextView.OnSup
     @Override
     public void onClick(SuperTextView view) {
         switch(view.getId()) {
-            case R.id.menu_notice:
-
-                break;
             case R.id.menu_userInfo:
                 openNewPage (UserInfoFragment.class);
                 break;

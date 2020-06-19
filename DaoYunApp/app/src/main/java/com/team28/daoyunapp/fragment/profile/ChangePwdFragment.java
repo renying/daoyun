@@ -17,13 +17,16 @@ import com.team28.daoyunapp.core.http.callback.TipCallBack;
 import com.team28.daoyunapp.utils.TokenUtils;
 import com.team28.daoyunapp.utils.XToastUtils;
 import com.xuexiang.xaop.annotation.SingleClick;
+import com.xuexiang.xaop.util.MD5Utils;
 import com.xuexiang.xhttp2.XHttp;
 import com.xuexiang.xhttp2.callback.CallBackProxy;
 import com.xuexiang.xhttp2.exception.ApiException;
 import com.xuexiang.xpage.annotation.Page;
 import com.xuexiang.xui.utils.CountDownButtonHelper;
 import com.xuexiang.xui.utils.ResUtils;
+import com.xuexiang.xui.utils.WidgetUtils;
 import com.xuexiang.xui.widget.actionbar.TitleBar;
+import com.xuexiang.xui.widget.dialog.LoadingDialog;
 import com.xuexiang.xui.widget.edittext.PasswordEditText;
 import com.xuexiang.xui.widget.edittext.materialedittext.MaterialEditText;
 import com.xuexiang.xui.widget.edittext.materialedittext.validation.METValidator;
@@ -49,7 +52,7 @@ public class ChangePwdFragment extends BaseFragment {
     MaterialEditText etNewPassword;
     @BindView(R.id.et_confirm_new_password)
     MaterialEditText etConfirmPassword;
-
+    private LoadingDialog mLoadingDialog;
     private SharedPreferences spf;
 
     private CountDownButtonHelper mCountDownHelper;
@@ -61,7 +64,10 @@ public class ChangePwdFragment extends BaseFragment {
 
     @Override
     protected void initViews () {
-        spf = SPUtils.getSharedPreferences ("user_info");
+        mLoadingDialog = WidgetUtils.getLoadingDialog (getContext ())
+                .setIconScale (0.4F)
+                .setLoadingSpeed (8);
+        spf = SPUtils.getSharedPreferences (Api.SPFNAME);
         etConfirmPassword.validateWith (new METValidator ("两次输入密码必须保持一致") {
             @Override
             public boolean isValid ( @NonNull CharSequence text, boolean isEmpty ) {
@@ -86,22 +92,33 @@ public class ChangePwdFragment extends BaseFragment {
     }
     private void changePassword ( String oldPwd, String newPwd ) {
         XHttp.post (Api.CHANGEPASSWORD)
-                .params ("ui", spf.getString ("ui", ""))
-                .params ("ukey", TokenUtils.getToken ())
+                .params (Api.param_ui, MD5Utils.encode (SPUtils.getString (spf, Api.param_ui, "")))
+                .params (Api.param_ukey, SPUtils.getString (spf,Api.param_ukey,""))
                 .params ("oldpass", oldPwd)
                 .params ("newpass", newPwd)
-                .execute (new CallBackProxy<CustomApiResult<Boolean>, Boolean> (new TipCallBack<Boolean> () {
+                .execute (new CallBackProxy<CustomApiResult<String>, String> (new TipCallBack<String> () {
                     @Override
-                    public void onSuccess ( Boolean response ) throws Throwable {
+                    public void onSuccess ( String response ) throws Throwable {
                         Logger.d (response);
                         XToastUtils.toast ("修改成功");
+                        mLoadingDialog.dismiss ();
                     }
                     @Override
                     public void onError ( ApiException e ) {
-                        Logger.d(e);
+                        Logger.d(e.getDetailMessage ()  );
                         super.onError (e);
+                        mLoadingDialog.dismiss ();
                     }
 
+                    @Override
+                    public void onStart () {
+                        mLoadingDialog.show ();
+                    }
+
+                    @Override
+                    public void onCompleted () {
+                        mLoadingDialog.dismiss ();
+                    }
                 }) {
                 });
     }

@@ -15,6 +15,7 @@ import com.team28.daoyunapp.core.http.callback.TipCallBack;
 import com.team28.daoyunapp.utils.TokenUtils;
 import com.team28.daoyunapp.utils.XToastUtils;
 import com.xuexiang.xaop.annotation.SingleClick;
+import com.xuexiang.xaop.util.MD5Utils;
 import com.xuexiang.xhttp2.XHttp;
 import com.xuexiang.xhttp2.callback.CallBackProxy;
 import com.xuexiang.xhttp2.exception.ApiException;
@@ -94,7 +95,7 @@ public class UserInfoFragment extends BaseFragment {
         bornDate.setCenterString (spf.getString ("BornDate", ""));
         userSex.setCenterString(mSexOption[StringUtils.toInt (spf.getString ("UserSex","1"))]);
         address.setCenterEditString (spf.getString ("Address", ""));
-
+        mLoadingDialog.dismiss ();
     }
 
     @SingleClick
@@ -143,8 +144,8 @@ public class UserInfoFragment extends BaseFragment {
 
     private void updateUserInfo(){
         XHttp.post (Api.UPDATEINFO)
-                .params (Api.param_ui,spf.getString (Api.param_ui,""))
-                .params (Api.param_ukey, TokenUtils.getToken ())
+                .params (Api.param_ui, MD5Utils.encode (SPUtils.getString (spf, Api.param_ui, "")))
+                .params (Api.param_ukey, SPUtils.getString (spf,Api.param_ukey,""))
                 .params (Api.param_nickName,nickName.getCenterEditValue ())
                 .params (Api.param_bornDate,bornDate.getCenterEditValue ())
                 .params (Api.param_realName,realName.getCenterEditValue ())
@@ -160,7 +161,6 @@ public class UserInfoFragment extends BaseFragment {
                         SPUtils.putString (spf, Api.param_userSex,userSex.getCenterEditValue ());
                         XToastUtils.success ("修改成功");
                         mLoadingDialog.dismiss ();
-                        popToBack ();
                     }
 
                     @Override

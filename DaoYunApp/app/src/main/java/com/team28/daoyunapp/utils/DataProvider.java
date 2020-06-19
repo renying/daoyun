@@ -32,6 +32,7 @@ public class DataProvider {
     private static int course_id;
     private static int userCount;
     private static int checkCount;
+    private static int point;
     private static List<Member>members = new ArrayList<> ();
 
     private static SharedPreferences spf = SPUtils.getSharedPreferences (Api.SPFNAME);
@@ -99,6 +100,7 @@ public class DataProvider {
                         Logger.json (response.toJSONString ());
                         JSONArray remembers = response.getJSONArray ("UserList");
                         checkCount = response.getInteger ("CheckCount");
+                        point = checkCount *2;
                         userCount = remembers.size ();
                         if ( members.size () < remembers.size ()) {
                             for (Object item : remembers) {
@@ -199,5 +201,13 @@ public class DataProvider {
 
     public static void setCheckAble ( boolean checkAble ) {
         DataProvider.checkAble = checkAble;
+    }
+
+    public static int getPoint () {
+        return point;
+    }
+
+    public static void setPoint ( int point ) {
+        DataProvider.point = point;
     }
 }
