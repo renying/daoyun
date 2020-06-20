@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.alibaba.android.vlayout.DelegateAdapter;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
 import com.alibaba.android.vlayout.layout.LinearLayoutHelper;
-import com.orhanobut.logger.Logger;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.team28.daoyunapp.R;
 import com.team28.daoyunapp.activity.CourseDetailActivity;
@@ -89,9 +88,8 @@ public class JoiningFragment extends BaseFragment {
                     holder.text(R.id.tv_summary, item.getDesc ());
 
                     holder.click (R.id.card_view,v -> {
-                        DataProvider.setCheckCount (0);
+                        DataProvider.clearCourseData ();
                         DataProvider.setCheckAble (true);
-                        DataProvider.clearMembers ();
                         DataProvider.setCourse_id (item.getID ());
                         DataProvider.getClassMembers ();
                         ActivityUtils.startActivityWithBundle (CourseDetailActivity.class,"key",item);

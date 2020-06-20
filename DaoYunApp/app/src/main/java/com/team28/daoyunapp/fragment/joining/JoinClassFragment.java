@@ -89,6 +89,7 @@ public class JoinClassFragment extends BaseFragment {
 
                     @Override
                     public void onStart () {
+                        Logger.d (classCode.getEditValue ());
                         mLoadingDialog.show ();
                         super.onStart ();
                     }

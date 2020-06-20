@@ -28,14 +28,12 @@ import java.util.List;
  * @author zengjun
  */
 public class DataProvider {
-    private static boolean checkAble;
-    private static int course_id;
-    private static int userCount;
-    private static int checkCount;
-    private static int point;
+    private static boolean checkAble = false;
+    private static int course_id = 0;
+    private static int userCount = 0;
+    private static int checkCount = 0;
+    private static int point = 0;
     private static List<Member>members = new ArrayList<> ();
-
-    private static SharedPreferences spf = SPUtils.getSharedPreferences (Api.SPFNAME);
 
     private static List<Course> createdCourses = new ArrayList<> ();
     private static List<Course> joinedCourses = new ArrayList<> ();
@@ -43,12 +41,11 @@ public class DataProvider {
 
     public static void getCourses () {
         XHttp.post (Api.CLASSINFO)
-                .params (Api.param_ukey, SPUtils.getString (spf, Api.param_ukey, ""))
-                .params (Api.param_ui, MD5Utils.encode (SPUtils.getString (spf, Api.param_ui, "")))
+                .params (Api.param_ukey, SPProvider.getData (Api.param_ukey))
+                .params (Api.param_ui, MD5Utils.encode (SPProvider.getData (Api.param_ui)))
                 .execute (new CallBackProxy<CustomApiResult<JSONObject>, JSONObject> (new TipCallBack<JSONObject> () {
                     @Override
                     public void onSuccess ( JSONObject response ) {
-//                        Logger.d (response);
                         Logger.json (response.toJSONString ());
                         JSONArray courses = response.getJSONArray ("Created");
                         if (createdCourses.size () < courses.size ()) {
@@ -91,21 +88,31 @@ public class DataProvider {
 
     public static void getClassMembers () {
         XHttp.post (Api.CLASSUSERLIST)
-                .params (Api.param_ukey, SPUtils.getString (spf, Api.param_ukey, ""))
-                .params (Api.param_ui, MD5Utils.encode (SPUtils.getString (spf, Api.param_ui, "")))
+                .params (Api.param_ukey, SPProvider.getData (Api.param_ukey))
+                .params (Api.param_ui, MD5Utils.encode (SPProvider.getData (Api.param_ui)))
                 .params (Api.param_classid,getCourse_id ())
                 .execute (new CallBackProxy<CustomApiResult<JSONObject>,JSONObject> (new TipCallBack<JSONObject> () {
+
                     @Override
                     public void onSuccess ( JSONObject response ) throws Throwable {
                         Logger.json (response.toJSONString ());
-                        JSONArray remembers = response.getJSONArray ("UserList");
-                        checkCount = response.getInteger ("CheckCount");
-                        point = checkCount *2;
-                        userCount = remembers.size ();
-                        if ( members.size () < remembers.size ()) {
-                            for (Object item : remembers) {
-                                JSONObject member = (JSONObject) item;
-                                members.add (new Member (member.getString ("UserId"),member.getString ("UserName"),member.getString ("UserCode")));
+                        if (response.getIntValue ("UserCount") != 0){
+                            JSONArray remembers= response.getJSONArray ("UserList");
+                            userCount = remembers.size ();
+                            if ( members.size () < remembers.size ()) {
+                                for (Object item : remembers) {
+                                    JSONObject member = (JSONObject) item;
+                                    members.add (new Member (member.getString ("UserId"),member.getString ("UserName"),member.getString ("UserCode")));
+                                }
+                            }
+                        }
+
+                        if (isCheckAble ()){
+                            try {
+                                checkCount = response.getInteger ("CheckCount");
+                                point = checkCount *2;
+                            } catch (NullPointerException e){
+                                Logger.d ("CheckCount不存在");
                             }
                         }
                     }
@@ -132,8 +139,10 @@ public class DataProvider {
      */
     @MemoryCache
     public static List<Course> getCreatedClassInfos () {
-
-        return createdCourses;
+        if (createdCourses.isEmpty ())
+            return null;
+        else
+            return createdCourses;
     }
 
     /**
@@ -141,8 +150,10 @@ public class DataProvider {
      */
     @MemoryCache
     public static List<Course> getJoinedClassInfos () {
-
-        return joinedCourses;
+        if (joinedCourses.isEmpty ())
+            return null;
+        else
+            return joinedCourses;
     }
 
     /**
@@ -150,7 +161,10 @@ public class DataProvider {
      */
     @MemoryCache
     public static List<Member> getMembers () {
-        return members;
+        if (members.isEmpty ())
+            return null;
+        else
+            return members;
     }
 
     public static Course getChoosedCourse () {
@@ -169,6 +183,26 @@ public class DataProvider {
             }
         }
         return - 1;
+    }
+
+    public static void clearCourseData(){
+        checkAble = false;
+        course_id = 0;
+        userCount = 0;
+        checkCount = 0;
+        point = 0;
+        members.clear ();
+    }
+
+    public static void clearAllData(){
+        checkAble = false;
+        course_id = 0;
+        userCount = 0;
+        checkCount = 0;
+        point = 0;
+        members.clear ();
+        createdCourses.clear ();
+        joinedCourses.clear ();
     }
 
     public static int getCourse_id () {

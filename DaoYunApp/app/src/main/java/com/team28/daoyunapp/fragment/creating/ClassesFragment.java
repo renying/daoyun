@@ -91,9 +91,8 @@ public class ClassesFragment extends BaseFragment {
                     holder.text(R.id.tv_summary, item.getDesc ());
 
                     holder.click (R.id.card_view,v -> {
-                        DataProvider.setCheckCount (0);
+                        DataProvider.clearCourseData ();
                         DataProvider.setCheckAble (false);
-                        DataProvider.clearMembers ();
                         DataProvider.setCourse_id (item.getID ());
                         DataProvider.getClassMembers ();
                         ActivityUtils.startActivityWithBundle (CourseDetailActivity.class,"key",item);

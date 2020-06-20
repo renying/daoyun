@@ -90,9 +90,8 @@ public class UserInfoFragment extends BaseFragment {
 
         userName.setRightString (spf.getString ("UserName", ""));
         realName.setCenterEditString (spf.getString ("RealName", ""));
-//        realName.setCenterTextColor (111111);
         nickName.setCenterEditString (spf.getString ("NickName", ""));
-        bornDate.setCenterString (spf.getString ("BornDate", ""));
+        bornDate.setCenterString (spf.getString ("BornDate", "1970-01-01"));
         userSex.setCenterString(mSexOption[StringUtils.toInt (spf.getString ("UserSex","1"))]);
         address.setCenterEditString (spf.getString ("Address", ""));
         mLoadingDialog.dismiss ();
@@ -127,13 +126,10 @@ public class UserInfoFragment extends BaseFragment {
      * 性别选择
      */
     private void showSexPickerView() {
-        OptionsPickerView pvOptions = new OptionsPickerBuilder (getContext(), new OnOptionsSelectListener () {
-            @Override
-            public boolean onOptionsSelect(View v, int options1, int options2, int options3) {
-                userSex.setCenterString(mSexOption[options1]);
-                sexSelectOption = options1;
-                return false;
-            }
+        OptionsPickerView pvOptions = new OptionsPickerBuilder (getContext(), ( v, options1, options2, options3 ) -> {
+            userSex.setCenterString(mSexOption[options1]);
+            sexSelectOption = options1;
+            return false;
         })
                 .setTitleText("请选择性别")
                 .setSelectOptions(sexSelectOption)
@@ -147,25 +143,25 @@ public class UserInfoFragment extends BaseFragment {
                 .params (Api.param_ui, MD5Utils.encode (SPUtils.getString (spf, Api.param_ui, "")))
                 .params (Api.param_ukey, SPUtils.getString (spf,Api.param_ukey,""))
                 .params (Api.param_nickName,nickName.getCenterEditValue ())
-                .params (Api.param_bornDate,bornDate.getCenterEditValue ())
+                .params (Api.param_bornDate,bornDate.getCenterString ())
                 .params (Api.param_realName,realName.getCenterEditValue ())
                 .params (Api.param_address,address.getCenterEditValue ())
-                .params (Api.param_userSex,userSex.getCenterEditValue ())
+                .params (Api.param_userSex,sexSelectOption)
                 .execute (new CallBackProxy<CustomApiResult<String>,String> (new TipCallBack<String> () {
                     @Override
                     public void onSuccess ( String response ) throws Throwable {
                         SPUtils.putString (spf, Api.param_nickName, nickName.getCenterEditValue ());
-                        SPUtils.putString (spf, Api.param_bornDate,bornDate.getCenterEditValue ());
+                        SPUtils.putString (spf, Api.param_bornDate,bornDate.getCenterString ());
                         SPUtils.putString (spf, Api.param_realName,realName.getCenterEditValue ());
                         SPUtils.putString (spf, Api.param_address,address.getCenterEditValue ());
-                        SPUtils.putString (spf, Api.param_userSex,userSex.getCenterEditValue ());
+                        SPUtils.putString (spf, Api.param_userSex,sexSelectOption+"");
                         XToastUtils.success ("修改成功");
                         mLoadingDialog.dismiss ();
                     }
 
                     @Override
                     public void onError ( ApiException e ) {
-                        Logger.d(e);
+                        Logger.d(e.getDetailMessage ());
                         mLoadingDialog.dismiss ();
                         super.onError (e);
                     }

@@ -3,8 +3,6 @@ package com.team28.daoyunapp.adapter.entity;
 /**
  * 新闻信息
  *
- * @author xuexiang
- * @since 2019/4/7 下午12:07
  */
 public class NewInfo {
 

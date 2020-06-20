@@ -6,6 +6,8 @@ import com.alibaba.fastjson.JSON;
 import com.orhanobut.logger.Logger;
 import com.team28.daoyunapp.core.BaseFragment;
 import com.team28.daoyunapp.utils.ActivityCollectorUtil;
+import com.team28.daoyunapp.utils.DataProvider;
+import com.team28.daoyunapp.utils.SPProvider;
 import com.team28.daoyunapp.utils.TokenUtils;
 import com.team28.daoyunapp.utils.XToastUtils;
 import com.team28.daoyunapp.R;
@@ -79,6 +81,8 @@ public class SettingsFragment extends BaseFragment implements SuperTextView.OnSu
                                 TokenUtils.handleLogoutSuccess ();
                                 Objects.requireNonNull (getActivity ()).finish ();
                                 ActivityCollectorUtil.finishAllActivity ();
+                                SPProvider.clear ();
+                                DataProvider.clearAllData ();
                             }
                         })
                         .negativeText(R.string.lab_no)
