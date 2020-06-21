@@ -79,10 +79,7 @@
     <div style="height: 30px; witdh: 100%"></div>
     <router-view/>
   </el-container>
-    <button class="btn btn-primary w-md waves-effect waves-light" type="button"
-                    @click="exit()">
-                    注销
-                    </button>
+    <button class="btn btn-primary w-md waves-effect waves-light" type="button" @click="exit()">注销</button>
   </div>
 </template>
 
