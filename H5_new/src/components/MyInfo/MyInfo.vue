@@ -32,7 +32,7 @@
         <div class="update" height="800px">
       <div>
         <p>账号：{{pid}}</p>
-        <p>昵称：{{nickname}}</p>
+        <p>昵称：{{message.nickname}}</p>
         <p>姓名：{{message.name}}</p>
         <p>出生年份：{{message.year}}</p>
         <p>性别：{{message.sex}}</p>
@@ -99,7 +99,8 @@ export default {
       size: 5,
       dialogVisible3: false,
       message: {
-        cardid: '',
+        nickname: '',
+        year: '',
         name: '',
         sex: '',
         number: '',
@@ -108,18 +109,12 @@ export default {
       search: '',
       studentInfo: {
         pid: '',
-        cardid: '',
-        p_code: '',
         nickname: '',
         name: '',
         year: '',
         sex: '',
         number: '',
         school: ''
-      },
-      changeCode: { // 访问的时候要先写  对象名 . 成员
-        p_code_old: '',
-        p_code_new: ''
       }
     }
   },
@@ -163,7 +158,7 @@ export default {
             t.username = response.data.username
             t.NickName = response.data.NickName
             t.year = response.data.BornDate
-            t.UserSex = response.data.UserSex
+            t.UserSex = t.formatRole(response.data.UserSex)
             t.UserType = response.data.UserType
             t.Address = response.data.Address
             t.Phone = response.data.Phone
