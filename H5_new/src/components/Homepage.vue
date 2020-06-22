@@ -29,32 +29,16 @@
     <el-tabs type="border-card">
       <el-tab-pane label="我加入的">
         <div class="row">
-          <div class="col-lg-3 col-md-6">
+          <div v-for="(item, index) in JoinedList" v-bind:key="index" class="col-lg-3 col-md-6">
             <a href="#" class="gallery-popup" title="Open Imagination">
               <div class="project-item">
                 <div class="overlay-container">
                   <img src="@/assets/images/gallery/work-1.jpg" alt="img" class="gallery-thumb-img">
                   <div class="project-item-overlay">
-                    <h4>这里放课程名称</h4>
+                    <h4>{{item.ClassName}}</h4>
                     <p>
                       <img src="@/assets/images/users/avatar-1.jpg" alt="user" class="thumb-sm rounded-circle" />
-                      <span class="ml-2">这里放任课教师</span>
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </a>
-          </div>
-          <div class="col-lg-3 col-md-6">
-            <a href="#" class="gallery-popup" title="Open Imagination">
-              <div class="project-item">
-                <div class="overlay-container">
-                  <img src="@/assets/images/gallery/work-2.jpg" alt="img" class="gallery-thumb-img">
-                  <div class="project-item-overlay">
-                    <h4>这里放课程名称</h4>
-                    <p>
-                      <img src="@/assets/images/users/avatar-2.jpg" alt="user" class="thumb-sm rounded-circle" />
-                      <span class="ml-2">这里放任课教师</span>
+                      <span class="ml-2">{{item.UserName}}</span>
                     </p>
                   </div>
                 </div>
@@ -80,34 +64,17 @@
         </el-row>
       </el-tab-pane>
       <el-tab-pane label="我创建的">
-        配置管理
         <div class="row">
-          <div class="col-lg-3 col-md-6">
-            <a href="assets/images/gallery/work-1.jpg" class="gallery-popup" title="Open Imagination">
+          <div v-for="(item, index) in CreatedList" v-bind:key="index" class="col-lg-3 col-md-6">
+            <a href="/MyCreation" class="gallery-popup" title="Open Imagination">
               <div class="project-item">
                 <div class="overlay-container">
                   <img src="@/assets/images/gallery/work-1.jpg" alt="img" class="gallery-thumb-img">
                   <div class="project-item-overlay">
-                    <h4>这里放课程名称</h4>
+                    <h4>{{item.ClassName}}</h4>
                     <p>
                       <img src="@/assets/images/users/avatar-1.jpg" alt="user" class="thumb-sm rounded-circle" />
-                      <span class="ml-2">这里放任课教师</span>
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </a>
-          </div>
-          <div class="col-lg-3 col-md-6">
-            <a href="assets/images/gallery/work-2.jpg" class="gallery-popup" title="Open Imagination">
-              <div class="project-item">
-                <div class="overlay-container">
-                  <img src="@/assets/images/gallery/work-2.jpg" alt="img" class="gallery-thumb-img">
-                  <div class="project-item-overlay">
-                    <h4>这里放课程名称</h4>
-                    <p>
-                      <img src="@/assets/images/users/avatar-2.jpg" alt="user" class="thumb-sm rounded-circle" />
-                      <span class="ml-2">这里放任课教师</span>
+                      <span class="ml-2">{{item.UserName}}</span>
                     </p>
                   </div>
                 </div>
@@ -136,15 +103,18 @@ export default {
       classid: '',
       c_uname: '',
       c_name: '',
-      c_school: ''
+      c_school: '',
+      JoinedList: [],
+      CreatedList: []
     }
   },
   methods: {
-    getJoinClass () {
+    getAllClass () {
       var t = this
       var myDate = new Date()
       var qs = require('qs')
-      this.$axios.get('api/get-classinfo', qs.stringify({
+      this.$axios.post('api/get-classinfo', qs.stringify({
+        ui: localStorage.getItem('userid'),
         ukey: localStorage.getItem('ukey'),
         TimeStamp: myDate
       }), {
@@ -158,9 +128,12 @@ export default {
             t.restult = '获取成功'
             // this.$store.commit('setToken', JSON.stringify(response.data.data.ukey))
             // this.$store.commit('setAccount', JSON.stringify(response.data.data.ui))
-            t.c_uname = response.data.data.UserName
-            t.c_name = response.data.data.ClassName
-            t.c_school = response.data.data.SchoolInfo
+            t.JoinedList = response.data.data.Joined
+            t.CreatedList = response.data.data.Created
+            console.log(t.JoinedList[0].UserName)
+            // t.c_uname = response.data.data.UserName
+            // t.c_name = response.data.data.ClassName
+            // t.c_school = response.data.data.SchoolInfo
           } else if (response.data.code === 9999) {
             t.restult = '系统错误'
             t.isShow = true
@@ -226,6 +199,7 @@ export default {
     }
   },
   mounted () {
+    this.getAllClass()
     // this.$router.push({path: '/HospitalManager/Employee'})
   }
 }

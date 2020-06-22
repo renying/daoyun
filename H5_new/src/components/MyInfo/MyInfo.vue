@@ -31,13 +31,13 @@
         这里是用户信息
         <div class="update" height="800px">
       <div>
-        <p>账号：{{pid}}</p>
-        <p>昵称：{{message.nickname}}</p>
-        <p>姓名：{{message.name}}</p>
-        <p>出生年份：{{message.year}}</p>
-        <p>性别：{{message.sex}}</p>
-        <p>学号：{{message.number}}</p>
-        <p>所在学校：{{message.school}}</p>
+        <p>账号：{{ui}}</p>
+        <p>昵称：{{nickname}}</p>
+        <p>姓名：{{name}}</p>
+        <p>出生年份：{{year}}</p>
+        <p>性别：{{sex}}</p>
+        <p>学号：{{number}}</p>
+        <p>所在学校：{{school}}</p>
       </div>
       <el-button type="primary" @click="dialogFormVisible1=true">修改信息</el-button>
       <el-dialog title="修改信息" :visible.sync="dialogFormVisible1">
@@ -95,40 +95,58 @@ export default {
       currentPage: 0,
       size: 5,
       dialogVisible3: false,
-      message: {
-        nickname: '',
-        year: '',
-        name: '',
-        sex: '',
-        number: '',
-        school: ''
-      },
+      ui: localStorage.getItem('userid'),
+      nickname: '',
+      year: '',
+      name: '',
+      sex: '',
+      number: '',
+      school: '',
+      type: '',
+      contry: '',
+      realname: '',
       search: '',
-      studentInfo: {
-        pid: '',
-        nickname: '',
-        name: '',
-        year: '',
-        sex: '',
-        number: '',
-        school: ''
-      }
+      studentInfo: {}
     }
   },
   methods: {
     formatRole (sex) { // 表格数据转换 性别
       return sex === 1 ? '男' : sex === 0 ? '女' : '未知'
     },
-    getPatientById () {
-      console.log('getPatientById')
+    getMyInfo () {
       var t = this
-      this.$axios({
-        method: 'get',
-        url: '/Patient/getPatientById?pid=' + t.pid
+      var myDate = new Date()
+      var qs = require('qs')
+      this.$axios.post('api/get-userinfo', qs.stringify({
+        ui: localStorage.getItem('userid'),
+        ukey: localStorage.getItem('ukey'),
+        TimeStamp: myDate
+      }), {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
       })
         .then(function (response) {
-          t.message = response.data
-          console.log(response)
+          console.log(response.data)
+          if (response.data.code === 1) {
+            t.restult = '获取成功'
+            // this.$store.commit('setToken', JSON.stringify(response.data.data.ukey))
+            // this.$store.commit('setAccount', JSON.stringify(response.data.data.ui))
+            t.name = response.data.data.UserName
+            t.nickname = response.data.data.NickName
+            t.year = response.data.data.BornDate
+            t.sex = response.data.data.UserSex
+            t.number = response.data.data.Phone
+            t.school = response.data.data.SchoolId
+            t.type = response.data.data.UserType
+            t.contry = response.data.data.ContryId
+            t.realname = response.data.data.RealName
+          } else if (response.data.code === 9999) {
+            t.restult = '系统错误'
+            t.isShow = true
+          } else if (response.data.code === 1001) {
+            t.restult = '请求错误'
+          }
         })
         .catch(function (error) {
           console.log(error)
@@ -238,7 +256,7 @@ export default {
     // }
   },
   mounted () {
-    this.getUserInfo()
+    this.getMyInfo()
   }
 }
 </script>
