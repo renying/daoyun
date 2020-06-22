@@ -565,8 +565,21 @@ class ApiController extends ApiBaseController
   {
     $request = \Yii::$app->request;
     $result=array();
+    $classInfo=null;
     $username = $request->post('ui');
     $classId = $request->post('classid');
+
+    $longitude = $request->post('longitude');
+    $latitude = $request->post('latitude');
+    
+    if($longitude==null||floatval($longitude)<0||$latitude==null||floatval($latitude)<0){
+      $result=array(
+        'code'=>1006,
+        'msg'=>'定位信息错误，无法发起签到',
+        'data'=>false,
+      );
+    }
+
     if($classId==null){
       $result=array(
           'code'=>1005,
@@ -574,72 +587,82 @@ class ApiController extends ApiBaseController
           'data'=>false,
         );
     }
-    //一小时之内不能重复签到
-    //一个课程一天不能超过4次签到
-    $userModel= new User();
-    $userList = $userModel::find()->asArray()->all();
-    $userinfodetail=null;
-    foreach($userList as $user){
-      if(md5($user['UserId'])==$username){
-        $userinfodetail=$user;
-        break;
-      }
-    }
-    if($userinfodetail!=null){
-      $CheckinModel = new CheckIn();
-      $searchdate=date("Y-m-d");
-      $chklist= $CheckinModel::find()->where(['UserId' => $userinfodetail['UserId'],'ClassId' => $classId])->andWhere(['like','CheckDate',$searchdate])->orderBy('CheckDate desc')->asArray()->all();
-
-      if(count($chklist)>3){
+    else{
+      $classInfo = ClassTable::findOne($classId);
+      if($classInfo==null){
         $result=array(
-          'code'=>1003,
-          'msg'=>'当前课程签到次数已满，无法签到',
+          'code'=>1005,
+          'msg'=>'课程id错误，无法签到',
           'data'=>false,
         );
       }
-      else{
-        foreach($chklist as $chk){
-          if(strtotime($chk['CheckDate'])>strtotime(date('Y-m-d H:i:s', strtotime('-1hour')))){
-            $result=array(
-              'code'=>1004,
-              'msg'=>'一小时之内不能重复签到，无法签到',
-              'data'=>false,
-            );
-            break;
-          }
+      else if(strtotime($classInfo->SignTime)<strtotime(date('Y-m-d H:i:s', strtotime('-'.$classInfo->Duration.'minute')))) {
+        $result=array(
+          'code'=>1006,
+          'msg'=>'签到时间已过，无法签到',
+          'data'=>false,
+        );
+      }
+    }
+    if($result!=null&&$result['code']>0){
+    }
+    else{
+      $userModel= new User();
+      $userList = $userModel::find()->asArray()->all();
+      $userinfodetail=null;
+      foreach($userList as $user){
+        if(md5($user['UserId'])==$username){
+          $userinfodetail=$user;
+          break;
         }
       }
-      if($result==null)
-      {
-        $CheckinModel->UserId=$userinfodetail['UserId'];
-        $CheckinModel->ClassId=$classId;
-        $CheckinModel->CheckDate=date("Y-m-d H:i:s");
-        $CheckinModel->CheckState=1;
+      if($userinfodetail!=null){
         
-        if($CheckinModel->save()){
-          $chklist= $CheckinModel::find()->where(['UserId' => $userinfodetail['UserId']])->asArray()->all();
+
+        $CheckinModel = new CheckIn();
+        $searchdate=date("Y-m-d H");
+        $chklist= $CheckinModel::find()->where(['UserId' => $userinfodetail['UserId'],'ClassId' => $classId])->andWhere(['>','CheckDate',date('Y-m-d H:i:s', strtotime($classInfo->SignTime))])->orderBy('CheckDate desc')->asArray()->all();
+
+        if(count($chklist)>0){
           $result=array(
-            'code'=>1,
-            'msg'=>'true',
-            'data'=>count($chklist)*2,
-          );
-        }
-        else{
-          $result=array(
-            'code'=>1001,
-            'msg'=>'签到失败',
+            'code'=>1003,
+            'msg'=>'当前课程已签到，无法再次签到',
             'data'=>false,
           );
         }
-        
+        if($result==null)
+        {
+          $CheckinModel->UserId=$userinfodetail['UserId'];
+          $CheckinModel->ClassId=$classId;
+          $CheckinModel->CheckDate=date("Y-m-d H:i:s");
+          $CheckinModel->CheckState=1;
+          $CheckinModel->Longitude = $longitude;
+          $CheckinModel->Latitude = $latitude;
+          if($CheckinModel->save()){
+            $chklist= $CheckinModel::find()->where(['UserId' => $userinfodetail['UserId']])->asArray()->all();
+            $result=array(
+              'code'=>1,
+              'msg'=>'true',
+              'data'=>count($chklist)*2,
+            );
+          }
+          else{
+            $result=array(
+              'code'=>1001,
+              'msg'=>'签到失败',
+              'data'=>false,
+            );
+          }
+          
+        }
       }
-    }
-    else{
-      $result=array(
-        'code'=>1002,
-        'msg'=>'can`t find this user',
-        'data'=>null,
-      );
+      else{
+        $result=array(
+          'code'=>1002,
+          'msg'=>'can`t find this user',
+          'data'=>null,
+        );
+      }
     }
     echo json_encode($result);
   }
@@ -650,7 +673,7 @@ class ApiController extends ApiBaseController
     $request = \Yii::$app->request;
     $result=array();
     $username = $request->post('ui');
-    $classId = $request->post('classId');
+    $classCode = $request->post('ClassCode');
     $userModel= new User();
     $userList = $userModel::find()->asArray()->all();
     $userinfodetail=null;
@@ -660,44 +683,136 @@ class ApiController extends ApiBaseController
         break;
       }
     }
-    if($userinfodetail!=null){
-      $stdModel = new StdClass();
-      $stdList=$stdModel::find()->where(['UserId' => $userinfodetail['UserId'],'ClassId' => $classId])->asArray()->all();
-      if($stdList!=null){
-        $result=array(
-          'code'=>1002,
-          'msg'=>'已加入当前课程，无需再次加入',
-          'data'=>false,
-        );
-      }
-      else{
-        $stdModel->UserId=$userinfodetail['UserId'];
-        $stdModel->ClassId=$classId;
-        if($stdModel->save()){
-         
+    $classModel= new ClassTable();
+    $classInfo=$classModel::find()->where(['ClassNum' => $classCode])->asArray()->one();
+    if($classInfo==null||$classInfo['ClassId']<1){
+      $result=array(
+        'code'=>1004,
+        'msg'=>'课程编码错误',
+        'data'=>false,
+      );
+    }
+    else{
+      $classId=$classInfo['ClassId'];
+      if($userinfodetail!=null){
+        $stdModel = new StdClass();
+        $stdList=$stdModel::find()->where(['UserId' => $userinfodetail['UserId'],'ClassId' => $classId])->asArray()->all();
+        if($stdList!=null){
           $result=array(
-            'code'=>1,
-            'msg'=>'加入成功',
-            'data'=>true,
-          );
-        }
-        else{
-          $result=array(
-            'code'=>1003,
-            'msg'=>'加入课程异常',
+            'code'=>1002,
+            'msg'=>'已加入当前课程，无需再次加入',
             'data'=>false,
           );
         }
+        else{
+          $stdModel->UserId=$userinfodetail['UserId'];
+          $stdModel->ClassId=$classId;
+          if($stdModel->save()){
+           
+            $result=array(
+              'code'=>1,
+              'msg'=>'加入成功',
+              'data'=>true,
+            );
+          }
+          else{
+            $result=array(
+              'code'=>1003,
+              'msg'=>'加入课程异常',
+              'data'=>false,
+            );
+          }
+        }
       }
-    }
-    else{
-      $result=array(
-        'code'=>1002,
-        'msg'=>'can`t find this user',
-        'data'=>null,
-      );
+      else{
+        $result=array(
+          'code'=>1002,
+          'msg'=>'can`t find this user',
+          'data'=>null,
+        );
+      }
     }
     echo json_encode($result);
   }
+  /*
+  * 十三、发起签到接口
+  */
+  public function actionStartcheckin(){
+    $request = \Yii::$app->request;
+    $result=array();
+    $username = $request->post('ui');
+    $classId = $request->post('classid');
 
+    $longitude = $request->post('longitude');
+    $latitude = $request->post('latitude');
+    $duration = $request->post('duration');
+    if($longitude==null||floatval($longitude)<0||$latitude==null||floatval($latitude)<0){
+      $result=array(
+        'code'=>1006,
+        'msg'=>'定位信息错误，无法发起签到',
+        'data'=>false,
+      );
+    }
+    if($duration==null||intval($duration)<1){
+      $result=array(
+        'code'=>1007,
+        'msg'=>'签到时效错误，无法发起签到',
+        'data'=>false,
+      );
+    }
+
+
+    if($classId==null){
+      $result=array(
+        'code'=>1005,
+        'msg'=>'课程id错误，无法发起签到',
+        'data'=>false,
+      );
+    }
+    if($result!=null&&$result['code']>0){
+
+    }
+    else{
+      $userModel= new User();
+      $userList = $userModel::find()->asArray()->all();
+      $userinfodetail=null;
+      foreach($userList as $user){
+        if(md5($user['UserId'])==$username){
+          $userinfodetail=$user;
+          break;
+        }
+      }
+
+      if($userinfodetail!=null){
+   
+          $classInfo = ClassTable::findOne($classId);
+          $classInfo->Longitude = $longitude;
+          $classInfo->Latitude = $latitude;
+          $classInfo->Duration = $duration;
+          $classInfo->SignTime = date("Y-m-d H:i:s");
+          if($classInfo->update()){
+            $result=array(
+              'code'=>1,
+              'msg'=>'发起签到成功',
+              'data'=>true,
+            );
+          }
+          else{
+            $result=array(
+              'code'=>1001,
+              'msg'=>'发起签到失败',
+              'data'=>false,
+            );
+          }
+      }
+      else{
+        $result=array(
+          'code'=>1002,
+          'msg'=>'can`t find this user',
+          'data'=>null,
+        );
+      }
+    }
+    echo json_encode($result);
+  }
 }
