@@ -28,7 +28,6 @@
       <el-main>
     <el-tabs type="border-card">
       <el-tab-pane label="用户信息">
-        这里是用户信息
         <div class="update" height="800px">
       <div>
         <p>账号：{{ui}}</p>
@@ -102,11 +101,22 @@ export default {
       sex: '',
       number: '',
       school: '',
+      phone: '',
       type: '',
       contry: '',
       realname: '',
       search: '',
-      studentInfo: {}
+      studentInfo: {
+        nickname: this.nickname,
+        year: this.year,
+        name: this.name,
+        sex: this.sex,
+        number: this.number,
+        school: this.school,
+        type: this.type,
+        contry: this.contry,
+        realname: this.realname
+      }
     }
   },
   methods: {
@@ -136,7 +146,8 @@ export default {
             t.nickname = response.data.data.NickName
             t.year = response.data.data.BornDate
             t.sex = response.data.data.UserSex
-            t.number = response.data.data.Phone
+            t.phone = response.data.data.Phone
+            t.number = response.data.data.UserCode
             t.school = response.data.data.SchoolId
             t.type = response.data.data.UserType
             t.contry = response.data.data.ContryId
@@ -152,14 +163,64 @@ export default {
           console.log(error)
         })
     },
-    getUserInfo () {
-      console.log('getUser')
+    // getUserInfo () {
+    //   console.log('getUser')
+    //   var t = this
+    //   var myDate = new Date()
+    //   var qs = require('qs')
+    //   this.$axios.post('api/get-userinfo', qs.stringify({
+    //     ui: t.account,
+    //     ukey: t.$root.ukey,
+    //     TimeStamp: myDate
+    //   }), {
+    //     headers: {
+    //       'Content-Type': 'application/x-www-form-urlencoded'
+    //     }
+    //   })
+    //     .then(function (response) {
+    //       console.log(response.data)
+    //       if (response.data.code === 1) {
+    //         t.restult = '获取成功'
+    //         t.username = response.data.username
+    //         t.NickName = response.data.NickName
+    //         t.year = response.data.BornDate
+    //         t.UserSex = t.formatRole(response.data.UserSex)
+    //         t.UserType = response.data.UserType
+    //         t.Address = response.data.Address
+    //         t.Phone = response.data.Phone
+    //         t.$router.push({path: 'Homepage'})
+    //       } else if (response.data.code === 1002) {
+    //         t.restult = '用户账号错误'
+    //         t.isShow = true
+    //       } else if (response.data.code === 1001) {
+    //         t.restult = '请求错误'
+    //       }
+    //     })
+    //     .catch(function (error) {
+    //       console.log(error)
+    //     })
+    // },
+    // gotoMyInfo () {
+    //   this.$router.replace('/MyInfo/MyInfo')
+    // },
+    gotoHomepage () {
+      this.$router.replace('/Homepage')
+    },
+    onSubmit () {
+      console.log('onSubmit')
       var t = this
       var myDate = new Date()
       var qs = require('qs')
-      this.$axios.post('api/get-userinfo', qs.stringify({
-        ui: t.account,
-        ukey: t.$root.ukey,
+      this.$axios.post('api/user-updateinfo', qs.stringify({
+        ui: localStorage.getItem('userid'),
+        ukey: localStorage.getItem('ukey'),
+        NickName: t.studentInfo.nickname,
+        BornDate: t.studentInfo.year,
+        Address: t.studentInfo.contry,
+        Phone: t.studentInfo.phone,
+        UserCode: t.studentInfo.code,
+        RealName: t.studentInfo.realname,
+        UserSex: t.studentInfo.sex,
         TimeStamp: myDate
       }), {
         headers: {
@@ -167,71 +228,24 @@ export default {
         }
       })
         .then(function (response) {
-          console.log(response.data)
           if (response.data.code === 1) {
-            t.restult = '获取成功'
-            t.username = response.data.username
-            t.NickName = response.data.NickName
-            t.year = response.data.BornDate
-            t.UserSex = t.formatRole(response.data.UserSex)
-            t.UserType = response.data.UserType
-            t.Address = response.data.Address
-            t.Phone = response.data.Phone
-            t.$router.push({path: 'Homepage'})
-          } else if (response.data.code === 1002) {
-            t.restult = '用户账号错误'
-            t.isShow = true
-          } else if (response.data.code === 1001) {
-            t.restult = '请求错误'
+            t.dialogFormVisible1 = false
+            t.$notify({
+              title: '成功',
+              message: '修改成功！',
+              type: 'success'
+            })
           }
         })
         .catch(function (error) {
           console.log(error)
+          t.$notify({
+            title: '警告',
+            message: '修改失败',
+            type: 'warning'
+          })
         })
-    },
-    gotoMyInfo () {
-      this.$router.replace('/MyInfo/MyInfo')
-    },
-    gotoHomepage () {
-      this.$router.replace('/Homepage')
     }
-    // onSubmit () {
-    //   console.log('onSubmit')
-    //   var t = this
-    //   this.$axios({
-    //     method: 'post',
-    //     url: '/Patient/saveUserinfo',
-    //     data: {
-    //       pid: t.pid,
-    //       cardid: t.message.cardid,
-    //       name: t.patientInfo.name,
-    //       sex: t.patientInfo.sex,
-    //       p_code: t.message.p_code,
-    //       hist_ill: t.message.hist_ill,
-    //       hist_cure: t.message.hist_cure
-    //     }
-    //   })
-    //     .then(function (response) {
-    //       t.message = response.data
-    //       console.log(t.message)
-    //       t.patientInfo.name = t.message.name
-    //       t.patientInfo.sex = t.message.sex
-    //       t.dialogFormVisible1 = false
-    //       t.$notify({
-    //         title: '成功',
-    //         message: '修改成功！',
-    //         type: 'success'
-    //       })
-    //     })
-    //     .catch(function (error) {
-    //       console.log(error)
-    //       t.$notify({
-    //         title: '警告',
-    //         message: '修改失败',
-    //         type: 'warning'
-    //       })
-    //     })
-    // },
     // checkCode () {
     //   console.log(this.patientInfo)
     //   var t = this
