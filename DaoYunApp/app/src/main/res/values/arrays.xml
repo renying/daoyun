@@ -30,6 +30,13 @@
         <item>@string/title_detail</item>
     </string-array>
 
+    <string-array name="check_time">
+        <item>1分钟</item>
+        <item>2分钟</item>
+        <item>5分钟</item>
+        <item>60分钟</item>
+    </string-array>
+
     <string-array name="adBlockUrl">
         <item>ubmcmm.baidustatic.com</item>
         <item>gss1.bdstatic.com/</item>

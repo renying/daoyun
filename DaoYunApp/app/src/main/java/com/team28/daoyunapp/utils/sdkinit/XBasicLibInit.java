@@ -4,7 +4,9 @@ import android.app.Application;
 
 import com.team28.daoyunapp.MyApp;
 import com.team28.daoyunapp.core.BaseActivity;
+import com.team28.daoyunapp.utils.LocationService;
 import com.team28.daoyunapp.utils.MMKVUtils;
+import com.team28.daoyunapp.utils.TokenUtils;
 import com.team28.daoyunapp.utils.XToastUtils;
 import com.xuexiang.xaop.XAOP;
 import com.xuexiang.xhttp2.XHttpSDK;
@@ -53,10 +55,13 @@ public final class XBasicLibInit {
     /**
      * 初始化XUtil工具类
      */
+
     private static void initXUtil(Application application) {
         XUtil.init(application);
         XUtil.debug(MyApp.isDebug());
         MMKVUtils.init(application);
+        LocationService.get().init(application);
+        TokenUtils.init(application);
     }
 
     /**

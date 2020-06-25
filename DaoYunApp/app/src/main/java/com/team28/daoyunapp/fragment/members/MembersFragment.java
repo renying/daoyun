@@ -1,7 +1,9 @@
 package com.team28.daoyunapp.fragment.members;
 
+import android.Manifest;
 import android.content.SharedPreferences;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -20,7 +22,10 @@ import com.team28.daoyunapp.core.http.Api;
 import com.team28.daoyunapp.core.http.CustomApiResult;
 import com.team28.daoyunapp.core.http.callback.TipCallBack;
 import com.team28.daoyunapp.utils.DataProvider;
+import com.team28.daoyunapp.utils.LocationService;
+import com.team28.daoyunapp.utils.MyLocationListener;
 import com.team28.daoyunapp.utils.XToastUtils;
+import com.xuexiang.xaop.annotation.Permission;
 import com.xuexiang.xaop.annotation.SingleClick;
 import com.xuexiang.xaop.util.MD5Utils;
 import com.xuexiang.xhttp2.XHttp;
@@ -32,17 +37,16 @@ import com.xuexiang.xui.adapter.recyclerview.RecyclerViewHolder;
 import com.xuexiang.xui.utils.WidgetUtils;
 import com.xuexiang.xui.widget.actionbar.TitleBar;
 import com.xuexiang.xui.widget.dialog.LoadingDialog;
+import com.xuexiang.xui.widget.dialog.materialdialog.MaterialDialog;
 import com.xuexiang.xui.widget.layout.ExpandableLayout;
 import com.xuexiang.xui.widget.textview.supertextview.SuperTextView;
 import com.xuexiang.xutil.data.SPUtils;
-
-import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 
 @Page(anim = CoreAnim.none)
-public class MembersFragment extends BaseFragment{
+public class MembersFragment extends BaseFragment {
 
     private SharedPreferences spf;
     @BindView(R.id.recyclerView_member)
@@ -50,7 +54,7 @@ public class MembersFragment extends BaseFragment{
 
     @BindView(R.id.refreshLayout_member)
     SmartRefreshLayout refreshLayout;
-    @BindView (R.id.layout_exe)
+    @BindView(R.id.layout_exe)
     ExpandableLayout layoutExe;
 
     @BindView(R.id.tv_exe)
@@ -59,11 +63,14 @@ public class MembersFragment extends BaseFragment{
     SuperTextView userCount;
     @BindView(R.id.checkOn)
     ExpandableLayout checkOn;
+    @BindView(R.id.image_check)
+    ImageView imageCheck;
     @BindView(R.id.exe_sign_in)
     SuperTextView exeSignIn;
 
-
     private SimpleDelegateAdapter<Member> mMemberAdapter;
+
+    private MyLocationListener myLocationListener = new MyLocationListener ();
 
     private LoadingDialog mLoadingDialog;
 
@@ -82,17 +89,21 @@ public class MembersFragment extends BaseFragment{
 
         spf = SPUtils.getSharedPreferences (Api.SPFNAME);
 
-        if (DataProvider.isCheckAble ()){
+        LocationService.start (myLocationListener);
+
+        if (DataProvider.isCheckAble ()) {
             layoutExe.setExpanded (true);
-            checkOn.setExpanded (true);
             checkOn.setClickable (true);
-        }else {
+            exeSignIn.setCenterString ("点击签到");
+        } else {
             layoutExe.setExpanded (false);
-            checkOn.setExpanded (false);
-            checkOn.setClickable (false);
+            imageCheck.setImageDrawable (getResources ().getDrawable (R.drawable.initiate_check));
+            imageCheck.setPadding (10, 10, 10, 10);
+            exeSignIn.setCenterString ("发起签到");
         }
 
-        VirtualLayoutManager virtualLayoutManager = new VirtualLayoutManager (Objects.requireNonNull (getContext ()));
+
+        VirtualLayoutManager virtualLayoutManager = new VirtualLayoutManager (getContext ());
         recyclerView.setLayoutManager (virtualLayoutManager);
         RecyclerView.RecycledViewPool viewPool = new RecyclerView.RecycledViewPool ();
         recyclerView.setRecycledViewPool (viewPool);
@@ -113,10 +124,10 @@ public class MembersFragment extends BaseFragment{
         delegateAdapter.addAdapter (mMemberAdapter);
 
         recyclerView.setAdapter (delegateAdapter);
-        checkExe.setText ("当前获得 "+DataProvider.getCheckCount ()*2+"积分");
+        checkExe.setText ("当前获得 " + DataProvider.getCheckCount () * 2 + "积分");
     }
-
     @Override
+
     protected TitleBar initTitle () {
         return super.initTitle ().setTitle ("成员");
     }
@@ -126,7 +137,10 @@ public class MembersFragment extends BaseFragment{
     public void onViewClicked ( View view ) {
         switch (view.getId ()) {
             case R.id.checkOn:
-                signIn ();
+                if (DataProvider.isCheckAble ())
+                    signIn ();
+                else
+                    initSignIn ();
                 break;
             default:
                 break;
@@ -134,19 +148,20 @@ public class MembersFragment extends BaseFragment{
     }
 
     @Override
+    @Permission(Manifest.permission_group.LOCATION)
     protected void initListeners () {
         //下拉刷新
         refreshLayout.setOnRefreshListener (refreshLayout -> refreshLayout.getLayout ().postDelayed (() -> {
-            Logger.d (DataProvider.getPoint ());
-            checkExe.setText ("当前获得 "+DataProvider.getPoint ()+" 积分");
-            exeSignIn.setCenterString ("签到次数："+DataProvider.getCheckCount ());
+            checkExe.setText ("当前获得 " + DataProvider.getPoint () + " 积分");
+            if (DataProvider.isCheckAble ())
+                exeSignIn.setCenterString ("签到次数：" + DataProvider.getCheckCount ());
             userCount.setRightString (DataProvider.getUserCount () + "人");
-            mMemberAdapter.refresh (DataProvider.getMembers ());
+            mMemberAdapter.refresh (DataProvider.getMembers (0));
             refreshLayout.finishRefresh ();
         }, 1000));
         //上拉加载
         refreshLayout.setOnLoadMoreListener (refreshLayout -> refreshLayout.getLayout ().postDelayed (() -> {
-            mMemberAdapter.loadMore (DataProvider.getMembers ());
+            mMemberAdapter.loadMore (DataProvider.getMembers (0));
 
             refreshLayout.finishLoadMore ();
         }, 1000));
@@ -159,12 +174,14 @@ public class MembersFragment extends BaseFragment{
                 .params (Api.param_ukey, SPUtils.getString (spf, Api.param_ukey, ""))
                 .params (Api.param_ui, MD5Utils.encode (SPUtils.getString (spf, Api.param_ui, "")))
                 .params (Api.param_classid, DataProvider.getCourse_id ())
+                .params (Api.param_longitude, myLocationListener.getLongitude ())
+                .params (Api.param_latitude, myLocationListener.getLatitude ())
                 .execute (new CallBackProxy<CustomApiResult<String>, String> (new TipCallBack<String> () {
                     @Override
                     public void onSuccess ( String response ) throws Throwable {
-                        DataProvider.setCheckCount (DataProvider.getCheckCount ()+1);
-                        checkExe.setText ("当前获得 "+response+" 积分");
-                        exeSignIn.setCenterString ("签到次数："+DataProvider.getCheckCount ());
+                        DataProvider.setCheckCount (DataProvider.getCheckCount () + 1);
+                        checkExe.setText ("当前获得 " + response + " 积分");
+                        exeSignIn.setCenterString ("签到次数：" + DataProvider.getCheckCount ());
                         XToastUtils.success ("签到成功");
                         checkOn.setClickable (false);
                         mLoadingDialog.dismiss ();
@@ -188,6 +205,62 @@ public class MembersFragment extends BaseFragment{
                     }
                 }) {
                 });
+
+    }
+
+
+    private void initSignIn () {
+        final int[] duration = {1};
+        new MaterialDialog.Builder(getContext())
+                .title("请选择限时签到的时长")
+                .items(R.array.check_time)
+                .itemsCallback(new MaterialDialog.ListCallback() {
+                    @Override
+                    public void onSelection(MaterialDialog dialog, View itemView, int position, CharSequence text) {
+                        switch (position){
+                            case 0: duration[0] = 1;
+                            case 1: duration[0] = 2;
+                            case 2: duration[0] = 5;
+                            case 3: duration[0] = 60;
+                        }
+
+                        XHttp.post (Api.STARTCHECKIN)
+                                .params (Api.param_ukey, SPUtils.getString (spf, Api.param_ukey, ""))
+                                .params (Api.param_ui, MD5Utils.encode (SPUtils.getString (spf, Api.param_ui, "")))
+                                .params (Api.param_classid, DataProvider.getCourse_id ())
+                                .params (Api.param_longitude, myLocationListener.getLongitude ())
+                                .params (Api.param_latitude, myLocationListener.getLatitude ())
+                                .params (Api.param_duration, duration[0])
+                                .execute (new CallBackProxy<CustomApiResult<String>, String> (new TipCallBack<String> () {
+                                    @Override
+                                    public void onSuccess ( String response ) throws Throwable {
+                                        XToastUtils.success ("发起签到成功");
+                                        checkOn.setClickable (false);
+                                        mLoadingDialog.dismiss ();
+                                    }
+
+                                    @Override
+                                    public void onError ( ApiException e ) {
+                                        super.onError (e);
+                                        Logger.d (e.getDetailMessage ());
+                                        mLoadingDialog.dismiss ();
+                                    }
+
+                                    @Override
+                                    public void onStart () {
+                                        mLoadingDialog.show ();
+                                    }
+
+                                    @Override
+                                    public void onCompleted () {
+                                        mLoadingDialog.dismiss ();
+                                    }
+                                }) {
+                                });
+                    }
+                })
+                .show();
+
 
     }
 }

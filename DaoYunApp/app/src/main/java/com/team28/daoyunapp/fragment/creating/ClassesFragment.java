@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.alibaba.android.vlayout.DelegateAdapter;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
 import com.alibaba.android.vlayout.layout.LinearLayoutHelper;
+import com.orhanobut.logger.Logger;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.team28.daoyunapp.activity.CourseDetailActivity;
 import com.team28.daoyunapp.adapter.entity.Course;
@@ -24,8 +25,6 @@ import com.xuexiang.xui.widget.actionbar.TitleBar;
 import com.xuexiang.xui.widget.dialog.LoadingDialog;
 import com.xuexiang.xutil.app.ActivityUtils;
 import com.xuexiang.xutil.data.SPUtils;
-
-import java.util.Objects;
 
 import butterknife.BindView;
 
@@ -46,11 +45,12 @@ public class ClassesFragment extends BaseFragment {
     private LoadingDialog mLoadingDialog;
 
     private SharedPreferences spf;
+
     /**
      * @return 返回为 null意为不需要导航栏
      */
     @Override
-    protected TitleBar initTitle() {
+    protected TitleBar initTitle () {
         return null;
     }
 
@@ -60,7 +60,7 @@ public class ClassesFragment extends BaseFragment {
      * @return 布局
      */
     @Override
-    protected int getLayoutId() {
+    protected int getLayoutId () {
         return R.layout.fragment_classes;
     }
 
@@ -68,7 +68,7 @@ public class ClassesFragment extends BaseFragment {
      * 初始化控件
      */
     @Override
-    protected void initViews() {
+    protected void initViews () {
 
         spf = SPUtils.getSharedPreferences (Api.SPFNAME);
         mLoadingDialog = WidgetUtils.getLoadingDialog (getContext ())
@@ -76,50 +76,50 @@ public class ClassesFragment extends BaseFragment {
                 .setLoadingSpeed (8);
         mLoadingDialog.show ();
 
-        VirtualLayoutManager virtualLayoutManager = new VirtualLayoutManager(Objects.requireNonNull (getContext ()));
-        recyclerView.setLayoutManager(virtualLayoutManager);
-        RecyclerView.RecycledViewPool viewPool = new RecyclerView.RecycledViewPool();
-        recyclerView.setRecycledViewPool(viewPool);
-        viewPool.setMaxRecycledViews(0, 10);
+        VirtualLayoutManager virtualLayoutManager = new VirtualLayoutManager (getContext ());
+        recyclerView.setLayoutManager (virtualLayoutManager);
+        RecyclerView.RecycledViewPool viewPool = new RecyclerView.RecycledViewPool ();
+        recyclerView.setRecycledViewPool (viewPool);
+        viewPool.setMaxRecycledViews (0, 10);
 
         //资讯
-        mNewsAdapter = new SimpleDelegateAdapter<Course>(R.layout.adapter_news_card_view_list_item, new LinearLayoutHelper()) {
+        mNewsAdapter = new SimpleDelegateAdapter<Course> (R.layout.adapter_news_card_view_list_item, new LinearLayoutHelper ()) {
             @Override
-            protected void bindData(@NonNull RecyclerViewHolder holder, int position, Course item) {
+            protected void bindData ( @NonNull RecyclerViewHolder holder, int position, Course item ) {
                 if (item != null) {
-                    holder.text(R.id.tv_title, item.getName ());
-                    holder.text(R.id.tv_summary, item.getDesc ());
+                    holder.text (R.id.tv_title, item.getName ());
+                    holder.text (R.id.tv_summary, item.getDesc ());
 
-                    holder.click (R.id.card_view,v -> {
+                    holder.click (R.id.card_view, v -> {
                         DataProvider.clearCourseData ();
                         DataProvider.setCheckAble (false);
                         DataProvider.setCourse_id (item.getID ());
                         DataProvider.getClassMembers ();
-                        ActivityUtils.startActivityWithBundle (CourseDetailActivity.class,"key",item);
+                        ActivityUtils.startActivityWithBundle (CourseDetailActivity.class, "key", item);
                     });
                 }
             }
         };
 
-        DelegateAdapter delegateAdapter = new DelegateAdapter(virtualLayoutManager);
-        delegateAdapter.addAdapter(mNewsAdapter);
+        DelegateAdapter delegateAdapter = new DelegateAdapter (virtualLayoutManager);
+        delegateAdapter.addAdapter (mNewsAdapter);
 
-        recyclerView.setAdapter(delegateAdapter);
+        recyclerView.setAdapter (delegateAdapter);
         mLoadingDialog.dismiss ();
     }
 
     @Override
-    protected void initListeners() {
+    protected void initListeners () {
         //下拉刷新
-        refreshLayout.setOnRefreshListener(refreshLayout -> refreshLayout.getLayout().postDelayed(() -> {
-            mNewsAdapter.refresh(DataProvider.getCreatedClassInfos ());
-            refreshLayout.finishRefresh();
+        refreshLayout.setOnRefreshListener (refreshLayout -> refreshLayout.getLayout ().postDelayed (() -> {
+            mNewsAdapter.refresh (DataProvider.getCreatedClassInfos (0));
+            refreshLayout.finishRefresh ();
         }, 1000));
         //上拉加载
-        refreshLayout.setOnLoadMoreListener(refreshLayout -> refreshLayout.getLayout().postDelayed(() -> {
-            mNewsAdapter.loadMore(DataProvider.getCreatedClassInfos ());
-            refreshLayout.finishLoadMore();
+        refreshLayout.setOnLoadMoreListener (refreshLayout -> refreshLayout.getLayout ().postDelayed (() -> {
+            mNewsAdapter.loadMore (DataProvider.getCreatedClassInfos (0));
+            refreshLayout.finishLoadMore ();
         }, 1000));
-        refreshLayout.autoRefresh();//第一次进入触发自动刷新，演示效果
+        refreshLayout.autoRefresh ();//第一次进入触发自动刷新，演示效果
     }
 }
