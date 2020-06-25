@@ -28,16 +28,15 @@
       <el-main>
     <el-tabs type="border-card">
       <el-tab-pane label="用户信息">
-        这里是用户信息
         <div class="update" height="800px">
       <div>
-        <p>账号：{{pid}}</p>
+        <p>账号：{{ui}}</p>
         <p>昵称：{{nickname}}</p>
-        <p>姓名：{{message.name}}</p>
-        <p>出生年份：{{message.year}}</p>
-        <p>性别：{{message.sex}}</p>
-        <p>学号：{{message.number}}</p>
-        <p>所在学校：{{message.school}}</p>
+        <p>姓名：{{name}}</p>
+        <p>出生年份：{{year}}</p>
+        <p>性别：{{sex}}</p>
+        <p>学号：{{number}}</p>
+        <p>所在学校：{{school}}</p>
       </div>
       <el-button type="primary" @click="dialogFormVisible1=true">修改信息</el-button>
       <el-dialog title="修改信息" :visible.sync="dialogFormVisible1">
@@ -79,10 +78,7 @@
     <div style="height: 30px; witdh: 100%"></div>
     <router-view/>
   </el-container>
-    <button class="btn btn-primary w-md waves-effect waves-light" type="button"
-                    @click="exit()">
-                    注销
-                    </button>
+    <button class="btn btn-primary w-md waves-effect waves-light" type="button" @click="exit()">注销</button>
   </div>
 </template>
 
@@ -98,28 +94,28 @@ export default {
       currentPage: 0,
       size: 5,
       dialogVisible3: false,
-      message: {
-        cardid: '',
-        name: '',
-        sex: '',
-        number: '',
-        school: ''
-      },
+      ui: localStorage.getItem('userid'),
+      nickname: '',
+      year: '',
+      name: '',
+      sex: '',
+      number: '',
+      school: '',
+      phone: '',
+      type: '',
+      contry: '',
+      realname: '',
       search: '',
       studentInfo: {
-        pid: '',
-        cardid: '',
-        p_code: '',
-        nickname: '',
-        name: '',
-        year: '',
-        sex: '',
-        number: '',
-        school: ''
-      },
-      changeCode: { // 访问的时候要先写  对象名 . 成员
-        p_code_old: '',
-        p_code_new: ''
+        nickname: this.nickname,
+        year: this.year,
+        name: this.name,
+        sex: this.sex,
+        number: this.number,
+        school: this.school,
+        type: this.type,
+        contry: this.contry,
+        realname: this.realname
       }
     }
   },
@@ -127,29 +123,13 @@ export default {
     formatRole (sex) { // 表格数据转换 性别
       return sex === 1 ? '男' : sex === 0 ? '女' : '未知'
     },
-    getPatientById () {
-      console.log('getPatientById')
-      var t = this
-      this.$axios({
-        method: 'get',
-        url: '/Patient/getPatientById?pid=' + t.pid
-      })
-        .then(function (response) {
-          t.message = response.data
-          console.log(response)
-        })
-        .catch(function (error) {
-          console.log(error)
-        })
-    },
-    getUserInfo () {
-      console.log('getUser')
+    getMyInfo () {
       var t = this
       var myDate = new Date()
       var qs = require('qs')
       this.$axios.post('api/get-userinfo', qs.stringify({
-        ui: t.account,
-        ukey: t.$root.ukey,
+        ui: localStorage.getItem('userid'),
+        ukey: localStorage.getItem('ukey'),
         TimeStamp: myDate
       }), {
         headers: {
@@ -160,16 +140,20 @@ export default {
           console.log(response.data)
           if (response.data.code === 1) {
             t.restult = '获取成功'
-            t.username = response.data.username
-            t.NickName = response.data.NickName
-            t.year = response.data.BornDate
-            t.UserSex = response.data.UserSex
-            t.UserType = response.data.UserType
-            t.Address = response.data.Address
-            t.Phone = response.data.Phone
-            t.$router.push({path: 'Homepage'})
-          } else if (response.data.code === 1002) {
-            t.restult = '用户账号错误'
+            // this.$store.commit('setToken', JSON.stringify(response.data.data.ukey))
+            // this.$store.commit('setAccount', JSON.stringify(response.data.data.ui))
+            t.name = response.data.data.UserName
+            t.nickname = response.data.data.NickName
+            t.year = response.data.data.BornDate
+            t.sex = response.data.data.UserSex
+            t.phone = response.data.data.Phone
+            t.number = response.data.data.UserCode
+            t.school = response.data.data.SchoolId
+            t.type = response.data.data.UserType
+            t.contry = response.data.data.ContryId
+            t.realname = response.data.data.RealName
+          } else if (response.data.code === 9999) {
+            t.restult = '系统错误'
             t.isShow = true
           } else if (response.data.code === 1001) {
             t.restult = '请求错误'
@@ -179,49 +163,89 @@ export default {
           console.log(error)
         })
     },
-    gotoMyInfo () {
-      this.$router.replace('/MyInfo/MyInfo')
-    },
-    gotoHomepage () {
-      this.$router.replace('/Homepage')
-    }
-    // onSubmit () {
-    //   console.log('onSubmit')
+    // getUserInfo () {
+    //   console.log('getUser')
     //   var t = this
-    //   this.$axios({
-    //     method: 'post',
-    //     url: '/Patient/saveUserinfo',
-    //     data: {
-    //       pid: t.pid,
-    //       cardid: t.message.cardid,
-    //       name: t.patientInfo.name,
-    //       sex: t.patientInfo.sex,
-    //       p_code: t.message.p_code,
-    //       hist_ill: t.message.hist_ill,
-    //       hist_cure: t.message.hist_cure
+    //   var myDate = new Date()
+    //   var qs = require('qs')
+    //   this.$axios.post('api/get-userinfo', qs.stringify({
+    //     ui: t.account,
+    //     ukey: t.$root.ukey,
+    //     TimeStamp: myDate
+    //   }), {
+    //     headers: {
+    //       'Content-Type': 'application/x-www-form-urlencoded'
     //     }
     //   })
     //     .then(function (response) {
-    //       t.message = response.data
-    //       console.log(t.message)
-    //       t.patientInfo.name = t.message.name
-    //       t.patientInfo.sex = t.message.sex
-    //       t.dialogFormVisible1 = false
-    //       t.$notify({
-    //         title: '成功',
-    //         message: '修改成功！',
-    //         type: 'success'
-    //       })
+    //       console.log(response.data)
+    //       if (response.data.code === 1) {
+    //         t.restult = '获取成功'
+    //         t.username = response.data.username
+    //         t.NickName = response.data.NickName
+    //         t.year = response.data.BornDate
+    //         t.UserSex = t.formatRole(response.data.UserSex)
+    //         t.UserType = response.data.UserType
+    //         t.Address = response.data.Address
+    //         t.Phone = response.data.Phone
+    //         t.$router.push({path: 'Homepage'})
+    //       } else if (response.data.code === 1002) {
+    //         t.restult = '用户账号错误'
+    //         t.isShow = true
+    //       } else if (response.data.code === 1001) {
+    //         t.restult = '请求错误'
+    //       }
     //     })
     //     .catch(function (error) {
     //       console.log(error)
-    //       t.$notify({
-    //         title: '警告',
-    //         message: '修改失败',
-    //         type: 'warning'
-    //       })
     //     })
     // },
+    // gotoMyInfo () {
+    //   this.$router.replace('/MyInfo/MyInfo')
+    // },
+    gotoHomepage () {
+      this.$router.replace('/Homepage')
+    },
+    onSubmit () {
+      console.log('onSubmit')
+      var t = this
+      var myDate = new Date()
+      var qs = require('qs')
+      this.$axios.post('api/user-updateinfo', qs.stringify({
+        ui: localStorage.getItem('userid'),
+        ukey: localStorage.getItem('ukey'),
+        NickName: t.studentInfo.nickname,
+        BornDate: t.studentInfo.year,
+        Address: t.studentInfo.contry,
+        Phone: t.studentInfo.phone,
+        UserCode: t.studentInfo.code,
+        RealName: t.studentInfo.realname,
+        UserSex: t.studentInfo.sex,
+        TimeStamp: myDate
+      }), {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      })
+        .then(function (response) {
+          if (response.data.code === 1) {
+            t.dialogFormVisible1 = false
+            t.$notify({
+              title: '成功',
+              message: '修改成功！',
+              type: 'success'
+            })
+          }
+        })
+        .catch(function (error) {
+          console.log(error)
+          t.$notify({
+            title: '警告',
+            message: '修改失败',
+            type: 'warning'
+          })
+        })
+    }
     // checkCode () {
     //   console.log(this.patientInfo)
     //   var t = this
@@ -246,7 +270,7 @@ export default {
     // }
   },
   mounted () {
-    this.getUserInfo()
+    this.getMyInfo()
   }
 }
 </script>

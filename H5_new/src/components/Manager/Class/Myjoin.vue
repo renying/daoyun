@@ -31,7 +31,7 @@
             </div>
         </el-col>
     </el-row>
-    <el-dialog title="添加新员工" :visible.sync="saveDialogVisible">
+    <el-dialog title="添加新课程" :visible.sync="saveDialogVisible">
       <el-form ref="from" :model="employeeInfo" label-width="80px">
         <el-form-item label="账户名称">
           <el-input v-model="employeeInfo.account"></el-input>

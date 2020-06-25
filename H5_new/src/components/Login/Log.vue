@@ -158,9 +158,9 @@ export default {
             t.restult = '登录成功'
             // this.$store.commit('setToken', JSON.stringify(response.data.data.ukey))
             // this.$store.commit('setAccount', JSON.stringify(response.data.data.ui))
-            localStorage.setItem('ukey', JSON.stringify(response.data.data.ukey))
-            localStorage.setItem('userid', JSON.stringify(t.$md5(response.data.data.userid)))
-            localStorage.setItem('account', JSON.stringify(t.account))
+            localStorage.setItem('ukey', response.data.data.ukey)
+            localStorage.setItem('userid', t.$md5(response.data.data.userid))
+            localStorage.setItem('account', t.account)
             t.$router.push({path: 'Homepage'})
           } else if (response.data.code === 1002) {
             t.restult = '账户或密码错误'
