@@ -19,7 +19,7 @@ class Config extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%config}}';
+        return '{{%mostop_config}}';
     }
 
     /**

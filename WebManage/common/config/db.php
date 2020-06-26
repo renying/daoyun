@@ -7,7 +7,7 @@ return [
     'username' => 'root',  // TODO
     'password' => '123456',  // TODO
     'charset' => 'utf8',
-    'tablePrefix' => 'mostop_',
+    'tablePrefix' => '',
     'enableSchemaCache' => false, // TODO
     'schemaCacheDuration' => 3600,
     'schemaCache' => 'cache',
