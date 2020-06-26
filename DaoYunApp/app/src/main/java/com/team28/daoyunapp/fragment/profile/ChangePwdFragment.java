@@ -98,7 +98,7 @@ public class ChangePwdFragment extends BaseFragment {
                 .params ("newpass", newPwd)
                 .execute (new CallBackProxy<CustomApiResult<String>, String> (new TipCallBack<String> () {
                     @Override
-                    public void onSuccess ( String response ) throws Throwable {
+                    public void onSuccess ( String response ) {
                         Logger.d (response);
                         XToastUtils.toast ("修改成功");
                         mLoadingDialog.dismiss ();

@@ -1,7 +1,5 @@
 package com.team28.daoyunapp.utils;
 
-import android.content.SharedPreferences;
-
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.orhanobut.logger.Logger;
@@ -17,7 +15,6 @@ import com.xuexiang.xhttp2.XHttp;
 import com.xuexiang.xhttp2.callback.CallBackProxy;
 import com.xuexiang.xhttp2.exception.ApiException;
 import com.xuexiang.xui.adapter.simple.AdapterItem;
-import com.xuexiang.xutil.data.SPUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,11 +30,18 @@ public class DataProvider {
     private static int userCount = 0;
     private static int checkCount = 0;
     private static int point = 0;
-    private static List<Member>members = new ArrayList<> ();
+    private static List<Member> members = new ArrayList<> ();
 
     private static List<Course> createdCourses = new ArrayList<> ();
     private static List<Course> joinedCourses = new ArrayList<> ();
-    int queryLimit = 10;
+
+    private static List<Course> emptyCourse = new ArrayList<> ();
+    private static List<Member> emptyMember = new ArrayList<> ();
+
+    private static int queryLimit = 10;
+    private static int create_left = 999;
+    private static int join_left = 999;
+    private static int member_left = 999;
 
     public static void getCourses () {
         XHttp.post (Api.CLASSINFO)
@@ -47,8 +51,11 @@ public class DataProvider {
                     @Override
                     public void onSuccess ( JSONObject response ) {
                         Logger.json (response.toJSONString ());
+
+                        //得到创建班课的信息
                         JSONArray courses = response.getJSONArray ("Created");
                         if (createdCourses.size () < courses.size ()) {
+                            create_left = courses.size ();
                             for (Object item : courses) {
                                 JSONObject course = (JSONObject) item;
                                 createdCourses.add (new Course (Integer.parseInt (course.getString ("ClassId")), course.getString ("ClassName"),
@@ -57,8 +64,11 @@ public class DataProvider {
                                         course.getString ("UserCode"), course.getString ("SchoolInfo")));
                             }
                         }
+
+                        //得到加入班课的信息
                         JSONArray coursesJoin = response.getJSONArray ("Joined");
                         if (joinedCourses.size () < coursesJoin.size ()) {
+                            join_left = coursesJoin.size ();
                             for (Object item : coursesJoin) {
                                 JSONObject course = (JSONObject) item;
                                 joinedCourses.add (new Course (Integer.parseInt (course.getString ("ClassId")), course.getString ("ClassName"),
@@ -72,7 +82,6 @@ public class DataProvider {
                     @Override
                     public void onError ( ApiException e ) {
                         Logger.d (e.getDetailMessage ());
-                        super.onError (e);
                         TokenUtils.handleLogoutSuccess ();
                         XToastUtils.error ("Token已过期，请重新登录");
                         ActivityCollectorUtil.finishAllActivity ();
@@ -90,28 +99,30 @@ public class DataProvider {
         XHttp.post (Api.CLASSUSERLIST)
                 .params (Api.param_ukey, SPProvider.getData (Api.param_ukey))
                 .params (Api.param_ui, MD5Utils.encode (SPProvider.getData (Api.param_ui)))
-                .params (Api.param_classid,getCourse_id ())
-                .execute (new CallBackProxy<CustomApiResult<JSONObject>,JSONObject> (new TipCallBack<JSONObject> () {
+                .params (Api.param_classid, getCourse_id ())
+                .execute (new CallBackProxy<CustomApiResult<JSONObject>, JSONObject> (new TipCallBack<JSONObject> () {
 
                     @Override
                     public void onSuccess ( JSONObject response ) throws Throwable {
                         Logger.json (response.toJSONString ());
-                        if (response.getIntValue ("UserCount") != 0){
-                            JSONArray remembers= response.getJSONArray ("UserList");
+                        if (response.getIntValue ("UserCount") != 0) {
+
+                            JSONArray remembers = response.getJSONArray ("UserList");
                             userCount = remembers.size ();
-                            if ( members.size () < remembers.size ()) {
+                            if (members.size () < remembers.size ()) {
+                                member_left = remembers.size ();
                                 for (Object item : remembers) {
                                     JSONObject member = (JSONObject) item;
-                                    members.add (new Member (member.getString ("UserId"),member.getString ("UserName"),member.getString ("UserCode")));
+                                    members.add (new Member (member.getString ("UserId"), member.getString ("UserName"), member.getString ("UserCode")));
                                 }
                             }
                         }
 
-                        if (isCheckAble ()){
+                        if (isCheckAble ()) {
                             try {
                                 checkCount = response.getInteger ("CheckCount");
-                                point = checkCount *2;
-                            } catch (NullPointerException e){
+                                point = checkCount * 2;
+                            } catch (NullPointerException e) {
                                 Logger.d ("CheckCount不存在");
                             }
                         }
@@ -119,59 +130,107 @@ public class DataProvider {
 
                     @Override
                     public void onError ( ApiException e ) {
-                        super.onError (e);
+                        Logger.d (e.getDetailMessage ());
                     }
-                }){
+                }) {
                 });
     }
 
     public static AdapterItem[] menuItems = new AdapterItem[]{
-            new AdapterItem("创建班课", R.drawable.createc),
-            new AdapterItem("加入班课", R.drawable.joinc)
+            new AdapterItem ("创建班课", R.drawable.createc),
+            new AdapterItem ("加入班课", R.drawable.joinc)
     };
 
-    public static void clearMembers(){
+    public static void clearMembers () {
         members.clear ();
+    }
+
+    public static void initCourse () {
+        getCourses ();
+    }
+
+    public static void initMember(){
+        getClassMembers ();
+
     }
 
     /**
      * @return list “我创建的”课程列表
      */
     @MemoryCache
-    public static List<Course> getCreatedClassInfos () {
+    public static List<Course> getCreatedClassInfos ( int begin ) {
         if (createdCourses.isEmpty ())
             return null;
-        else
-            return createdCourses;
+        else {
+            if (create_left <= 0)
+                return null;
+            else {
+                if (create_left < queryLimit) {
+                    int temp = create_left;
+                    create_left = 0;
+                    return createdCourses.subList (begin, temp);
+                } else {
+//                    create_left = create_left - (queryLimit + begin);
+                    create_left = 0;
+                    return createdCourses.subList (begin, queryLimit);
+                }
+            }
+        }
     }
 
     /**
      * @return list “我加入的”课程列表
      */
     @MemoryCache
-    public static List<Course> getJoinedClassInfos () {
+    public static List<Course> getJoinedClassInfos ( int begin ) {
         if (joinedCourses.isEmpty ())
             return null;
-        else
-            return joinedCourses;
+        else {
+            if (join_left <= 0)
+                return null;
+            else {
+                if (join_left < queryLimit) {
+                    int temp = join_left;
+                    join_left = 0;
+                    return joinedCourses.subList (begin, temp);
+                } else {
+//                    join_left = join_left - (queryLimit + begin);
+                    join_left = 0;
+                    return joinedCourses.subList (begin, queryLimit);
+                }
+            }
+        }
     }
 
     /**
      * @return list 成员列表
      */
     @MemoryCache
-    public static List<Member> getMembers () {
+    public static List<Member> getMembers ( int begin ) {
         if (members.isEmpty ())
             return null;
-        else
-            return members;
+        else {
+            if (member_left <= 0)
+                return null;
+            else {
+                if (member_left < queryLimit) {
+                    int temp = member_left;
+                    member_left = 0;
+                    return members.subList (begin, temp);
+                } else {
+//                    member_left = member_left - (queryLimit + begin);
+                    member_left = 0;
+                    return members.subList (begin, queryLimit);
+                }
+            }
+        }
     }
 
     public static Course getChoosedCourse () {
         int pos = findPos (createdCourses, course_id);
         if (pos != - 1) {
             return createdCourses.get (pos);
-        }else{
+        } else {
             return joinedCourses.get (findPos (joinedCourses, course_id));
         }
     }
@@ -185,7 +244,7 @@ public class DataProvider {
         return - 1;
     }
 
-    public static void clearCourseData(){
+    public static void clearCourseData () {
         checkAble = false;
         course_id = 0;
         userCount = 0;
@@ -194,7 +253,7 @@ public class DataProvider {
         members.clear ();
     }
 
-    public static void clearAllData(){
+    public static void clearAllData () {
         checkAble = false;
         course_id = 0;
         userCount = 0;
@@ -203,6 +262,9 @@ public class DataProvider {
         members.clear ();
         createdCourses.clear ();
         joinedCourses.clear ();
+        member_left = 999;
+        join_left = 999;
+        create_left = 999;
     }
 
     public static int getCourse_id () {
@@ -243,5 +305,11 @@ public class DataProvider {
 
     public static void setPoint ( int point ) {
         DataProvider.point = point;
+    }
+
+    public static void zeroLeft () {
+        join_left = 0;
+        create_left = 0;
+        member_left = 0;
     }
 }

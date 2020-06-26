@@ -51,6 +51,7 @@ public class CourseDetailActivity extends BaseActivity implements View.OnClickLi
         return R.layout.activity_course_detail;
     }
 
+
     @Override
     protected void onCreate ( Bundle savedInstanceState ) {
         super.onCreate(savedInstanceState);

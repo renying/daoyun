@@ -5,6 +5,27 @@
     <!-- 进程杀死 -->
     <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" /> <!-- 联网权限 -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- 这个权限用于进行网络定位-->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!-- 这个权限用于访问GPS定位-->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!-- 用于访问wifi网络信息，wifi信息会用于进行网络定位-->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!-- 获取运营商信息，用于支持提供运营商信息相关的接口-->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- 这个权限用于获取wifi的获取权限，wifi信息会用来进行网络定位-->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <!-- 允许程序访问额外的定位提供者指令获取模拟定位信息 -->
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
+    <!-- 用于读取手机当前的状态-->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!-- 写入扩展存储，向扩展卡写入数据，用于写入离线定位数据-->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- 写sd卡 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_GPS" />
+    <!-- 访问网络，网络定位需要上网-->
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
             android:name=".MyApp"
@@ -128,6 +149,16 @@
         <meta-data
                 android:name="design_height_in_dp"
                 android:value="640" />
+
+        <meta-data
+                android:name="com.baidu.lbsapi.API_KEY"
+                android:value="759b82lZAo3ZKBN1Yws37D0TDbtMcoRl" />
+
+        <!--定义百度地图的服务，用于定位-->
+        <service android:name="com.baidu.location.f"
+                android:enabled="true"
+                android:process=":remote">
+        </service>
     </application>
 
 </manifest>

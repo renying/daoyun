@@ -1,4 +1,5 @@
 package com.team28.daoyunapp.fragment.detail;
+import android.annotation.SuppressLint;
 import android.widget.TextView;
 
 import com.orhanobut.logger.Logger;
@@ -9,6 +10,8 @@ import com.team28.daoyunapp.utils.DataProvider;
 import com.xuexiang.xpage.annotation.Page;
 import com.xuexiang.xpage.enums.CoreAnim;
 import com.xuexiang.xui.widget.actionbar.TitleBar;
+
+import java.text.SimpleDateFormat;
 
 import butterknife.BindView;
 
@@ -31,13 +34,15 @@ public class DetailFragment extends BaseFragment {
         return R.layout.fragment_detail;
     }
 
+    @SuppressLint("SimpleDateFormat")
     @Override
     protected void initViews () {
         Course course = DataProvider.getChoosedCourse ();
         if (course !=null){
             classCode.setText (course.getCode ());
             classCreator.setText (course.getCreator ());
-            createTime.setText (course.getCreateTime ().toString ());
+            createTime.setText (new SimpleDateFormat ("yyyy年MM月dd日").format (course.getCreateTime ()));
+//            createTime.setText (course.getCreateTime ().toString ());
             className.setText (course.getName ());
             classDesc.setText (course.getDesc ());
         }

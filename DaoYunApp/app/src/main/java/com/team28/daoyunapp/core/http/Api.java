@@ -27,6 +27,8 @@ public class Api {
     public static String CHECKIN = BASE_URL +"api/checkin";
     //加入班课接口
     public static String CHOOSECLASS = BASE_URL +"api/choose-class";
+    //发起签到接口
+    public static String STARTCHECKIN = BASE_URL +"api/startcheckin";
 
     public static String param_ui = "ui";
     public static String param_ukey = "ukey";
@@ -38,6 +40,9 @@ public class Api {
     public static String param_realName = "RealName";
     public static String param_userSex = "UserSex";
     public static String param_classid = "classid";
+    public static String param_classCode = "classCode";
     public static String SPFNAME = "user_info";
-
+    public static String param_duration = "duration";
+    public static String param_longitude = "longitude";
+    public static String param_latitude = "latitude";
 }

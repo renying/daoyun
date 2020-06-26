@@ -70,7 +70,7 @@ public class JoinClassFragment extends BaseFragment {
         XHttp.post (Api.CHOOSECLASS)
                 .params (Api.param_ukey, SPUtils.getString (spf, Api.param_ukey, ""))
                 .params (Api.param_ui, MD5Utils.encode (SPUtils.getString (spf, Api.param_ui, "")))
-                .params ("classId", classCode.getEditValue ())
+                .params (Api.param_classCode, classCode.getEditValue ())
                 .execute (new CallBackProxy<CustomApiResult<Boolean>, Boolean> (new TipCallBack<Boolean> () {
                     @Override
                     public void onSuccess ( Boolean response ) {
@@ -91,7 +91,6 @@ public class JoinClassFragment extends BaseFragment {
                     public void onStart () {
                         Logger.d (classCode.getEditValue ());
                         mLoadingDialog.show ();
-                        super.onStart ();
                     }
 
                     @Override
