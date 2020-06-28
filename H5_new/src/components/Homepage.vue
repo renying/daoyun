@@ -183,6 +183,8 @@ export default {
               t.isShow = true
             } else if (response.data.code === 1001) {
               t.restult = '请求错误'
+            } else if (response.data.code === 1004) {
+              t.$message('课程编号不存在')
             }
           })
           .catch(function (error) {
@@ -200,7 +202,6 @@ export default {
   },
   mounted () {
     this.getAllClass()
-    // this.$router.push({path: '/HospitalManager/Employee'})
   }
 }
 </script>
