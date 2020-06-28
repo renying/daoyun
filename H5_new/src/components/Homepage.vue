@@ -3,26 +3,30 @@
     <el-container>
     <el-header id="topnav">
             <!-- MENU Start -->
-      <div>
-        <a>
-          <img src="" alt="" height="50">
-        </a>
-      </div>
       <div class="topbar-main">
         <div class="container-fluid">
-          <div id="navigation">
-            <!-- Navigation Menu-->
+          <div class="logo">
+            <a href="index.html" class="logo">
+              <img src="@/assets/images/DaoYun-Logo.png" alt="" height="45">
+            </a>
+          </div>
+          <div class="menu-extras topbar-custom">
             <ul class="navigation-menu">
               <li>
                 <a href="/Homepage"><i class="mdi mdi-view-dashboard"></i>我的班课</a>
               </li>
-              <li class="has-submenu">
+              <li>
                 <a href="/MyInfo/MyInfo"><i class="mdi mdi-view-dashboard"></i>我的信息</a>
               </li>
+              <li class="has-submenu">
+                <a href="/Notice"><i class="mdi mdi-view-dashboard"></i>消息通知</a>
+              </li>
             </ul>
+            <!-- Navigation Menu-->
             <!-- End navigation menu -->
           </div> <!-- end #navigation -->
         </div> <!-- end container -->
+        <div class="clearfix"></div>
       </div> <!-- end navbar-custom -->
     </el-header>
     <el-main>
@@ -98,6 +102,13 @@
 <script>
 export default {
   name: 'Homepage',
+  beforeCreate () {
+    // 添加背景色
+    document.querySelector('body').setAttribute('style', 'background-color:######')
+  },
+  beforeDestroy () {
+    document.querySelector('body').setAttribute('style', '')
+  },
   data () {
     return {
       classid: '',

@@ -1,22 +1,16 @@
 <template>
-  <div>
+<div>
 
     <!-- Begin page -->
     <div class="accountbg"></div>
     <div class="wrapper-page">
       <div class="card">
         <div class="card-body">
-          <!--
-          <h3 class="text-center m-0">
-            <a href="index.html" class="logo logo-admin"
-              ><img src="assets/images/DaoYun-Logo.png" height="80" alt="logo"
-            /></a>
-          </h3>
-          -->
           <img src="@/assets/images/DaoYun-Logo.png" width="200">
           <div class="p-3">
-            <h4 class="font-18 m-b-5 text-center">欢迎!</h4>
-            <p class="text-muted text-center">登录以继续</p>
+            <h4 class="font-18 m-b-5 text-center">免费注册</h4>
+            <p class="text-muted text-center">现在免费注册你的到云账号吧 !</p>
+
             <form class="form-horizontal m-t-30" action="index.html">
               <div class="form-group">
                 <label for="username">用户名</label>
@@ -39,30 +33,13 @@
                   v-model="password"
                 />
               </div>
-              <div>
-                <label v-show = isShow>用户名或密码不正确</label>
-              </div>
               <div class="form-group row m-t-20">
-                <div class="col-sm-6">
-                  <div class="custom-control custom-checkbox">
-                    <input
-                      type="checkbox"
-                      class="custom-control-input"
-                      id="customControlInline"
-                    />
-                    <label
-                      class="custom-control-label"
-                      for="customControlInline"
-                      >记住密码</label
-                    >
-                  </div>
-                </div>
-                <div class="col-sm-6 text-right">
+                <div class="col-sm-12 text-right">
                   <button
                     class="btn btn-primary w-md waves-effect waves-light" type="button"
-                    @click="login()"
+                    @click="register()"
                   >
-                    登录
+                    注册
                   </button>
                 </div>
               </div>
@@ -82,8 +59,8 @@
 
       <div class="m-t-40 text-center">
         <p class="text-white">
-          还没有账号?
-          <router-link to = "Register" replace><i class="mdi mdi-lock"></i>现在注册</router-link>
+          已有帐号？
+          <router-link to = "/" replace><i class="mdi mdi-lock"></i>点击登录</router-link>
         </p>
         <p class="text-white">
           © 2020 工程实践28组 <i class="mdi mdi-heart text-danger"></i>
@@ -104,7 +81,7 @@ export default {
       'getToken'
     ])
   },
-  name: 'Log',
+  name: 'Register',
   data () {
     return {
       isShow: false,
@@ -129,7 +106,8 @@ export default {
     //       console.log(error)
     //     })
     // },
-    login () {
+    register () {
+      // ------------这个方法不怎么会改QAQ，但是参数应该是对的------------------
       var t = this
       var myDate = new Date()
       // 这个代码检查真严格
@@ -139,7 +117,7 @@ export default {
        * get就是 $axios.get('xxxx/xxx', xxxxxx)
        */
       var qs = require('qs')
-      this.$axios.post('/api/user-login', qs.stringify({
+      this.$axios.post('/api/user-register', qs.stringify({
         u: t.account,
         p: t.password,
         TimeStamp: myDate
@@ -154,7 +132,7 @@ export default {
             t.restult = '登录成功'
             // this.$store.commit('setToken', JSON.stringify(response.data.data.ukey))
             // this.$store.commit('setAccount', JSON.stringify(response.data.data.ui))
-            localStorage.setItem('ukey', response.data.data.ukey)
+            localStorage.setItem('ukey', response.data.data.ukey)// 这里不用了，不太清楚怎么改QAQ
             localStorage.setItem('userid', t.$md5(response.data.data.userid))
             localStorage.setItem('account', t.account)
             t.$router.push({path: 'Homepage'})
@@ -175,15 +153,6 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  .login-container{
-    margin-top: 200px;
-  }
-  .login-card{
-    width: 480px;
-  }
-  .input-contianer{
-    margin-top: 40px;
-  }
+
 </style>
