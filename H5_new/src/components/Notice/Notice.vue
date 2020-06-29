@@ -37,16 +37,17 @@
               <div class="row">
                 <div class="col-12">
                   <div class="email-leftbar">
-                    <div class="m-t-20">
+                    <div class="m-t-20" v-for="(item, index) in NoticeList" v-bind:key="index">
                                 <a href="#" class="media">
                                     <img class="d-flex mr-3 rounded-circle" src="@/assets/images/users/avatar-2.jpg" alt="Generic placeholder image" height="36">
                                     <div class="media-body chat-user-box">
-                                      <p class="user-title m-0">工程英语</p>
+                                      <el-badge :is-dot="item.HasNew" class="item">{{item.FromName}}</el-badge>
+                                      <p class="user-title m-0">{{formatType(item.NoticeType)}}</p>
                                       <p class="text-muted"></p>
                                     </div>
                                 </a>
 
-                                <a href="#" class="media">
+                                <!-- <a href="#" class="media">
                                     <img class="d-flex mr-3 rounded-circle" src="@/assets/images/users/avatar-3.jpg" alt="Generic placeholder image" height="36">
                                     <div class="media-body chat-user-box">
                                       <p class="user-title m-0">工程实践</p>
@@ -60,25 +61,25 @@
                                       <p class="user-title m-0">软件体系结构</p>
                                       <p class="text-muted"></p>
                                     </div>
-                                </a>
+                                </a> -->
                             </div>
                   </div>
                   <div class="email-rightbar mb-3">
                     <div class="card m-t-20">
-                      <ul class="message-list">
+                      <ul class="message-list" v-for="(item, index) in NoticeList" v-bind:key="index">
                         <li>
                                         <a href="">
                                             <div class="col-mail col-mail-1">
-                                                <p class="title">池芝标</p><span class="star-toggle fa fa-star-o"></span>
+                                                <p class="title">{{item.FromName}}</p><span class="star-toggle fa fa-star-o"></span>
                                             </div>
                                             <div class="col-mail col-mail-2">
-                                                <div class="subject"><span class="teaser">由于五一假期，课程顺延至下周末上课</span>
+                                                <div class="subject"><span class="teaser">{{item.InfoContent}}</span>
                                                 </div>
-                                                <div class="date">Mar. 6</div>
+                                                <div class="date">{{item.InfoDate}}</div>
                                             </div>
                                         </a>
                         </li>
-                        <li>
+                        <!-- <li>
                                         <a href="">
                                             <div class="col-mail col-mail-1">
                                                 <p class="title">池芝标</p><span class="star-toggle fa fa-star-o"></span>
@@ -89,7 +90,7 @@
                                                 <div class="date">Mar. 7</div>
                                             </div>
                                         </a>
-                        </li>
+                        </li> -->
                       </ul>
                     </div>
                   </div>
@@ -119,6 +120,83 @@ export default {
   },
   beforeDestroy () {
     document.querySelector('body').setAttribute('style', '')
+  },
+  data () {
+    return {
+      classid: '',
+      cla_tea: '',
+      c_name: '',
+      content: '',
+      not_type: '',
+      isShow: false,
+      NoticeList: []
+    }
+  },
+  methods: {
+    formatType (nottype) { // 表格数据转换 消息类别
+      return nottype === '1' ? '班课通知' : nottype === '2' ? '用户消息' : '未知类型'
+    },
+    getAllNotice () {
+      var t = this
+      var myDate = new Date()
+      var qs = require('qs')
+      this.$axios.post('api/get-usernoticelist', qs.stringify({
+        ui: localStorage.getItem('userid'),
+        ukey: localStorage.getItem('ukey'),
+        TimeStamp: myDate
+      }), {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      })
+        .then(function (response) {
+          console.log(response.data)
+          if (response.data.code === 1) {
+            t.restult = '获取成功'
+            t.NoticeList = response.data.data.NoticeList
+          } else if (response.data.code === 9999) {
+            t.restult = '系统错误'
+            t.isShow = true
+          } else if (response.data.code === 1001) {
+            t.restult = '请求错误'
+          }
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+    },
+    getNoticeInfo () {
+      var t = this
+      var myDate = new Date()
+      var qs = require('qs')
+      this.$axios.post('api/get-usernoticelist', qs.stringify({
+        ui: localStorage.getItem('userid'),
+        ukey: localStorage.getItem('ukey'),
+        TimeStamp: myDate
+      }), {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      })
+        .then(function (response) {
+          console.log(response.data)
+          if (response.data.code === 1) {
+            t.restult = '获取成功'
+            t.NoticeList = response.data.data.NoticeList
+          } else if (response.data.code === 9999) {
+            t.restult = '系统错误'
+            t.isShow = true
+          } else if (response.data.code === 1001) {
+            t.restult = '请求错误'
+          }
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+    }
+  },
+  mounted () {
+    this.getAllNotice()
   }
 }
 </script>

@@ -107,7 +107,6 @@ export default {
     //     })
     // },
     register () {
-      // ------------这个方法不怎么会改QAQ，但是参数应该是对的------------------
       var t = this
       var myDate = new Date()
       // 这个代码检查真严格
@@ -129,16 +128,11 @@ export default {
         .then(function (response) {
           console.log(response.data)
           if (response.data.code === 1) {
-            t.restult = '登录成功'
+            t.restult = '注册成功'
             // this.$store.commit('setToken', JSON.stringify(response.data.data.ukey))
             // this.$store.commit('setAccount', JSON.stringify(response.data.data.ui))
-            localStorage.setItem('ukey', response.data.data.ukey)// 这里不用了，不太清楚怎么改QAQ
-            localStorage.setItem('userid', t.$md5(response.data.data.userid))
-            localStorage.setItem('account', t.account)
-            t.$router.push({path: 'Homepage'})
-          } else if (response.data.code === 1002) {
-            t.restult = '账户或密码错误'
-            t.isShow = true
+            t.$message('注册成功！')
+            t.$router.push({path: '/'})
           } else if (response.data.code === 1001) {
             t.restult = '请求错误'
           }

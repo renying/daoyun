@@ -175,7 +175,7 @@ export default {
             t.username = response.data.data.UserName
             t.nickname = response.data.data.NickName
             t.year = response.data.data.BornDate
-            t.sex = response.data.data.UserSex
+            t.sex = t.formatRole(response.data.data.UserSex)
             t.phone = response.data.data.Phone
             t.number = response.data.data.UserCode
             t.school = response.data.data.SchoolId
