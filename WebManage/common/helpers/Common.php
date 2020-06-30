@@ -63,6 +63,7 @@ class Common
 
         $find_num = $sum % $total_table; // 计算用户名所在的表
 
+
         return $table_prefix . $find_num;
     }
 

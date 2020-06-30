@@ -111,6 +111,35 @@ layui.use(['table'], function (){
     });
 
     /* ------------------------------ 华丽的分割线 ------------------------------ */
+    //签到列表
+    table.render({
+        elem: '#mos-table-checkin',
+        url: $('#mos-table-checkin').data('url'),
+        cols: [[
+            {title: 'ID', width: 110, fixed: 'left', field: 'id'},
+            {title: '课程名', width: 200, fixed: 'left', field: 'ClassName'},
+            {title: '用户', width: 200, fixed: 'left', field: 'UserName'},
+            {title: '签到时间', width: 200, fixed: 'left', field: 'CheckDate'},
+            {title: '经度', width: 170, field: 'Longitude'},
+            {title: '纬度', width: 140, field: 'Latitude'}
+        ]],
+        height: 'full-136'
+    });
+    //班课列表
+    table.render({
+        elem: '#mos-table-dyclass',
+        url: $('#mos-table-dyclass').data('url'),
+        cols: [[
+            {title: 'ID', width: 110, fixed: 'left', field: 'ClassId'},
+            {title: '课程名', width: 200, fixed: 'left', field: 'ClassName'},
+            {title: '课程编号', width: 200, fixed: 'left', field: 'ClassNum'},
+            {title: '课程简介', width: 200, fixed: 'left', field: 'ClassDiscription'},
+            {title: '创建时间', width: 170, field: 'CreateTime'},
+            {title: '创建者', width: 140, field: 'UserId'},
+            {title: '操作', width: 100, fixed: 'right', toolbar: '#mos-table-bar'}
+        ]],
+        height: 'full-136'
+    });
     //系统参数列表
     table.render({
         elem: '#mos-table-config',

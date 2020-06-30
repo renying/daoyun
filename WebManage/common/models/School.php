@@ -25,7 +25,7 @@ class School extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%school}}';
+        return '{{%mostop_school}}';
     }
 
     /**

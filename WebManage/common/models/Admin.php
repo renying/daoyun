@@ -29,7 +29,7 @@ class Admin extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%admin}}';
+        return '{{%mostop_admin}}';
     }
 
     /**

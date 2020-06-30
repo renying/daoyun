@@ -24,11 +24,12 @@ $config = [
                     'class' => 'yii\log\FileTarget',
                     'levels' => ['error', 'warning'],
                     'logFile' => '@runtime/logs/' . date('Ym') . '/app_' . date('d') . '.log',
+                    'logVars' => ['*'],
                 ],
                 [
                     'class' => 'yii\log\DbTarget',
                     'levels' => ['error', 'warning'],
-                    'logTable' => '{{%log}}',
+                    'logTable' => '{{%mostop_log}}',
                 ],
             ],
         ],

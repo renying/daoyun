@@ -6,16 +6,17 @@
     <div class="wrapper-page">
       <div class="card">
         <div class="card-body">
+          <!--
           <h3 class="text-center m-0">
             <a href="index.html" class="logo logo-admin"
               ><img src="assets/images/DaoYun-Logo.png" height="80" alt="logo"
             /></a>
           </h3>
-
+          -->
+          <img src="@/assets/images/DaoYun-Logo.png" width="200">
           <div class="p-3">
-            <h4 class="font-18 m-b-5 text-center">欢迎回来 !</h4>
-            <p class="text-muted text-center">请登录以继续</p>
-
+            <h4 class="font-18 m-b-5 text-center">欢迎!</h4>
+            <p class="text-muted text-center">登录以继续</p>
             <form class="form-horizontal m-t-30" action="index.html">
               <div class="form-group">
                 <label for="username">用户名</label>
@@ -82,12 +83,7 @@
       <div class="m-t-40 text-center">
         <p class="text-white">
           还没有账号?
-          <a
-            href="pages-register.html"
-            class="font-500 font-14 text-white font-secondary"
-          >
-            现在注册
-          </a>
+          <router-link to = "Register" replace><i class="mdi mdi-lock"></i>现在注册</router-link>
         </p>
         <p class="text-white">
           © 2020 工程实践28组 <i class="mdi mdi-heart text-danger"></i>
@@ -146,6 +142,7 @@ export default {
       this.$axios.post('/api/user-login', qs.stringify({
         u: t.account,
         p: t.password,
+        ut: 6,
         TimeStamp: myDate
       }), {
         headers: {

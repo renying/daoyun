@@ -20,7 +20,7 @@ class AdminLoginLog extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%admin_login_log}}';
+        return '{{%mostop_admin_login_log}}';
     }
 
     /**

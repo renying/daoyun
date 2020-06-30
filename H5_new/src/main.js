@@ -13,7 +13,11 @@ import '../node_modules/element-ui/lib/theme-chalk/index.css'
 import axios from 'axios'
 import Resource from 'vue-resource'
 import md5 from 'js-md5'
-
+import BaiduMap from 'vue-baidu-map'
+Vue.use(BaiduMap, {
+  // ak 是在百度地图开发者平台申请的密钥 详见 http://lbsyun.baidu.com/apiconsole/key */
+  ak: 'y2j12NPgbyD06lG538uSGK4GaCH4bZ1v'
+})
 // axios.defaults.baseURL = 'http://47.94.234.206/'
 axios.defaults.baseURL = '/api'
 

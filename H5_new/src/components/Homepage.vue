@@ -3,34 +3,38 @@
     <el-container>
     <el-header id="topnav">
             <!-- MENU Start -->
-      <div>
-        <a>
-          <img src="" alt="" height="50">
-        </a>
-      </div>
       <div class="topbar-main">
         <div class="container-fluid">
-          <div id="navigation">
-            <!-- Navigation Menu-->
+          <div class="logo">
+            <a href="index.html" class="logo">
+              <img src="@/assets/images/DaoYun-Logo.png" alt="" height="45">
+            </a>
+          </div>
+          <div class="menu-extras topbar-custom">
             <ul class="navigation-menu">
               <li>
                 <a href="/Homepage"><i class="mdi mdi-view-dashboard"></i>我的班课</a>
               </li>
-              <li class="has-submenu">
+              <li>
                 <a href="/MyInfo/MyInfo"><i class="mdi mdi-view-dashboard"></i>我的信息</a>
               </li>
+              <li class="has-submenu">
+                <a href="/Notice"><i class="mdi mdi-view-dashboard"></i>消息通知</a>
+              </li>
             </ul>
+            <!-- Navigation Menu-->
             <!-- End navigation menu -->
           </div> <!-- end #navigation -->
         </div> <!-- end container -->
+        <div class="clearfix"></div>
       </div> <!-- end navbar-custom -->
     </el-header>
     <el-main>
     <el-tabs type="border-card">
       <el-tab-pane label="我加入的">
         <div class="row">
-          <div v-for="(item, index) in JoinedList" v-bind:key="index" class="col-lg-3 col-md-6">
-            <a href="#" class="gallery-popup" title="Open Imagination">
+          <div v-for="(item, index) in JoinedList" v-bind:key="index" class="col-lg-3 col-md-6" @click="getClassId(item.ClassId)">
+            <a href="/ClassInfo" class="gallery-popup" title="Open Imagination">
               <div class="project-item">
                 <div class="overlay-container">
                   <img src="@/assets/images/gallery/work-1.jpg" alt="img" class="gallery-thumb-img">
@@ -47,15 +51,10 @@
           </div>
         </div>
         <el-row class="controls controls-row">
-          <div style="float:right">
+          <div align="center">
             <el-input v-model="classid" size="medium" placeholder="输入课程编号" span="100"/>
             <el-button type="button" @click="addMyJoin()">加入新班课</el-button>
           </div>
-          <ul>
-            <li prop="c_name" label="课程名称"></li>
-            <li prop="c_uname" label="创建人用户名"></li>
-            <li prop="c_school" label="院系信息"></li>
-          </ul>
         </el-row>
         <el-row :gutter="20">
           <el-col :span="6">
@@ -65,8 +64,8 @@
       </el-tab-pane>
       <el-tab-pane label="我创建的">
         <div class="row">
-          <div v-for="(item, index) in CreatedList" v-bind:key="index" class="col-lg-3 col-md-6">
-            <a href="/MyCreation" class="gallery-popup" title="Open Imagination">
+          <div v-for="(item, index) in CreatedList" v-bind:key="index" class="col-lg-3 col-md-6" @click="getClassId(item.ClassId)">
+            <a href="/ClassInfo" class="gallery-popup" title="Open Imagination">
               <div class="project-item">
                 <div class="overlay-container">
                   <img src="@/assets/images/gallery/work-1.jpg" alt="img" class="gallery-thumb-img">
@@ -81,6 +80,26 @@
               </div>
             </a>
           </div>
+        </div>
+        <div>
+        <el-button type="primary" @click="dialogFormVisible4=true">创建班课</el-button>
+      <el-dialog title="创建班课" :visible.sync="dialogFormVisible4">
+        <el-form>
+          <el-form-item label="班课名称">
+            <el-input v-model="classInfo.className"></el-input>
+          </el-form-item>
+          <el-form-item label="课程简介">
+            <el-input v-model="classInfo.classDesc"></el-input>
+          </el-form-item>
+          <el-form-item label="课程编号">
+            <el-input v-model="classInfo.classCode"></el-input>
+          </el-form-item>
+          <el-form-item size="large">
+            <el-button type="primary" @click="onCreate()">立即创建</el-button>
+            <el-button @click="dialogFormVisible4 = false">取消</el-button>
+          </el-form-item>
+        </el-form>
+      </el-dialog>
         </div>
       </el-tab-pane>
     </el-tabs>
@@ -98,14 +117,30 @@
 <script>
 export default {
   name: 'Homepage',
+  inject: ['reload'],
+  beforeCreate () {
+    // 添加背景色
+    document.querySelector('body').setAttribute('style', 'background-color:######')
+  },
+  beforeDestroy () {
+    document.querySelector('body').setAttribute('style', '')
+  },
   data () {
     return {
       classid: '',
       c_uname: '',
       c_name: '',
       c_school: '',
+      dialogFormVisible4: false,
       JoinedList: [],
-      CreatedList: []
+      CreatedList: [],
+      classInfo: {
+        ui: '',
+        ukey: '',
+        className: '',
+        classDesc: '',
+        classCode: ''
+      }
     }
   },
   methods: {
@@ -145,6 +180,9 @@ export default {
           console.log(error)
         })
     },
+    getClassId (ClassId) {
+      localStorage.setItem('classid', ClassId)
+    },
     handleSelect (val, valkey) {
       console.log(val, valkey)
       if (val === '1') {
@@ -164,7 +202,7 @@ export default {
         this.$axios.post('api/choose-class', qs.stringify({
           ui: localStorage.getItem('userid'),
           ukey: localStorage.getItem('ukey'),
-          classId: t.classid,
+          ClassCode: t.classid,
           TimeStamp: myDate
         }), {
           headers: {
@@ -177,12 +215,56 @@ export default {
               t.restult = '获取成功'
               // this.$store.commit('setToken', JSON.stringify(response.data.data.ukey))
               // this.$store.commit('setAccount', JSON.stringify(response.data.data.ui))
-              t.$router.push({path: 'Myjoin'})
+              t.$router.push({path: 'ClassInfo'})
             } else if (response.data.code === 9999) {
               t.restult = '系统错误'
               t.isShow = true
             } else if (response.data.code === 1001) {
               t.restult = '请求错误'
+            } else if (response.data.code === 1004) {
+              t.$message('课程编号不存在')
+            }
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
+      }
+    },
+    onCreate () {
+      var t = this
+      var myDate = new Date()
+      var qs = require('qs')
+      if (t.classInfo.className === '' || t.classInfo.classDesc === '' || t.classInfo.classCode === '') {
+        t.$message('所有信息都必填!')
+      } else {
+        this.$axios.post('api/add-classinfo', qs.stringify({
+          ui: localStorage.getItem('userid'),
+          ukey: localStorage.getItem('ukey'),
+          className: t.classInfo.className,
+          classDesc: t.classInfo.classDesc,
+          classCode: t.classInfo.classCode,
+          TimeStamp: myDate
+        }), {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }
+        })
+          .then(function (response) {
+            console.log(response.data)
+            if (response.data.code === 1) {
+              t.restult = '获取成功'
+              // this.$store.commit('setToken', JSON.stringify(response.data.data.ukey))
+              // this.$store.commit('setAccount', JSON.stringify(response.data.data.ui))
+              t.$message('创建成功！')
+              t.dialogFormVisible4 = false
+              t.reload()
+            } else if (response.data.code === 9999) {
+              t.restult = '系统错误'
+              t.isShow = true
+            } else if (response.data.code === 1001) {
+              t.restult = '请求错误'
+            } else if (response.data.code === 1004) {
+              t.$message('课程编号不存在')
             }
           })
           .catch(function (error) {
@@ -200,7 +282,6 @@ export default {
   },
   mounted () {
     this.getAllClass()
-    // this.$router.push({path: '/HospitalManager/Employee'})
   }
 }
 </script>
