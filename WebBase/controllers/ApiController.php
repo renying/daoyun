@@ -33,14 +33,28 @@ class ApiController extends ApiBaseController
    
     $username = $request->post('u');
     $password = md5( $request->post('p'));
+    $usertype = $request->post('ut');
+    $userList = null;
+
 
     $userModel= new User();
-    $userList = $userModel::find()->asArray()->all();
+    if($usertype!=null&&$usertype=='6')
+    {
+      $userList = $userModel::find()->where(['UserType' => '1'])->asArray()->all();
+    }
+    else{
+      $userList = $userModel::find()->asArray()->all();
+    }
     $isSuccess=false;
     $userId='';
     $token='';
     foreach($userList as $user){
       if($user['UserName']==$username && $user['PassWord']==$password){
+        $isSuccess=true;
+        $userId=$user['UserId'];
+        break;
+      }
+      elseif ($user['Phone']==$username && $user['PassWord']==$password) {
         $isSuccess=true;
         $userId=$user['UserId'];
         break;
