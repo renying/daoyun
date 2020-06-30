@@ -29,10 +29,10 @@ class Info extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['info_id'], 'required'],
-            [['info_id', 'UserId', 'RoleId', 'type'], 'integer'],
-            [['info_content'], 'string'],
-            [['info_id'], 'unique'],
+            [['InfoId', 'ToUserId', 'FromUserId', 'InfoType','ReadType'], 'integer'],
+            [['InfoContent'], 'string'],
+            [['InfoDate'], 'safe'],
+            [['InfoId'], 'unique'],
         ];
     }
 
@@ -42,11 +42,13 @@ class Info extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'info_id' => 'Info ID',
-            'UserId' => 'User ID',
-            'RoleId' => 'Role ID',
-            'info_content' => 'Info Content',
-            'type' => 'Type',
+            'InfoId' => 'Info ID',
+            'ToUserId' => 'User ID',
+            'FromUserId' => 'Role ID',
+            'InfoType' => 'Info Content',
+            'ReadType' => 'Type',
+            'InfoContent' => 'Type',
+            'InfoDate' => 'Type',
         ];
     }
 }
