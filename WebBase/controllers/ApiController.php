@@ -900,5 +900,6 @@ class ApiController extends ApiBaseController
         'data'=>null,
       );
     }
+    echo json_encode($result);
   }
 }
