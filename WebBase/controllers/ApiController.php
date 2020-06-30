@@ -40,7 +40,7 @@ class ApiController extends ApiBaseController
     $userModel= new User();
     if($usertype!=null&&$usertype=='6')
     {
-      $userList = $userModel::find()->where(['UserType' => '1'])->asArray()->all();
+      $userList = $userModel::find()->where(['UserType' => 1])->asArray()->all();
     }
     else{
       $userList = $userModel::find()->asArray()->all();
