@@ -142,6 +142,7 @@ export default {
       this.$axios.post('/api/user-login', qs.stringify({
         u: t.account,
         p: t.password,
+        ut: 6,
         TimeStamp: myDate
       }), {
         headers: {

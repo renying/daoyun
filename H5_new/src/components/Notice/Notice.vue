@@ -38,12 +38,13 @@
               <div class="row">
                 <div class="col-12">
                   <div class="email-leftbar">
-                    <div class="m-t-20" v-for="(item, index) in NoticeList" v-bind:key="index">
+                    <div class="m-t-20" v-for="(item, index) in NoticeList" v-bind:key="index" @click="readMessage(item.FromUserId)">
                                 <a href="#" class="media">
                                     <img class="d-flex mr-3 rounded-circle" src="@/assets/images/users/avatar-2.jpg" alt="Generic placeholder image" height="36">
                                     <div class="media-body chat-user-box">
                                       <el-badge :is-dot="item.HasNew" class="item">{{item.FromName}}</el-badge>
                                       <p class="user-title m-0">{{formatType(item.NoticeType)}}</p>
+                                      <p>{{item.FromUserId}}</p>
                                       <p class="text-muted"></p>
                                     </div>
                                 </a>
@@ -52,7 +53,7 @@
                   </div>
                   <div class="email-rightbar mb-3">
                     <div class="card m-t-20">
-                      <ul class="message-list" v-for="(item, index) in NoticeList" v-bind:key="index">
+                      <ul class="message-list" v-for="(item, index) in NoticeList" v-bind:key="index" >
                         <li>
                                         <a>
                                             <div class="col-mail col-mail-1">
@@ -71,21 +72,21 @@
                                                 <!--
                                                 *<el-button type="primary" @click="dialogVisible = true">阅读详情</el-button>
                                                 -->
-                                            <el-button type="primary" @click=readMessage()>阅读详情</el-button>
+                                            <!-- <el-button type="primary" @click=readMessage()>阅读详情</el-button> -->
                                             <!--这个方法试了半天，不知道该怎么写，需要在click时，显示新窗口，同时发送数据，方法定义在305行-->
                                           <el-dialog title="提示" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
                                             <span>这是一段信息</span>
                                             <div class="card m-t-20">
-                                              <div class="card-body">
+                                              <div class="card-body" v-for="(item, index) in NoticeInfoList" v-bind:key="index">
                                                 <div class="media m-b-30">
                                                   <img class="d-flex mr-3 rounded-circle thumb-md" src="@/assets/images/users/avatar-1.jpg" alt="Generic placeholder image">
                                                   <div class="media-body">
-                                                    <h4 class="font-14 m-0">这里是发消息的用户FromName</h4>
-                                                    <small class="text-muted">这里是发消息的时间InfoDate</small>
+                                                    <h4 class="font-14 m-0">{{item.FromName}}</h4>
+                                                    <small class="text-muted">{{item.InfoDate}}</small>
                                                   </div>
                                                 </div>
-                                                <h4 class="mt-0 font-18">这里是发消息的用户FromName</h4>
-                                                <p>这里是InfoContent</p>
+                                                <!-- <h4 class="mt-0 font-18">这里是发消息的用户FromName</h4> -->
+                                                <p>{{item.InfoContent}}</p>
                                                 <hr>
                                               </div>
                                             </div>
@@ -125,7 +126,7 @@
               <div class="row">
                 <div class="col-12">
                   <div class="email-leftbar">
-                    <div class="m-t-20" v-for="(item, index) in NoticeList" v-bind:key="index">
+                    <div class="m-t-20" v-for="(item, index) in NoticeList" v-bind:key="index" @click="readMessage(item.FromUserId)">
                                 <a href="#" class="media">
                                     <img class="d-flex mr-3 rounded-circle" src="@/assets/images/users/avatar-2.jpg" alt="Generic placeholder image" height="36">
                                     <div class="media-body chat-user-box">
@@ -138,7 +139,7 @@
                   </div>
                   <div class="email-rightbar mb-3">
                     <div class="card m-t-20">
-                      <ul class="message-list" v-for="(item, index) in NoticeList" v-bind:key="index">
+                      <ul class="message-list" v-for="(item, index) in NoticeInfoList" v-bind:key="index">
                         <li>
                                         <a>
                                             <div class="col-mail col-mail-1">
@@ -152,26 +153,27 @@
                                                 <div class="subject"><span class="teaser">{{item.InfoContent}}</span>
                                                 </div>
                                                 <div class="date">{{item.InfoDate}}</div>
+                                                <div class="noticetype">{{formatType(item.NoticeType)}}</div>
                                             </div>
                                           <div class="col-mail col-mail-3">
                                                 <!--
                                                 *<el-button type="primary" @click="dialogVisible = true">阅读详情</el-button>
                                                 -->
-                                            <el-button type="primary" @click=readMessage()>阅读详情</el-button>
+                                            <!-- <el-button type="primary" @click=getMessage()>阅读详情</el-button> -->
                                             <!--这个方法试了半天，不知道该怎么写，需要在click时，显示新窗口，同时发送数据，方法定义在305行-->
                                           <el-dialog title="提示" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
                                             <span>这是一段信息</span>
                                             <div class="card m-t-20">
-                                              <div class="card-body">
+                                              <div class="card-body" v-for="(item, index) in NoticeInfoList" v-bind:key="index">
                                                 <div class="media m-b-30">
                                                   <img class="d-flex mr-3 rounded-circle thumb-md" src="@/assets/images/users/avatar-1.jpg" alt="Generic placeholder image">
                                                   <div class="media-body">
-                                                    <h4 class="font-14 m-0">这里是发消息的用户FromName</h4>
-                                                    <small class="text-muted">这里是发消息的时间InfoDate</small>
+                                                    <h4 class="font-14 m-0">{{item.FromName}}</h4>
+                                                    <small class="text-muted">{{item.InfoDate}}</small>
                                                   </div>
                                                 </div>
-                                                <h4 class="mt-0 font-18">这里是发消息的用户FromName</h4>
-                                                <p>这里是InfoContent</p>
+                                                <!-- <h4 class="mt-0 font-18">这里是发消息的用户FromName</h4> -->
+                                                <p>{{item.InfoContent}}</p>
                                                 <hr>
                                               </div>
                                             </div>
@@ -231,7 +233,8 @@ export default {
       not_type: '',
       isShow: false,
       dialogVisible: false,
-      NoticeList: []
+      NoticeList: [],
+      NoticeInfoList: []
     }
   },
   methods: {
@@ -274,13 +277,16 @@ export default {
           console.log(error)
         })
     },
-    getNoticeInfo () {
+    readMessage (id) {
       var t = this
       var myDate = new Date()
       var qs = require('qs')
+      console.log(t.$md5(id))
+      console.log(localStorage.getItem('userid'))
       this.$axios.post('api/get-noticeinfolist', qs.stringify({
-        ui: localStorage.getItem('userid'),
+        ToUserId: localStorage.getItem('userid'),
         ukey: localStorage.getItem('ukey'),
+        FromUserId: t.$md5(id),
         TimeStamp: myDate
       }), {
         headers: {
@@ -291,7 +297,8 @@ export default {
           console.log(response.data)
           if (response.data.code === 1) {
             t.restult = '获取成功'
-            t.NoticeList = response.data.data.NoticeList
+            t.dialogVisible = true
+            t.NoticeInfoList = response.data.data.NoticeList
           } else if (response.data.code === 9999) {
             t.restult = '系统错误'
             t.isShow = true
@@ -302,8 +309,6 @@ export default {
         .catch(function (error) {
           console.log(error)
         })
-    },
-    readMessage () {
     }
   },
   mounted () {
