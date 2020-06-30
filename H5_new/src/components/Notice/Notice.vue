@@ -44,7 +44,6 @@
                                     <div class="media-body chat-user-box">
                                       <el-badge :is-dot="item.HasNew" class="item">{{item.FromName}}</el-badge>
                                       <p class="user-title m-0">{{formatType(item.NoticeType)}}</p>
-                                      <p>{{item.FromUserId}}</p>
                                       <p class="text-muted"></p>
                                     </div>
                                 </a>
