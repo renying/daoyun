@@ -113,7 +113,7 @@ public class JoiningFragment extends BaseFragment {
         }, 1000));
         //上拉加载
         refreshLayout.setOnLoadMoreListener (refreshLayout -> refreshLayout.getLayout ().postDelayed (() -> {
-            mNewsAdapter.loadMore (DataProvider.getJoinedClassInfos (0));
+//            mNewsAdapter.loadMore (DataProvider.getJoinedClassInfos (0));
             refreshLayout.finishLoadMore ();
         }, 1000));
         refreshLayout.autoRefresh ();//第一次进入触发自动刷新，演示效果

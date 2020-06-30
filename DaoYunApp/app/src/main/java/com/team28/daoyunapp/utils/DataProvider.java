@@ -38,11 +38,6 @@ public class DataProvider {
     private static List<Course> emptyCourse = new ArrayList<> ();
     private static List<Member> emptyMember = new ArrayList<> ();
 
-    private static int queryLimit = 10;
-    private static int create_left = 999;
-    private static int join_left = 999;
-    private static int member_left = 999;
-
     public static void getCourses () {
         XHttp.post (Api.CLASSINFO)
                 .params (Api.param_ukey, SPProvider.getData (Api.param_ukey))
@@ -52,10 +47,16 @@ public class DataProvider {
                     public void onSuccess ( JSONObject response ) {
                         Logger.json (response.toJSONString ());
 
+                        if (!createdCourses.isEmpty ()){
+                            createdCourses.clear ();
+                        }
+                        if (!joinedCourses.isEmpty ()){
+                            joinedCourses.clear ();
+                        }
+
                         //得到创建班课的信息
                         JSONArray courses = response.getJSONArray ("Created");
                         if (createdCourses.size () < courses.size ()) {
-                            create_left = courses.size ();
                             for (Object item : courses) {
                                 JSONObject course = (JSONObject) item;
                                 createdCourses.add (new Course (Integer.parseInt (course.getString ("ClassId")), course.getString ("ClassName"),
@@ -68,7 +69,6 @@ public class DataProvider {
                         //得到加入班课的信息
                         JSONArray coursesJoin = response.getJSONArray ("Joined");
                         if (joinedCourses.size () < coursesJoin.size ()) {
-                            join_left = coursesJoin.size ();
                             for (Object item : coursesJoin) {
                                 JSONObject course = (JSONObject) item;
                                 joinedCourses.add (new Course (Integer.parseInt (course.getString ("ClassId")), course.getString ("ClassName"),
@@ -110,7 +110,6 @@ public class DataProvider {
                             JSONArray remembers = response.getJSONArray ("UserList");
                             userCount = remembers.size ();
                             if (members.size () < remembers.size ()) {
-                                member_left = remembers.size ();
                                 for (Object item : remembers) {
                                     JSONObject member = (JSONObject) item;
                                     members.add (new Member (member.getString ("UserId"), member.getString ("UserName"), member.getString ("UserCode")));
@@ -159,22 +158,12 @@ public class DataProvider {
      */
     @MemoryCache
     public static List<Course> getCreatedClassInfos ( int begin ) {
-        if (createdCourses.isEmpty ())
-            return null;
+        if (createdCourses.isEmpty ()){
+            Logger.d ("createdCourses.isEmpty");
+            return emptyCourse;
+        }
         else {
-            if (create_left <= 0)
-                return null;
-            else {
-                if (create_left < queryLimit) {
-                    int temp = create_left;
-                    create_left = 0;
-                    return createdCourses.subList (begin, temp);
-                } else {
-//                    create_left = create_left - (queryLimit + begin);
-                    create_left = 0;
-                    return createdCourses.subList (begin, queryLimit);
-                }
-            }
+            return createdCourses;
         }
     }
 
@@ -183,22 +172,12 @@ public class DataProvider {
      */
     @MemoryCache
     public static List<Course> getJoinedClassInfos ( int begin ) {
-        if (joinedCourses.isEmpty ())
-            return null;
+        if (joinedCourses.isEmpty ()){
+            Logger.d ("joinedCourses.isEmpty");
+            return emptyCourse;
+        }
         else {
-            if (join_left <= 0)
-                return null;
-            else {
-                if (join_left < queryLimit) {
-                    int temp = join_left;
-                    join_left = 0;
-                    return joinedCourses.subList (begin, temp);
-                } else {
-//                    join_left = join_left - (queryLimit + begin);
-                    join_left = 0;
-                    return joinedCourses.subList (begin, queryLimit);
-                }
-            }
+            return joinedCourses;
         }
     }
 
@@ -207,22 +186,12 @@ public class DataProvider {
      */
     @MemoryCache
     public static List<Member> getMembers ( int begin ) {
-        if (members.isEmpty ())
-            return null;
+        if (members.isEmpty ()){
+            Logger.d ("members.isEmpty");
+            return emptyMember;
+        }
         else {
-            if (member_left <= 0)
-                return null;
-            else {
-                if (member_left < queryLimit) {
-                    int temp = member_left;
-                    member_left = 0;
-                    return members.subList (begin, temp);
-                } else {
-//                    member_left = member_left - (queryLimit + begin);
-                    member_left = 0;
-                    return members.subList (begin, queryLimit);
-                }
-            }
+            return members;
         }
     }
 
@@ -262,9 +231,6 @@ public class DataProvider {
         members.clear ();
         createdCourses.clear ();
         joinedCourses.clear ();
-        member_left = 999;
-        join_left = 999;
-        create_left = 999;
     }
 
     public static int getCourse_id () {
@@ -305,11 +271,5 @@ public class DataProvider {
 
     public static void setPoint ( int point ) {
         DataProvider.point = point;
-    }
-
-    public static void zeroLeft () {
-        join_left = 0;
-        create_left = 0;
-        member_left = 0;
     }
 }

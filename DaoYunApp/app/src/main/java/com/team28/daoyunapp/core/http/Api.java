@@ -40,7 +40,7 @@ public class Api {
     public static String param_realName = "RealName";
     public static String param_userSex = "UserSex";
     public static String param_classid = "classid";
-    public static String param_classCode = "classCode";
+    public static String param_classCode = "ClassCode";
     public static String SPFNAME = "user_info";
     public static String param_duration = "duration";
     public static String param_longitude = "longitude";

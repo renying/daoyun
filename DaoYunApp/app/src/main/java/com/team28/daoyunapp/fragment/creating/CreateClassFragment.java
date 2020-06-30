@@ -9,6 +9,7 @@ import com.team28.daoyunapp.core.BaseFragment;
 import com.team28.daoyunapp.core.http.Api;
 import com.team28.daoyunapp.core.http.CustomApiResult;
 import com.team28.daoyunapp.core.http.callback.TipCallBack;
+import com.team28.daoyunapp.utils.DataProvider;
 import com.team28.daoyunapp.utils.XToastUtils;
 import com.xuexiang.xaop.annotation.SingleClick;
 import com.xuexiang.xaop.util.MD5Utils;
@@ -83,6 +84,7 @@ public class CreateClassFragment extends BaseFragment {
                     public void onSuccess ( Boolean response ) {
                         Logger.d ("创建班课成功");
                         XToastUtils.success ("创建成功");
+                        DataProvider.getCourses ();
                         mLoadingDialog.dismiss ();
                         popToBack ();
                     }
