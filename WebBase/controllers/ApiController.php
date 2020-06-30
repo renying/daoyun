@@ -851,54 +851,55 @@ class ApiController extends ApiBaseController
     $res=array();
 
     $realId=0;
+    if($result==null){
+      if($classInfo!=null){
+        if(md5($classInfo['UserId'])==$userid){
+          $stdModel = new StdClass();
+          $stdList=$stdModel::find()->where(['ClassId' => $classid])->asArray()->all();
+          $isSuccess=true;
+          foreach($stdList as $classItem){
+            $infoModel= new Info();
+            $infoModel->ToUserId=$classItem['UserId'];
+            $infoModel->FromUserId=$classInfo['UserId'];
+            $infoModel->InfoContent=$content;
+            $infoModel->InfoType=1;
+            $infoModel->ReadType=0;
+            $infoModel->InfoDate=date("Y-m-d H:i:s");
+            $isSuccess=$isSuccess&&$infoModel->save();
+            
+          }
 
-    if($classInfo!=null){
-      if(md5($classInfo['UserId'])==$userid){
-        $stdModel = new StdClass();
-        $stdList=$stdModel::find()->where(['ClassId' => $classid])->asArray()->all();
-        $isSuccess=true;
-        foreach($stdList as $classItem){
-          $infoModel= new Info();
-          $infoModel->ToUserId=$classItem['UserId'];
-          $infoModel->FromUserId=$classInfo['UserId'];
-          $infoModel->InfoContent=$content;
-          $infoModel->InfoType=1;
-          $infoModel->ReadType=0;
-          $infoModel->InfoDate=date("Y-m-d H:i:s");
-          $isSuccess=$isSuccess&&$infoModel->save();
-          
+          if($isSuccess){
+             
+              $result=array(
+                'code'=>1,
+                'msg'=>'通知成功',
+                'data'=>true,
+              );
+            }
+            else{
+              $result=array(
+                'code'=>1004,
+                'msg'=>'通知异常',
+                'data'=>false,
+              );
+            }
         }
-
-        if($isSuccess){
-           
-            $result=array(
-              'code'=>1,
-              'msg'=>'通知成功',
-              'data'=>true,
-            );
-          }
-          else{
-            $result=array(
-              'code'=>1004,
-              'msg'=>'通知异常',
-              'data'=>false,
-            );
-          }
+        else{
+          $result=array(
+            'code'=>1003,
+            'msg'=>'用户与班课不匹配',
+            'data'=>null,
+          );
+        }
       }
       else{
         $result=array(
-          'code'=>1003,
-          'msg'=>'用户与班课不匹配',
+          'code'=>1002,
+          'msg'=>'班课不存在',
           'data'=>null,
         );
       }
-    }
-    else{
-      $result=array(
-        'code'=>1002,
-        'msg'=>'班课不存在',
-        'data'=>null,
-      );
     }
     echo json_encode($result);
   }
