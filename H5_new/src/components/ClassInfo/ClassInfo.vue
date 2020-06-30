@@ -123,10 +123,6 @@ export default {
       this.center.lng = x.point.lng
     },
     mapReady ({BMap, map}) {
-      // 下面注释是百度地图API官方实现方法
-      // console.log(1)
-      // console.log(map);
-      // console.log(BMap);
       let that = this
       var geolocation = new BMap.Geolocation()
       // 开启SDK辅助定位

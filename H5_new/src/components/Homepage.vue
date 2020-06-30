@@ -33,7 +33,11 @@
     <el-tabs type="border-card">
       <el-tab-pane label="我加入的">
         <div class="row">
+<<<<<<< HEAD
           <div v-for="(item, index) in JoinedList" v-bind:key="index" class="col-lg-3 col-md-6" @click="getClassId(item.ClassId)">
+=======
+          <div v-for="(item, index) in JoinedList" v-bind:key="index" class="col-lg-3 col-md-6">
+>>>>>>> ef81e21cc321e617fdc33e5d004cbc5d1a8ac5c5
             <a href="/ClassInfo" class="gallery-popup" title="Open Imagination">
               <div class="project-item">
                 <div class="overlay-container">
@@ -64,7 +68,11 @@
       </el-tab-pane>
       <el-tab-pane label="我创建的">
         <div class="row">
+<<<<<<< HEAD
           <div v-for="(item, index) in CreatedList" v-bind:key="index" class="col-lg-3 col-md-6" @click="getClassId(item.ClassId)">
+=======
+          <div v-for="(item, index) in CreatedList" v-bind:key="index" class="col-lg-3 col-md-6">
+>>>>>>> ef81e21cc321e617fdc33e5d004cbc5d1a8ac5c5
             <a href="/ClassInfo" class="gallery-popup" title="Open Imagination">
               <div class="project-item">
                 <div class="overlay-container">
@@ -271,6 +279,8 @@ export default {
             console.log(error)
           })
       }
+    },
+    onCreate () {
     },
     exit () {
       console.log('注销')
