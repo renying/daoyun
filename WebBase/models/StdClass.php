@@ -27,7 +27,6 @@ class StdClass extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id'], 'required'],
             [['id', 'UserId', 'ClassId'], 'integer'],
             [['id'], 'unique'],
         ];
