@@ -15,6 +15,7 @@ api/user-login
 | --------- | -------- | -------- | ------------------------------------------------------------ |
 | u         | string   | Y        | 用户名                                                       |
 | p         | string   | Y        | 密码                                                         |
+| ut        | int      | N        | 用户类型(6:老师和管理员)                                     |
 | TimeStamp | string   | Y        | 时间戳，格式为：yyyyMMddHHmmss例如：20200411155201           |
 | CheckCode | string   | Y        | 校验码，格式为：标准MD5(u+ p+TimeStamp + 平台密钥) （加号代表连接符，非数值运算） |
 
@@ -496,7 +497,7 @@ api/choose-class
 | --------- | -------- | -------- | ------------------------------------------------------------ |
 | ui        | string   | Y        | 当前用户id，非int，需要上传MD5值，即标准MD5(userid)          |
 | ukey      | string   | Y        | 用户token                                                    |
-| classid   | int      | Y        | 课程编号                                                     |
+| ClassCode | int      | Y        | 课程编号                                                     |
 | TimeStamp | string   | Y        | 时间戳，格式为：yyyyMMddHHmmss例如：20200411155201           |
 | CheckCode | string   | Y        | 校验码，格式为：标准MD5(ui +className +  TimeStamp + 平台密钥) （加号代表连接符，非数值运算） |
 

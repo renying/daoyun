@@ -19,6 +19,9 @@ import Input from '@/components/Cure/Input'
 import Advice from '@/components/Cure/Advice'
 import RecoverPassword from '@/components/User/RecoverPassword'
 import MyInfo from '@/components/MyInfo/MyInfo'
+import Register from '@/components/Register/Register'
+import Notice from '@/components/Notice/Notice'
+import ClassInfo from '@/components/ClassInfo/ClassInfo'
 
 Vue.use(Router)
 
@@ -34,6 +37,16 @@ export default new Router({
       path: '/PLogin',
       name: 'PLogin',
       component: PLogin
+    },
+    {
+      path: '/Register',
+      name: 'Register',
+      component: Register
+    },
+    {
+      path: '/Notice',
+      name: 'Notice',
+      component: Notice
     },
     {
       path: '/User',
@@ -125,6 +138,11 @@ export default new Router({
       path: '/MyInfo/MyInfo',
       name: 'MyInfo',
       component: MyInfo
+    },
+    {
+      path: '/ClassInfo',
+      name: 'ClassInfo',
+      component: ClassInfo
     }
   ]
 })
