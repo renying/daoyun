@@ -360,6 +360,7 @@ class ApiController extends ApiBaseController
           if($infoItem['FromUserId']==$user['UserId']){
 
             $infoinfo['FromName']=$user['UserName'];
+            $infoinfo['FromUserId']=$user['FromUserId'];
             $infoinfo['NoticeType']=$infoItem['InfoType'];
             $infoinfo['HasNew']=$infoItem['ReadType']==0;
             if(!in_array($user['UserName'], $resMd5)){
