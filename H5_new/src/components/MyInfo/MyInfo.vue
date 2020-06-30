@@ -88,10 +88,7 @@
           </el-form-item>
         </el-form>
       </el-dialog>
-     </div>
-      </el-tab-pane>
-      <el-tab-pane label="签到信息">
-        这里是签到信息
+        </div>
       </el-tab-pane>
     </el-tabs>
     </el-main>
