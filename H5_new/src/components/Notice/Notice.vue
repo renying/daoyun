@@ -154,14 +154,6 @@
 <!--                                                <div class="noticetype">{{formatType(item.NoticeType)}}</div>-->
                                             </div>
                                           <div class="col-mail col-mail-3">
-<<<<<<< HEAD
-=======
-                                                <!--
-                                                *<el-button type="primary" @click="dialogVisible = true">阅读详情</el-button>
-                                                -->
-                                            <!-- <el-button type="primary" @click=getMessage()>阅读详情</el-button> -->
-                                            <!--这个方法试了半天，不知道该怎么写，需要在click时，显示新窗口，同时发送数据，方法定义在305行-->
->>>>>>> ef81e21cc321e617fdc33e5d004cbc5d1a8ac5c5
                                           <el-dialog title="消息详情" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
                                             <div class="card m-t-20">
                                               <div class="card-body" v-for="(item, index) in NoticeInfoList" v-bind:key="index">
