@@ -36,8 +36,9 @@
         <p>成员总数：{{UserCount}}</p>
         <p>成员签到总次数：{{CheckCount}}</p>
         <el-table :data="tableData" style="width: 100%">
-      <el-table-column prop="UserId" label="编号" width="180">
+      <!-- <el-table-column prop="UserId" label="编号" width="180">
       </el-table-column>
+      -->
       <el-table-column prop="UserName" label="名称" width="180">
       </el-table-column>
       <el-table-column prop="UserCode" label="学号">
@@ -54,7 +55,19 @@
             </bm-marker>
           </baidu-map>
           </view>
-        <el-button type="primary" @click=startCheckin()>发起签到</el-button>
+        <!--<el-button type="primary" @click=startCheckin()>发起签到</el-button>-->
+        <el-button type="primary" @click="dialogFormVisible5 = true">发起签到</el-button>
+        <el-dialog title="设置签到时间(分钟)" :visible.sync="dialogFormVisible5">
+          <el-input v-model="duration" placeholder="请输入整数" type="number"></el-input>
+          <el-dialog width="30%" title="提示" :visible.sync="innerVisible" append-to-body>
+             <span>发起签到成功！</span>
+            <el-button @click="innerVisible = false">确定</el-button>
+          </el-dialog>
+          <div slot="footer" class="dialog-footer">
+            <el-button @click="dialogFormVisible5 = false">取 消</el-button>
+            <el-button type="primary" @click=startCheckin()>确认发起签到</el-button>
+          </div>
+        </el-dialog>
       </el-tab-pane>
     </el-tabs>
     </el-main>
@@ -83,6 +96,8 @@ export default {
       longitude: '',
       latitude: '',
       duration: '',
+      innerVisible: false,
+      dialogFormVisible5: false,
       zoom: 18, // 地图相关设置
       center: {lng: 0, lat: 0}
     }
@@ -208,6 +223,7 @@ export default {
             t.restult = '获取成功'
             // this.$store.commit('setToken', JSON.stringify(response.data.data.ukey))
             // this.$store.commit('setAccount', JSON.stringify(response.data.data.ui))
+            t.innerVisible = true
             t.code = response.data.data.code
             t.message = response.data.data.message
           } else if (response.data.code === 9999) {
