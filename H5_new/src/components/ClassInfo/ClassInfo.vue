@@ -34,6 +34,7 @@
       <el-tab-pane label="班课成员信息">
         <p>课程名称：{{ClassName}}</p>
         <p>成员总数：{{UserCount}}</p>
+        <p>成员签到总次数：{{CheckCount}}</p>
         <el-table :data="tableData" style="width: 100%">
       <el-table-column prop="UserId" label="编号" width="180">
       </el-table-column>
@@ -41,6 +42,7 @@
       </el-table-column>
       <el-table-column prop="UserCode" label="学号">
       </el-table-column>
+      <!-- <el-table-column><el-button type="primary" @click="getStuInfo(UserId)">查看信息</el-button></el-table-column> -->
     </el-table>
       </el-tab-pane>
       <el-tab-pane label="发起签到">
@@ -76,6 +78,7 @@ export default {
     return {
       ClassName: '',
       UserCount: '',
+      CheckCount: '',
       tableData: [],
       longitude: '',
       latitude: '',
@@ -106,6 +109,7 @@ export default {
             t.tableData = response.data.data.UserList
             t.ClassName = response.data.data.ClassName
             t.UserCount = response.data.data.UserCount
+            t.CheckCount = response.data.data.CheckCount
           } else if (response.data.code === 9999) {
             t.restult = '系统错误'
             t.isShow = true
@@ -121,6 +125,38 @@ export default {
       console.log(x.point)
       this.center.lat = x.point.lat
       this.center.lng = x.point.lng
+    },
+    getStuInfo (Id) {
+      var t = this
+      var myDate = new Date()
+      var qs = require('qs')
+      this.$axios.post('api/get-classuserlist', qs.stringify({
+        ui: localStorage.getItem('userid'),
+        ukey: localStorage.getItem('ukey'),
+        classid: localStorage.getItem('classid'),
+        TimeStamp: myDate
+      }), {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      })
+        .then(function (response) {
+          console.log(response.data)
+          if (response.data.code === 1) {
+            t.restult = '获取成功'
+            t.tableData = response.data.data.UserList
+            t.ClassName = response.data.data.ClassName
+            t.UserCount = response.data.data.UserCount
+          } else if (response.data.code === 9999) {
+            t.restult = '系统错误'
+            t.isShow = true
+          } else if (response.data.code === 1001) {
+            t.restult = '请求错误'
+          }
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
     },
     mapReady ({BMap, map}) {
       let that = this
