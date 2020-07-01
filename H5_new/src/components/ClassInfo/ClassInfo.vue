@@ -232,6 +232,13 @@ export default {
         .catch(function (error) {
           console.log(error)
         })
+    },
+    exit () {
+      console.log('注销')
+      localStorage.removeItem('ukey')
+      localStorage.removeItem('account')
+      localStorage.removeItem('userid')
+      this.$router.push({path: '/'})
     }
   },
   mounted () {
