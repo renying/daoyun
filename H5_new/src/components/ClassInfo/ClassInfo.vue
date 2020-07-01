@@ -47,14 +47,13 @@
     </el-table>
       </el-tab-pane>
       <el-tab-pane label="发起签到">
-        <view class="map">
-          <baidu-map class="map-contain" :scroll-wheel-zoom="true" :center="center" :zoom="zoom" MapType="BMAP_SATELLITE_MAP" @ready="mapReady">
+
+          <baidu-map class="map-contain map" :scroll-wheel-zoom="true" :center="center" :zoom="zoom" MapType="BMAP_SATELLITE_MAP" @ready="mapReady">
             <bm-geolocation anchor="BMAP_ANCHOR_BOTTOM_RIGHT" @locationSuccess="getMyLocation()" :showAddressBar="true" :autoLocation="true"></bm-geolocation>
             <bm-marker @dragend="markerDrag" :position="center" :dragging="true" animation="BMAP_ANIMATION_BOUNCE">
-            <!--<bm-label content="我爱北京天安门" :labelStyle="{color: 'red', fontSize : '24px'}" :offset="{width: -35, height: 30}"/> -->
             </bm-marker>
           </baidu-map>
-          </view>
+
         <!--<el-button type="primary" @click=startCheckin()>发起签到</el-button>-->
         <el-button type="primary" @click="dialogFormVisible5 = true">发起签到</el-button>
         <el-dialog title="设置签到时间(分钟)" :visible.sync="dialogFormVisible5">
@@ -65,7 +64,7 @@
           </el-dialog>
           <div slot="footer" class="dialog-footer">
             <el-button @click="dialogFormVisible5 = false">取 消</el-button>
-            <el-button type="primary" @click=startCheckin()>确认发起签到</el-button>
+            <el-button type="primary" @click="startCheckin()">确认发起签到</el-button>
           </div>
         </el-dialog>
       </el-tab-pane>
@@ -80,6 +79,7 @@
 
 <script>
 export default {
+  inject: ['reload'],
   beforeCreate () {
     // 添加背景色
     document.querySelector('body').setAttribute('style', 'background-color:######')
@@ -176,7 +176,6 @@ export default {
     mapReady ({BMap, map}) {
       let that = this
       var geolocation = new BMap.Geolocation()
-      // 开启SDK辅助定位
       geolocation.enableSDKLocation()
       geolocation.getCurrentPosition(function (r) {
         console.log('d')
@@ -184,15 +183,10 @@ export default {
         // getStatus拿到的是状态信息，失败与否
         // eslint-disable-next-line no-undef
         if (this.getStatus() === BMAP_STATUS_SUCCESS) {
-          // var mk = new BMap.Marker(r.point);
-          // map.addOverlay(mk);//将覆盖物添加到地图中
-          // map.panTo(r.point);//将地图的中心点更改为给定的点
           that.center.lng = r.point.lng
           that.center.lat = r.point.lat
-          this.latitude = r.point.lat
-          this.longitude = r.point.lng
-          that.showToast('您所在位置为经度：' + r.point.lng + ',纬度：' + r.point.lat)
-          // alert('您的位置：' + r.point.lng + ',' + r.point.lat);
+          that.latitude = r.point.lat
+          that.longitude = r.point.lng
         } else {
           that.showToast('位置信息获取失败，' + this.getStatus())
         }
@@ -204,6 +198,9 @@ export default {
       var t = this
       var myDate = new Date()
       var qs = require('qs')
+      console.log('start')
+      console.log(t.longitude)
+      console.log(t.latitude)
       this.$axios.post('api/startcheckin', qs.stringify({
         ui: localStorage.getItem('userid'),
         ukey: localStorage.getItem('ukey'),
@@ -245,5 +242,8 @@ export default {
 </script>
 
 <style scoped>
-
+.map {
+  width: 100%;
+  height: 500px;
+}
 </style>
