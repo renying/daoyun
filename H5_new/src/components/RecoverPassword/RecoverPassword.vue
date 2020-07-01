@@ -1,18 +1,20 @@
 <template>
 <!-- Loader -->
+  <div>
+    <div class="accountbg"></div>
   <div class="wrapper-page">
             <div class="card">
                 <div class="card-body">
 
                     <h3 class="text-center m-0">
-                        <a href="index.html" class="logo logo-admin"><img src="assets/images/logo.png" height="30" alt="logo"></a>
+                        <a href="../../../index.html" class="logo logo-admin"><img src="@/assets/images/DaoYun-Logo.png" width="200"></a>
                     </h3>
 
                     <div class="p-3">
                         <h4 class="font-18 m-b-5 text-center">修改密码</h4>
                         <p class="text-muted text-center">请输入以下信息</p>
 
-                        <form class="form-horizontal m-t-30" action="index.html">
+                        <form class="form-horizontal m-t-30" action="../../../index.html">
 
                             <div class="form-group">
                                 <label for="account">账号</label>
@@ -42,11 +44,12 @@
             </div>
 
             <div class="m-t-40 text-center">
-                <p class="text-white">已有账号？ <a href="pages-login.html" class="font-500 font-14 text-white font-secondary"> 登录 </a> </p>
-                <p class="text-white">© 2019-2020.  <i class="mdi mdi-heart text-danger"></i>  <a href="http://www.bootstrapmb.com">工程实践28组.</a></p>
+                <p class="text-white">已有账号？ <router-link to = "/" replace><i class="mdi mdi-lock"></i>登录</router-link> </p>
+                <p class="text-white">© 2019-2020.  <i class="mdi mdi-heart text-danger"></i>工程实践28组.</p>
             </div>
 
         </div>
+    </div>
 </template>
 <script>
 

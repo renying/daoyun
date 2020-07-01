@@ -69,7 +69,7 @@
 
               <div class="form-group m-t-10 mb-0 row">
                 <div class="col-12 m-t-20">
-                  <router-link to = "Recoverpw" replace><i class="mdi mdi-lock"></i>忘记密码？</router-link>
+                  <router-link to = "/RecoverPassword" replace><i class="mdi mdi-lock"></i>忘记密码？</router-link>
                   <!-- <a href="pages-recoverpw.html" class="text-muted"
                     ><i class="mdi mdi-lock    "></i>忘记密码？</a
                   > -->

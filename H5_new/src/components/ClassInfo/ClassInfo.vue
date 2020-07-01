@@ -218,11 +218,10 @@ export default {
           console.log(response.data)
           if (response.data.code === 1) {
             t.restult = '获取成功'
-            // this.$store.commit('setToken', JSON.stringify(response.data.data.ukey))
-            // this.$store.commit('setAccount', JSON.stringify(response.data.data.ui))
             t.innerVisible = true
             t.code = response.data.data.code
             t.message = response.data.data.message
+            t.dialogFormVisible5 = false
           } else if (response.data.code === 9999) {
             t.restult = '系统错误'
             t.isShow = true
