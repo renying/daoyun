@@ -34,25 +34,39 @@
       <el-tab-pane label="班课成员信息">
         <p>课程名称：{{ClassName}}</p>
         <p>成员总数：{{UserCount}}</p>
+        <p>成员签到总次数：{{CheckCount}}</p>
         <el-table :data="tableData" style="width: 100%">
-      <el-table-column prop="UserId" label="编号" width="180">
+      <!-- <el-table-column prop="UserId" label="编号" width="180">
       </el-table-column>
+      -->
       <el-table-column prop="UserName" label="名称" width="180">
       </el-table-column>
       <el-table-column prop="UserCode" label="学号">
       </el-table-column>
+      <!-- <el-table-column><el-button type="primary" @click="getStuInfo(UserId)">查看信息</el-button></el-table-column> -->
     </el-table>
       </el-tab-pane>
       <el-tab-pane label="发起签到">
-        <view class="map">
-          <baidu-map class="map-contain" :scroll-wheel-zoom="true" :center="center" :zoom="zoom" MapType="BMAP_SATELLITE_MAP" @ready="mapReady">
+
+          <baidu-map class="map-contain map" :scroll-wheel-zoom="true" :center="center" :zoom="zoom" MapType="BMAP_SATELLITE_MAP" @ready="mapReady">
             <bm-geolocation anchor="BMAP_ANCHOR_BOTTOM_RIGHT" @locationSuccess="getMyLocation()" :showAddressBar="true" :autoLocation="true"></bm-geolocation>
             <bm-marker @dragend="markerDrag" :position="center" :dragging="true" animation="BMAP_ANIMATION_BOUNCE">
-            <!--<bm-label content="我爱北京天安门" :labelStyle="{color: 'red', fontSize : '24px'}" :offset="{width: -35, height: 30}"/> -->
             </bm-marker>
           </baidu-map>
-          </view>
-        <el-button type="primary" @click=startCheckin()>发起签到</el-button>
+
+        <!--<el-button type="primary" @click=startCheckin()>发起签到</el-button>-->
+        <el-button type="primary" @click="dialogFormVisible5 = true">发起签到</el-button>
+        <el-dialog title="设置签到时间(分钟)" :visible.sync="dialogFormVisible5">
+          <el-input v-model="duration" placeholder="请输入整数" type="number"></el-input>
+          <el-dialog width="30%" title="提示" :visible.sync="innerVisible" append-to-body>
+             <span>发起签到成功！</span>
+            <el-button @click="innerVisible = false">确定</el-button>
+          </el-dialog>
+          <div slot="footer" class="dialog-footer">
+            <el-button @click="dialogFormVisible5 = false">取 消</el-button>
+            <el-button type="primary" @click="startCheckin()">确认发起签到</el-button>
+          </div>
+        </el-dialog>
       </el-tab-pane>
     </el-tabs>
     </el-main>
@@ -65,6 +79,7 @@
 
 <script>
 export default {
+  inject: ['reload'],
   beforeCreate () {
     // 添加背景色
     document.querySelector('body').setAttribute('style', 'background-color:######')
@@ -76,16 +91,57 @@ export default {
     return {
       ClassName: '',
       UserCount: '',
+      CheckCount: '',
       tableData: [],
       longitude: '',
       latitude: '',
       duration: '',
+      innerVisible: false,
+      dialogFormVisible5: false,
       zoom: 18, // 地图相关设置
       center: {lng: 0, lat: 0}
     }
   },
   methods: {
     getClassInfo () {
+      var t = this
+      var myDate = new Date()
+      var qs = require('qs')
+      this.$axios.post('api/get-classuserlist', qs.stringify({
+        ui: localStorage.getItem('userid'),
+        ukey: localStorage.getItem('ukey'),
+        classid: localStorage.getItem('classid'),
+        TimeStamp: myDate
+      }), {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      })
+        .then(function (response) {
+          console.log(response.data)
+          if (response.data.code === 1) {
+            t.restult = '获取成功'
+            t.tableData = response.data.data.UserList
+            t.ClassName = response.data.data.ClassName
+            t.UserCount = response.data.data.UserCount
+            t.CheckCount = response.data.data.CheckCount
+          } else if (response.data.code === 9999) {
+            t.restult = '系统错误'
+            t.isShow = true
+          } else if (response.data.code === 1001) {
+            t.restult = '请求错误'
+          }
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+    },
+    markerDrag (x) {
+      console.log(x.point)
+      this.center.lat = x.point.lat
+      this.center.lng = x.point.lng
+    },
+    getStuInfo (Id) {
       var t = this
       var myDate = new Date()
       var qs = require('qs')
@@ -117,15 +173,9 @@ export default {
           console.log(error)
         })
     },
-    markerDrag (x) {
-      console.log(x.point)
-      this.center.lat = x.point.lat
-      this.center.lng = x.point.lng
-    },
     mapReady ({BMap, map}) {
       let that = this
       var geolocation = new BMap.Geolocation()
-      // 开启SDK辅助定位
       geolocation.enableSDKLocation()
       geolocation.getCurrentPosition(function (r) {
         console.log('d')
@@ -133,15 +183,10 @@ export default {
         // getStatus拿到的是状态信息，失败与否
         // eslint-disable-next-line no-undef
         if (this.getStatus() === BMAP_STATUS_SUCCESS) {
-          // var mk = new BMap.Marker(r.point);
-          // map.addOverlay(mk);//将覆盖物添加到地图中
-          // map.panTo(r.point);//将地图的中心点更改为给定的点
           that.center.lng = r.point.lng
           that.center.lat = r.point.lat
-          this.latitude = r.point.lat
-          this.longitude = r.point.lng
-          that.showToast('您所在位置为经度：' + r.point.lng + ',纬度：' + r.point.lat)
-          // alert('您的位置：' + r.point.lng + ',' + r.point.lat);
+          that.latitude = r.point.lat
+          that.longitude = r.point.lng
         } else {
           that.showToast('位置信息获取失败，' + this.getStatus())
         }
@@ -153,6 +198,9 @@ export default {
       var t = this
       var myDate = new Date()
       var qs = require('qs')
+      console.log('start')
+      console.log(t.longitude)
+      console.log(t.latitude)
       this.$axios.post('api/startcheckin', qs.stringify({
         ui: localStorage.getItem('userid'),
         ukey: localStorage.getItem('ukey'),
@@ -170,10 +218,10 @@ export default {
           console.log(response.data)
           if (response.data.code === 1) {
             t.restult = '获取成功'
-            // this.$store.commit('setToken', JSON.stringify(response.data.data.ukey))
-            // this.$store.commit('setAccount', JSON.stringify(response.data.data.ui))
+            t.innerVisible = true
             t.code = response.data.data.code
             t.message = response.data.data.message
+            t.dialogFormVisible5 = false
           } else if (response.data.code === 9999) {
             t.restult = '系统错误'
             t.isShow = true
@@ -184,6 +232,13 @@ export default {
         .catch(function (error) {
           console.log(error)
         })
+    },
+    exit () {
+      console.log('注销')
+      localStorage.removeItem('ukey')
+      localStorage.removeItem('account')
+      localStorage.removeItem('userid')
+      this.$router.push({path: '/'})
     }
   },
   mounted () {
@@ -193,5 +248,8 @@ export default {
 </script>
 
 <style scoped>
-
+.map {
+  width: 100%;
+  height: 500px;
+}
 </style>

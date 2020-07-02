@@ -31,93 +31,7 @@
     </el-header>
     <el-main>
     <el-tabs type="border-card">
-      <!-- --------------------------这里是班课通知------------------------------------- -->
-<!--      <el-tab-pane label="班课通知">-->
-<!--        <div class="wrapper">-->
-<!--            <div class="container-fluid">-->
-<!--              <div class="row">-->
-<!--                <div class="col-12">-->
-<!--                  <div class="email-leftbar">-->
-<!--                    <div class="m-t-20" v-for="(item, index) in NoticeList" v-bind:key="index" @click="readMessage(item.FromUserId)">-->
-<!--                                <a href="#" class="media">-->
-<!--                                    <img class="d-flex mr-3 rounded-circle" src="@/assets/images/users/avatar-2.jpg" alt="Generic placeholder image" height="36">-->
-<!--                                    <div class="media-body chat-user-box">-->
-<!--                                      <el-badge :is-dot="item.HasNew" class="item">{{item.FromName}}</el-badge>-->
-<!--                                      <p class="user-title m-0">{{formatType(item.NoticeType)}}</p>-->
-<!--                                      <p class="text-muted"></p>-->
-<!--                                    </div>-->
-<!--                                </a>-->
-
-<!--                            </div>-->
-<!--                  </div>-->
-<!--                  <div class="email-rightbar mb-3">-->
-<!--                    <div class="card m-t-20">-->
-<!--                      <ul class="message-list" v-for="(item, index) in NoticeList" v-bind:key="index" >-->
-<!--                        <li>-->
-<!--                                        <a>-->
-<!--                                            <div class="col-mail col-mail-1">-->
-<!--                                              <div class="checkbox-wrapper-mail">-->
-<!--                                                    <input type="checkbox" id="chk19">-->
-<!--                                                    <label for="chk19" class="toggle"></label>-->
-<!--                                                </div>-->
-<!--                                                <p class="title">{{item.FromName}}</p><span class="star-toggle fa fa-star-o"></span>-->
-<!--                                            </div>-->
-<!--                                            <div class="col-mail col-mail-2">-->
-<!--                                                <div class="subject"><span class="teaser">{{item.InfoContent}}</span>-->
-<!--                                                </div>-->
-<!--                                                <div class="date">{{item.InfoDate}}</div>-->
-<!--                                            </div>-->
-<!--                                          <div class="col-mail col-mail-3">-->
-<!--                                                &lt;!&ndash;-->
-<!--                                                *<el-button type="primary" @click="dialogVisible = true">阅读详情</el-button>-->
-<!--                                                &ndash;&gt;-->
-<!--                                            &lt;!&ndash; <el-button type="primary" @click=readMessage()>阅读详情</el-button> &ndash;&gt;-->
-<!--                                            &lt;!&ndash;这个方法试了半天，不知道该怎么写，需要在click时，显示新窗口，同时发送数据，方法定义在305行&ndash;&gt;-->
-<!--                                          <el-dialog title="提示" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">-->
-<!--                                            <span>这是一段信息</span>-->
-<!--                                            <div class="card m-t-20">-->
-<!--                                              <div class="card-body" v-for="(item, index) in NoticeInfoList" v-bind:key="index">-->
-<!--                                                <div class="media m-b-30">-->
-<!--                                                  <img class="d-flex mr-3 rounded-circle thumb-md" src="@/assets/images/users/avatar-1.jpg" alt="Generic placeholder image">-->
-<!--                                                  <div class="media-body">-->
-<!--                                                    <h4 class="font-14 m-0">{{item.FromName}}</h4>-->
-<!--                                                    <small class="text-muted">{{item.InfoDate}}</small>-->
-<!--                                                  </div>-->
-<!--                                                </div>-->
-<!--                                                &lt;!&ndash; <h4 class="mt-0 font-18">这里是发消息的用户FromName</h4> &ndash;&gt;-->
-<!--                                                <p>{{item.InfoContent}}</p>-->
-<!--                                                <hr>-->
-<!--                                              </div>-->
-<!--                                            </div>-->
-<!--                                            <span slot="footer" class="dialog-footer">-->
-<!--                                              <el-button @click="dialogVisible = false">取 消</el-button>-->
-<!--                                              <el-button type="primary" @click="dialogVisible = false">确 定</el-button>-->
-<!--                                            </span>-->
-<!--                                          </el-dialog>-->
-<!--                                          </div>-->
-<!--                                        </a>-->
-<!--                        </li>-->
-<!--                        &lt;!&ndash; <li>-->
-<!--                                        <a href="">-->
-<!--                                            <div class="col-mail col-mail-1">-->
-<!--                                                <p class="title">池芝标</p><span class="star-toggle fa fa-star-o"></span>-->
-<!--                                            </div>-->
-<!--                                            <div class="col-mail col-mail-2">-->
-<!--                                                <div class="subject"><span class="teaser">测试消息.</span>-->
-<!--                                                </div>-->
-<!--                                                <div class="date">Mar. 7</div>-->
-<!--                                            </div>-->
-<!--                                        </a>-->
-<!--                        </li> &ndash;&gt;-->
-<!--                      </ul>-->
-<!--                    </div>-->
-<!--                  </div>-->
-<!--                </div>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--      </el-tab-pane>-->
-      <!-- --------------------------------这里是用户消息-------------------------------------------- -->
+      <!-- --------------------------------这里是消息列表-------------------------------------------- -->
       <el-tab-pane label="消息列表">
         <div class="wrapper">
             <div class="container-fluid">
@@ -177,18 +91,6 @@
                                           </div>
                                         </a>
                         </li>
-                        <!-- <li>
-                                        <a href="">
-                                            <div class="col-mail col-mail-1">
-                                                <p class="title">池芝标</p><span class="star-toggle fa fa-star-o"></span>
-                                            </div>
-                                            <div class="col-mail col-mail-2">
-                                                <div class="subject"><span class="teaser">测试消息.</span>
-                                                </div>
-                                                <div class="date">Mar. 7</div>
-                                            </div>
-                                        </a>
-                        </li> -->
                       </ul>
                     </div>
                   </div>
@@ -301,6 +203,13 @@ export default {
         .catch(function (error) {
           console.log(error)
         })
+    },
+    exit () {
+      console.log('注销')
+      localStorage.removeItem('ukey')
+      localStorage.removeItem('account')
+      localStorage.removeItem('userid')
+      this.$router.push({path: '/'})
     }
   },
   mounted () {

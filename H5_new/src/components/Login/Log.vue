@@ -69,7 +69,7 @@
 
               <div class="form-group m-t-10 mb-0 row">
                 <div class="col-12 m-t-20">
-                  <router-link to = "Recoverpw" replace><i class="mdi mdi-lock"></i>忘记密码？</router-link>
+                  <router-link to = "/RecoverPassword" replace><i class="mdi mdi-lock"></i>忘记密码？</router-link>
                   <!-- <a href="pages-recoverpw.html" class="text-muted"
                     ><i class="mdi mdi-lock    "></i>忘记密码？</a
                   > -->
@@ -139,39 +139,101 @@ export default {
        * get就是 $axios.get('xxxx/xxx', xxxxxx)
        */
       var qs = require('qs')
-      this.$axios.post('/api/user-login', qs.stringify({
-        u: t.account,
-        p: t.password,
-        ut: 6,
-        TimeStamp: myDate
-      }), {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        }
-      })
-        .then(function (response) {
-          console.log(response.data)
-          if (response.data.code === 1) {
-            t.restult = '登录成功'
-            // this.$store.commit('setToken', JSON.stringify(response.data.data.ukey))
-            // this.$store.commit('setAccount', JSON.stringify(response.data.data.ui))
-            localStorage.setItem('ukey', response.data.data.ukey)
-            localStorage.setItem('userid', t.$md5(response.data.data.userid))
-            localStorage.setItem('account', t.account)
-            t.$router.push({path: 'Homepage'})
-          } else if (response.data.code === 1002) {
-            t.restult = '账户或密码错误'
-            t.isShow = true
-          } else if (response.data.code === 1001) {
-            t.restult = '请求错误'
+      if (localStorage.getItem('account') === null || localStorage.getItem('password') === null) {
+        this.$axios.post('/api/user-login', qs.stringify({
+          u: t.account,
+          p: t.password,
+          ut: 6,
+          TimeStamp: myDate
+        }), {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
           }
         })
-        .catch(function (error) {
-          console.log(error)
+          .then(function (response) {
+            console.log(response.data)
+            if (response.data.code === 1) {
+              t.restult = '登录成功'
+              // this.$store.commit('setToken', JSON.stringify(response.data.data.ukey))
+              // this.$store.commit('setAccount', JSON.stringify(response.data.data.ui))
+              localStorage.setItem('ukey', response.data.data.ukey)
+              localStorage.setItem('userid', t.$md5(response.data.data.userid))
+              localStorage.setItem('account', t.account)
+              localStorage.setItem('password', t.password)
+              t.$router.push({path: 'Homepage'})
+            } else if (response.data.code === 1002) {
+              console.log('没登录过')
+              t.restult = '账户或密码错误'
+              t.isShow = true
+            } else if (response.data.code === 1001) {
+              t.restult = '请求错误'
+            }
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
+      } else {
+        this.$axios.post('/api/user-login', qs.stringify({
+          u: localStorage.getItem('account'),
+          p: localStorage.getItem('password'),
+          ut: 6,
+          TimeStamp: myDate
+        }), {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }
         })
+          .then(function (response) {
+            console.log(response.data)
+            if (response.data.code === 1) {
+              t.restult = '登录成功'
+              localStorage.setItem('ukey', response.data.data.ukey)
+              t.$router.push({path: 'Homepage'})
+            } else if (response.data.code === 1002) {
+              console.log(localStorage.getItem('password'))
+              t.restult = '账户或密码错误'
+              t.isShow = true
+            } else if (response.data.code === 1001) {
+              t.restult = '请求错误'
+            }
+          })
+      }
+    },
+    autologin () {
+      var t = this
+      var myDate = new Date()
+      var qs = require('qs')
+      if (localStorage.getItem('account') === null || localStorage.getItem('password') === null) {
+      } else {
+        this.$axios.post('/api/user-login', qs.stringify({
+          u: localStorage.getItem('account'),
+          p: localStorage.getItem('password'),
+          ut: 6,
+          TimeStamp: myDate
+        }), {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }
+        })
+          .then(function (response) {
+            console.log(response.data)
+            if (response.data.code === 1) {
+              t.restult = '登录成功'
+              localStorage.setItem('ukey', response.data.data.ukey)
+              t.$router.push({path: 'Homepage'})
+            } else if (response.data.code === 1002) {
+              console.log(localStorage.getItem('password'))
+              t.restult = '账户或密码错误'
+              t.isShow = true
+            } else if (response.data.code === 1001) {
+              t.restult = '请求错误'
+            }
+          })
+      }
     }
   },
   mounted () {
+    this.autologin()
   }
 }
 </script>
