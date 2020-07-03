@@ -1,30 +1,30 @@
 # daoyun-H5
 
-> A Vue.js project
+> Vue工程，主框架使用Vue，部分页面样式使用了HTML5
 
-## Build Setup
+## 效果
+登录界面
 
-``` bash
-# install dependencies
-npm install
+ ![image](https://img2020.cnblogs.com/blog/1112320/202007/1112320-20200703170750781-1229620195.png)
 
-# serve with hot reload at localhost:8080
-npm run dev
+修改密码和注册界面类似。
 
-# build for production with minification
-npm run build
+"我的班课"页面
+![image](https://img2020.cnblogs.com/blog/1112320/202007/1112320-20200703170924924-232666318.png)
 
-# build for production and view the bundle analyzer report
-npm run build --report
+"创建班课"页面
+![image](https://img2020.cnblogs.com/blog/1112320/202007/1112320-20200703171015686-1348740981.png)
 
-# run unit tests
-npm run unit
+班课信息页面
+![image](https://img2020.cnblogs.com/blog/1112320/202007/1112320-20200703171107241-1988798469.png)
 
-# run e2e tests
-npm run e2e
+发起签到页面
+![image](https://img2020.cnblogs.com/blog/1112320/202007/1112320-20200703171207789-1700960592.png)
 
-# run all tests
-npm test
-```
+![image](https://img2020.cnblogs.com/blog/1112320/202007/1112320-20200703171243170-1512654239.png)
 
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+消息通知页面
+![image](https://img2020.cnblogs.com/blog/1112320/202007/1112320-20200703171352699-1603829244.png)
+
+消息通知详情
+![image](https://img2020.cnblogs.com/blog/1112320/202007/1112320-20200703171431864-744870445.png)
