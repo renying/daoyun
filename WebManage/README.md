@@ -5,32 +5,32 @@
 
 ### 用户登陆：
 
-![登陆](https://s1.ax1x.com/2020/07/04/NxFRw6.md.gif)
+![登陆](./img/1.gif)
 
 ### 用户信息修改：
 
-![用户信息修改](https://s1.ax1x.com/2020/07/04/NxFqmt.gif)
+![用户信息修改](./img/2.gif)
 
 ### 操作日志查看：
 
-![操作日志查看](https://s1.ax1x.com/2020/07/04/NxFsSJ.gif)
+![操作日志查看](./img/3.gif)
 
 ### 菜单管理：
 
-![菜单信息修改](https://s1.ax1x.com/2020/07/04/NxF5fe.md.gif)
+![菜单信息修改](./img/4.gif)
 
 ### 组织结构修改：
 
-![组织结构修改](https://s1.ax1x.com/2020/07/04/NxFyl9.gif)
+![组织结构修改](./img/5.gif)
 
 ### 系统参数修改：
 
-![系统参数设置](https://s1.ax1x.com/2020/07/04/NxF6yR.gif)
+![系统参数设置](./img/6.gif)
 
 ### 班课管理：
 
-![班课管理](https://s1.ax1x.com/2020/07/04/NxF2ex.md.gif)
+![班课管理](./img/7.gif)
 
 ### 签到信息查看：
 
-![签到信息](https://s1.ax1x.com/2020/07/04/NxFcO1.gif)
+![签到信息](./img/8.gif)
