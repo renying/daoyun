@@ -5,32 +5,32 @@
 
 ### 用户登陆：
 
-![登录](C:\Users\renying\Desktop\登录.gif)
+![登陆](https://s1.ax1x.com/2020/07/04/NxFRw6.md.gif)
 
 ### 用户信息修改：
 
-![用户信息修改](C:\Users\renying\Desktop\用户信息修改.gif)
+![用户信息修改](https://s1.ax1x.com/2020/07/04/NxFqmt.gif)
 
 ### 操作日志查看：
 
-![操作日志查看](C:\Users\renying\Desktop\操作日志查看.gif)
+![操作日志查看](https://s1.ax1x.com/2020/07/04/NxFsSJ.gif)
 
 ### 菜单管理：
 
-![菜单信息修改](C:\Users\renying\Desktop\19研究生考试\软件工程实践\菜单信息修改.gif)
+![菜单信息修改](https://s1.ax1x.com/2020/07/04/NxF5fe.md.gif)
 
 ### 组织结构修改：
 
-![组织结构修改](C:\Users\renying\Desktop\19研究生考试\软件工程实践\组织结构修改.gif)
+![组织结构修改](https://s1.ax1x.com/2020/07/04/NxFyl9.gif)
 
 ### 系统参数修改：
 
-![系统参数设置](C:\Users\renying\Desktop\19研究生考试\软件工程实践\系统参数设置.gif)
+![系统参数设置](https://s1.ax1x.com/2020/07/04/NxF6yR.gif)
 
 ### 班课管理：
 
-![班课管理](C:\Users\renying\Desktop\班课管理.gif)
+![班课管理](https://s1.ax1x.com/2020/07/04/NxF2ex.md.gif)
 
 ### 签到信息查看：
 
-![签到信息](C:\Users\renying\Desktop\签到信息.gif)
+![签到信息](https://s1.ax1x.com/2020/07/04/NxFcO1.gif)
